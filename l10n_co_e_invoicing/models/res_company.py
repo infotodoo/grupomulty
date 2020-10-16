@@ -11,9 +11,6 @@ from odoo.exceptions import ValidationError
 from requests import post, exceptions
 from lxml import etree
 
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
-
 
 
 class ResCompany(models.Model):

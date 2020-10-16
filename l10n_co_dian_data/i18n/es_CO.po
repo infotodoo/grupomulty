@@ -1859,7 +1859,7 @@ msgstr "Secuencia de entrada de notas de débito"
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.invoice_form_discrepancy_response
 #, python-format
 msgid "Debit Note Invoice"
-msgstr "Crear nota de débito"
+msgstr "Factura de nota de débito"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_account_invoice_debit_note__filter_debit_note
