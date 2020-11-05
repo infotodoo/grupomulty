@@ -1,0 +1,6 @@
+
+version 13.0.0.1 (20/02/20)
+		- Solve partner id issue.
+		- Add validation such that user can not select same source and destination location.
+		- Add validation to select all fields.
+		- Remove order after creation of transfer .
