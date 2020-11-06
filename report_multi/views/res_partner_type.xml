@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>     
+<odoo>
+    <data>
+        <record id="view_res_partner_type_tree" model="ir.ui.view">
+            <field name="name">res.partner.type.tree</field>
+            <field name="model">res.partner.type</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="type">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_res_partner_type_form" model="ir.ui.view">
+            <field name="name">res.partner.type.form</field>
+            <field name="model">res.partner.type</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="type">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>    
+                              <field name="name" required="1" placeholder="Nombre"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_view_res_partner_type">
+            <field name="name">Tipos de Clientes</field>
+            <field name="res_model">res.partner.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Registrar un Tipo de Cliente
+                </p>
+            </field>
+        </record>
+        <menuitem id="id_res_partner_type" name="Tipos de Clientes" parent="contacts.res_partner_menu_config"
+                  action="action_view_res_partner_type"/>
+    </data>
+</odoo>
