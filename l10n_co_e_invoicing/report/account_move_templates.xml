@@ -12,153 +12,80 @@
 
         <!-- <?xml version="1.0"?> -->
         <template id="report_e_invoice_document">
-            <t t-call="l10n_co_e_invoicing.report_e_invoice_layout">
+            <!--<t t-call="l10n_co_e_invoicing.report_e_invoice_layout">-->
+            <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context(lang=lang)"/>
                 <!-- <t t-set="data" t-value="o.get_data_report_invoice_e()"/> -->
-                <div t-attf-class="watermark" class="watermark_report o_company_#{company.id}_layout" align="center"
-                      style="position:fixed; opacity:0.12; width: 96%; height: 400px; border: 0px solid red; padding: 30px">
-                    <img t-att-src="image_data_uri(o.company_id.logo)" style="width:80%;"/>
-                </div>
-                <div class="page" style="border: 0px solid black">
-                    <style>
-                        table {
-                              font-family: arial, sans-serif;
-                              border-collapse: collapse;
-                              width: 100%;
-                          }
-                        td, th {
-                              border: 1px solid #BFBFBF;
-                              text-align: left;
-                              padding: 4px;
-                              font-size:12px;
-                          }
-                        #p_info {
-                            font-family: sans-serif;
-                            align: justify;
-                            font-size:11px;
-                          }
-                        #a {
-                            border: 0px solid black;
-                            width: 100%;
-                            height: 170px;
-                            font-family: sans-serif;
-                            font-size:12px;
-                          }
-                        #a1 {
-                            float: left;
-                            border: 0px solid red;
-                            width: 45%;
-                            height: 100%; 
-                          }
-                        #a2 {
-                            float: left;
-                            border: 0px solid red;
-                            width: 10%;
-                            height: 100%;
-                          }
-                        #a3 {
-                            float: left;
-                            border: 0px solid red;
-                            width: 45%;
-                            height: 100%;
-                            margin-left: 0px;
-                            margin-top: 0px;
-                          }
-                        #b {
-                            margin-top: 70px;
-                            position: static;
-                            width: 100%;
-                            height: 40px;
-                            font-family: sans-serif;
-                            font-size:12px;
-                            border: 0px solid black;
-                        }
-                        #b1 {
-                            border-top: 1px solid black; 
-                            width: 35%; 
-                            float: left;
-                          }
-                        #b2 {
-                            border: 0px solid red; 
-                            width: 30%; 
-                            float: left;
-                        }
-                        #b3 {
-                            border-top: 1px solid black; 
-                            width: 35%; 
-                            float: left;
-                        }
-				                #cufe {
-				                    float:left;
-				                    width: 50%;
-				                    margin-right: 0em;
-				                  }
-				                #tletras {
-    				                border-top: 1px solid black;
-    				                width: 100%;
-    				                font-size:13px;
-				                  }
-                    </style>
-                    
-                    <div id="a">
-                        <div id="a1">
-                            <table name="table_customer" class="table table-borderless" style="padding:1px; text-align:left;">
-                              <tr>
-                                <td style="padding:1px; text-align:left; width:20%"><strong>Cliente:</strong></td>
-                                <td style="padding:1px; text-align:left; width:70%"><span t-field="o.partner_id"/></td>
+                <div class="page">
+
+                    <div class="clearfix">
+                        <div id="total" class="row">
+                            <div class="ml-auto">
+                            <table>
+
+                              <tbody>
+                              <tr border="0">
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Nit:</strong> <span t-field="o.partner_id.identification_document"/>
+                                </td>
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Ciudad:</strong><span class="m-0" t-field="o.partner_id.city"/>
+                                </td>
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Telefono:</strong><span class="m-0" t-field="o.partner_id.phone"/>
+                                </td>
                               </tr>
-                              <tr>
-                                <td style="padding:1px; text-align:left;"><strong>Nit:</strong></td>
-                                <td style="padding:1px; text-align:left;"><span t-field="o.partner_id.identification_document"/></td>
+                              <tr style="">
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Nombre:</strong> <span t-field="o.partner_id.name"/>
+                                </td>
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Departamento:</strong><span class="m-0" t-field="o.partner_id.state_id"/>
+                                </td>
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Vendedor:</strong><span class="m-0" t-field="o.invoice_user_id"/>
+                                </td>
                               </tr>
-                              <tr>
-                                <td style="padding:1px; text-align:left;"><strong>Dirección:</strong></td>
-                                <td style="padding:1px; text-align:left;"><span t-field="o.partner_id.street"/></td>
+                              <tr style="">
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Direccion:</strong> <span t-field="o.partner_id.street"/>
+                                </td>
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Pais:</strong><span class="m-0" t-field="o.partner_id.country_id"/>
+                                </td>
+                                <td style="padding:1px; text-align:left; width:33%;  background-color: transparent">
+                                    <strong>Plazo de pago:</strong><span class="m-0" t-field="o.partner_id.phone"/>
+                                </td>
                               </tr>
-                              <tr>
-                              	<td style="padding:1px; text-align:left;"><strong>Ciudad:</strong></td>
-                                <td style="padding:1px; text-align:left;"><span t-field="o.partner_id.city"/></td>
-                              </tr>
-                              <tr>
-                              	<td style="padding:1px; text-align:left;"><strong>Teléfono:</strong></td>
-                                <td style="padding:1px; text-align:left;"><span t-field="o.partner_id.phone"/></td>
-                              </tr>
-                          </table>
-                        </div>
-                        <div id="a2">
-                        </div>
-                        <div id="a3">
-                          <table name="table_dates">
-                           <tr>
-                             <th>FECHA FACTURA</th>
-                             <!-- <th>HORA FACTURA</th> -->
-                             <th>FECHA VENCIMIENTO</th>
-                           </tr>
-                           <tr>
-                             <td><span t-field="o.invoice_date"/></td>
-                             <!-- <td><span t-if="o.state == 'posted'" t-esc="datetime.datetime.strptime(o.issue_time, '%H:%M:%S-05:00').strftime('%r')"/></td> -->
-                             <td><span t-field="o.invoice_date_due"/></td>
-                           </tr>
-                         </table> 
-                         <br/>
-                         <table name="table_info" class="table table-borderless" style="padding:1px; text-align:left;">
-                              <tr>
-                                <td style="padding:1px; text-align:left; width:40%"><strong>Doc. Origen:</strong></td>
-                                <td style="padding:1px; text-align:left; width:60%"><span t-field="o.invoice_origin"/></td>
-                              </tr>
-                              <tr>
-                                <td style="padding:1px; text-align:left;"><strong>Forma de pago:</strong></td>
-                                <td style="padding:1px; text-align:left;"><span t-field="o.payment_mean_id"/></td>
-                              </tr>
-                              <tr>
-                              	<td style="padding:1px; text-align:left;"><strong>Medio de pago:</strong></td>
-                                <td style="padding:1px; text-align:left;"><span t-field="o.payment_mean_code_id"/></td>
-                              </tr>
-                          </table>
+                              </tbody>
+                              </table>
+                            </div>
                         </div>
                     </div>
-                <!-- <br/> -->
-                
+
+
+                        <h3><strong>Factura: <span t-esc="o.name"/></strong> </h3>
+
+
+                    <div id="informations" class="row mt32 mb32">
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Fecha De Facturacion:</strong>
+                            <p class="m-0" t-field="o.invoice_date"/>
+                        </div>
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Fecha De Vencimiento:</strong>
+                            <p class="m-0" t-field="o.invoice_date_due"/>
+                        </div>
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Plazo De Pago:</strong>
+                            <p class="m-0" t-field="o.invoice_payment_term_id.name"/>
+                        </div>
+
+                    </div>
+
+
+
+
                   <t t-if="o.company_id.einvoicing_enabled == True">
                       <t t-foreach="o.dian_document_lines" t-as="dd">
                           <t t-if="dd.state == 'done'">
@@ -303,7 +230,7 @@
                   </div>
                 </div>
                 <!--+++++++++++++++++++++++++++++++++++++-->
-                
+
                 <div id="tletras">
                    <t t-set="total_letras" t-value="o.currency_id.amount_to_text(o.amount_total)"/>
                    <t t-if="o.currency_id.name == 'COP' and 'Peso' in total_letras and int(o.amount_total) != 1"><t t-set="total_letras" t-value="total_letras.replace('Peso', 'Pesos')"/></t>
@@ -312,6 +239,10 @@
                    <t t-if="o.currency_id.name in ('USD','EUR') and 'Cents' in total_letras"><t t-set="total_letras" t-value="total_letras.replace('Cents', 'Centavos')"/></t>
                    <t t-elif="o.currency_id.name in ('USD','EUR') and 'Cent' in total_letras"><t t-set="total_letras" t-value="total_letras.replace('Cent', 'Centavo')"/></t>
                    <p class="text-justify"><strong>Total en letras: </strong> <span t-if="o.currency_id" t-esc="total_letras"/></p>
+                </div>
+
+                <div id="tletras">
+                     <p class="text-justify"><strong>Puntos de lealtad: </strong> <span t-field="o.partner_id.loyalty_points"/> </p>
                 </div>
                 
                 <p id="p_info" t-if="o.type in ('out_invoice', 'in_refund')" style="font-family: sans-serif; font-size:12px;">
