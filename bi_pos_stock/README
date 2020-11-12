@@ -1,0 +1,9 @@
+
+Version 13.0.1.0 : (17/01/20)
+		- Update code to show specific location quantity on product
+
+Version 13.0.1.1 : (12/10/20)
+		- solved the loading issue of pos stock based on current session warehouse
+
+Version 13.0.1.2 : (13/10/20)
+		- Check available qty only of orderline products at the time of payment button click.

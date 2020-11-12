@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <templates id="bi_pos_stock_template" inherit_id="point_of_sale.template" xml:space="preserve">
+    	
+    	<t t-extend="OrderSelectorWidget">
+			<t t-jquery=".order-selector" t-operation="after">
+				<!-- <t t-if='widget.pos.config and widget.pos.config.allow_pos_lock'> -->
+					<div class="oe_status">
+						<span class="pos-stock-sync" style="padding-right: 30px;">
+							Sync
+							<i class="fa fa-refresh " style='font-size: 28px;position: absolute;margin-left: 1%;color: #5db937;'/>
+						</span>
+					</div>
+				<!-- </t> -->
+			</t>
+		</t>
+
+ 	 <!-- Product Widget -->
+		<t t-extend="Product">
+			<t t-jquery=".product-img" t-operation="append">
+				
+				<!-- Display Stock in POS -->
+		    	<t t-if="widget.pos.config.pos_display_stock">
+		    		
+		    		<!-- If Stock Type is Qty on hand -->
+		    		<t t-if="widget.pos.config.pos_stock_type == 'onhand'">
+						<span class="price-tag" id="stockqty" style="right: 90px;">
+						    <t t-esc="product.bi_on_hand"/>
+						</span>
+					</t>
+					
+					<!-- If Stock Type is Incoming Qty -->
+					<t t-if="widget.pos.config.pos_stock_type == 'incoming'">
+						<span class="price-tag" style="right: 90px;">
+						    <t t-esc="product.incoming_qty"/>
+						</span>
+					</t>
+					
+					<!-- If Stock Type is Outgoing Qty -->
+					<t t-if="widget.pos.config.pos_stock_type == 'outgoing'">
+						<span class="price-tag" style="right: 90px;">
+						    <t t-esc="product.outgoing_qty"/>
+						</span>
+					</t>
+					
+					<!-- If Stock Type is Qty Available -->
+					<t t-if="widget.pos.config.pos_stock_type == 'available'">
+						<span class="price-tag" id="availqty" style="right: 90px;">
+							<t t-if="widget.pos.config.show_stock_location == 'specific'">
+								<t t-esc="product.bi_available"/>
+							</t>
+							<t t-if="widget.pos.config.show_stock_location == 'all'">
+								<t t-esc="product.virtual_available"/>
+							</t>
+						</span>
+					</t>
+					
+				</t>
+			</t>
+		</t> 
+
+		<!-- ValidQtyPopupWidget -->     
+		<t t-name="ValidQtyPopupWidget">
+		    <div class="modal-dialog">
+		        <div class="popup popup-textinput" style="height: 250px !important;">
+		            <p class="title" style="background-color: rgb(110,200,155); color: #fff;">Denied Order</p>
+		            <p class="body" style="color: #0075AC;">Ordered qty of One or more product(s) is more than available qty.</p>
+		            <div class="footer" style="background-color: rgb(110,200,155); color: #fff;">
+		                <div class="button confirm" id="back_to_products" style="background-color: #0075AC; color: #fff;">
+		                    Ok 
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</t>
+        
+  	</templates>
+  	
+  	
