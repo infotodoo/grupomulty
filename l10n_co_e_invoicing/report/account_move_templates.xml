@@ -139,10 +139,10 @@
                                         <span class="text-nowrap" t-field="line.price_unit"/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="iva"/>
+                                        <span t-esc="iva" t-options='{"widget": "float", "precision": 2}'/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="priceiva"/>
+                                        <span t-esc="priceiva" t-options='{"widget": "float", "precision": 2}'/>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span class="text-nowrap" t-field="line.discount"/>
