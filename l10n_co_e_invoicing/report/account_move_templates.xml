@@ -68,7 +68,6 @@
                                 <strong>Plazo De Pago:</strong>
                                 <p class="m-0" t-field="o.invoice_payment_term_id.name"/>
                             </div>
-
                         </div>
 
 
@@ -96,10 +95,10 @@
                             <!-- TODO: remove in master -->
                             <th name="th_source" class="d-none text-left" t-if="0"><span>Source Document</span></th>
                             <th name="th_quantity" class="text-right"><span>Quantity</span></th>
+                            <th name="th_udm" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>UdM</span></th>
                             <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>P. sin IVA</span></th>
                             <th name="th_iva" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>IVA</span></th>
                             <th name="th_priceiva" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>P. con IVA</span></th>
-                            <th name="th_udm" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>UdM</span></th>
                             <th name="th_price_unit" t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                 <span>Disc.%</span>
                                 <!-- TODO: remove in master -->
@@ -131,7 +130,10 @@
                                     <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
                                     <td class="text-right">
                                         <span t-field="line.quantity"/>
-                                        <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                    </td>
+
+                                    <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                        <span t-esc="udm"/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span class="text-nowrap" t-field="line.price_unit"/>
@@ -141,9 +143,6 @@
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span t-esc="priceiva"/>
-                                    </td>
-                                    <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="udm"/>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span class="text-nowrap" t-field="line.discount"/>
