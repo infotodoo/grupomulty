@@ -48,7 +48,7 @@
                             <strong>Pais:</strong><span class="m-0" t-field="o.partner_id.country_id"/>
                         </div>
                         <div class="col-4 float-left">
-                            <strong>Plazo de pago:</strong><span class="m-0" t-field="o.partner_id.phone"/>
+                            <strong>Zona:</strong><span class="m-0" t-field="o.partner_id.zone"/>
                         </div>
                     </div>
 
