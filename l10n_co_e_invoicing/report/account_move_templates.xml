@@ -178,16 +178,6 @@
                 </table>
                 <div class="clearfix">
                   <div id="total">
-                    <div id="cufe">
-                      <t t-if="o.company_id.einvoicing_enabled == True">
-                        <t t-foreach="o.dian_document_lines" t-as="dd">
-                          <t t-if="dd.state == 'done' or dd.state == 'sent'">
-                            <img class="image" t-attf-src="data:image/png;base64,{{dd.qr_image}}" style="width:150px;height:150px;margin-bottom:5px"/>
-                            <span t-field="o.name"/>
-                          </t>
-                        </t>
-                      </t>
-                    </div>
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
                       <table class="table table-sm table-borderless">
                         <tr class="border-black o_subtotal" style="">
@@ -237,6 +227,17 @@
                    <t t-if="o.currency_id.name in ('USD','EUR') and 'Cents' in total_letras"><t t-set="total_letras" t-value="total_letras.replace('Cents', 'Centavos')"/></t>
                    <t t-elif="o.currency_id.name in ('USD','EUR') and 'Cent' in total_letras"><t t-set="total_letras" t-value="total_letras.replace('Cent', 'Centavo')"/></t>
                    <p class="text-justify"><strong>Total en letras: </strong> <span t-if="o.currency_id" t-esc="total_letras"/></p>
+                </div>
+
+                  <div id="cufe">
+                      <t t-if="o.company_id.einvoicing_enabled == True">
+                        <t t-foreach="o.dian_document_lines" t-as="dd">
+                          <t t-if="dd.state == 'done' or dd.state == 'sent'">
+                            <img class="image" t-attf-src="data:image/png;base64,{{dd.qr_image}}" style="width:150px;height:150px;margin-bottom:5px"/>
+                            <span t-field="o.name"/>
+                          </t>
+                        </t>
+                      </t>
                 </div>
 
                 <div id="tletras">
