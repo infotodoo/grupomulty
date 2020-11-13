@@ -252,17 +252,6 @@
                     <span t-field="o.narration"/>
                 </p>
 
-                <div id="b">
-                  <div id="b1">
-                    <p><t t-esc="o.company_id.name"/><br/>Firma Autorizada</p>
-                  </div>
-                  <div id="b2">
-                    <p/>
-                  </div>
-                  <div id="b3">
-                    <p>Aceptado y Recibido<br/>Nombre y Sello, Cliente</p>
-                  </div>
-                </div>
 
                 <!--<p id="p_info" t-if="o.invoice_payment_term_id" name="payment_term">-->
                 <!--    <span t-field="o.invoice_payment_term_id.note"/>-->
