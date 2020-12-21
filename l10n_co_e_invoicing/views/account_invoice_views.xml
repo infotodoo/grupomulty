@@ -8,13 +8,13 @@
             <xpath expr="//field[@name='invoice_date']" position="after">
                 <field name="type"></field>
                 <field name="send_invoice_to_dian"
-                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],'!required': [('type', '!=', 'out_invoice')]}"
+                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],'required': [('type', 'in', ('out_invoice','out_refund'))]}"
                     />
                 <field name="operation_type" string="Tipo Operacion"
-                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],'!required': [('type', '!=', 'out_invoice')]}"
+                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],'required': [('type', 'in', ('out_invoice','out_refund'))]}"
                     />
                 <field name="invoice_type_code"
-                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],'!required': [('type', '!=', 'out_invoice')]}"
+                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],'required': [('type', 'in', ('out_invoice','out_refund'))]}"
                     />
                 <field name="is_invoice_out_odoo"
                     attrs="{'invisible': ['|',('type', 'not in', ('out_invoice','out_refund')),('operation_type', 'not in', ('20','30'))],'!required': [('type', '!=', 'out_invoice')]}"

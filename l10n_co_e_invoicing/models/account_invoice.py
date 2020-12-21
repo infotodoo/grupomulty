@@ -301,20 +301,27 @@ class AccountInvoice(models.Model):
 				tax_code = tax.tax_line_id.tax_group_id.tax_group_type_id.code
 				tax_name = tax.tax_line_id.tax_group_id.tax_group_type_id.name
 				tax_type = tax.tax_line_id.tax_group_id.tax_group_type_id.type
-				tax_percent = '{:.2f}'.format(tax.tax_line_id.amount)
+				# tax_percent = '{:.2f}'.format(tax.tax_line_id.amount)
+				tax_percent = str(tax.tax_line_id.amount)
 
 				if tax_type == 'withholding_tax' and tax.tax_line_id.amount == 0:
 					raise UserError(msg2 % tax.name)
-				elif tax_type == 'tax' and tax.tax_line_id.amount <= 0:
+				elif tax_type == 'tax' and tax.tax_line_id.amount < 0:
 					_logger.info('negativo einvoicing')
 					raise UserError(msg3 % tax.name)
-				elif tax_type == 'withholding_tax' and tax.tax_line_id.amount > 0:
+				elif tax_type == 'tax' and tax.tax_line_id.amount == 0:
+					pass
+				elif tax_type == 'withholding_tax' and tax.tax_line_id.amount < 0:
 					if tax_code not in withholding_taxes:
 						withholding_taxes[tax_code] = {}
 						withholding_taxes[tax_code]['total'] = 0
 						withholding_taxes[tax_code]['name'] = tax_name
 						withholding_taxes[tax_code]['taxes'] = {}
-
+					
+					if float(tax_percent) < 0.0:
+						# tax_percent = '{:.2f}'.format(tax.tax_line_id.amount*(-1))
+						tax_percent = str(tax.tax_line_id.amount*(-1))
+					
 					if tax_percent not in withholding_taxes[tax_code]['taxes']:
 						withholding_taxes[tax_code]['taxes'][tax_percent] = {}
 						withholding_taxes[tax_code]['taxes'][tax_percent]['base'] = 0
@@ -332,7 +339,7 @@ class AccountInvoice(models.Model):
 						withholding_taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount
 						withholding_taxes[tax_code]['taxes'][tax_percent]['amount'] += ((tax.tax_base_amount * tax.tax_line_id.amount) / 100) * (-1)
 
-				if tax_type == 'withholding_tax' and tax.tax_line_id.amount < 0:
+				elif tax_type == 'withholding_tax' and tax.tax_line_id.amount > 0:
 					# TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN
 					# Solo las positivas que indicarian una autoretencion, Si la DIAN
 					# pide que se envien las retenciones, seria quitar o comentar este if
@@ -434,23 +441,24 @@ class AccountInvoice(models.Model):
 			taxes['01']['taxes']['0.00']['base'] = 0
 			taxes['01']['taxes']['0.00']['amount'] = 0
 
+		if '03' not in taxes:
+			taxes['03'] = {}
+			taxes['03']['total'] = 0
+			taxes['03']['name'] = 'ICA'
+			taxes['03']['taxes'] = {}
+			taxes['03']['taxes']['0.00'] = {}
+			taxes['03']['taxes']['0.00']['base'] = 0
+			taxes['03']['taxes']['0.00']['amount'] = 0
+
 		if '04' not in taxes:
 			taxes['04'] = {}
 			taxes['04']['total'] = 0
-			taxes['04']['name'] = 'ICA'
+			taxes['04']['name'] = 'INC'
 			taxes['04']['taxes'] = {}
 			taxes['04']['taxes']['0.00'] = {}
 			taxes['04']['taxes']['0.00']['base'] = 0
 			taxes['04']['taxes']['0.00']['amount'] = 0
 
-		if '03' not in taxes:
-			taxes['03'] = {}
-			taxes['03']['total'] = 0
-			taxes['03']['name'] = 'INC'
-			taxes['03']['taxes'] = {}
-			taxes['03']['taxes']['0.00'] = {}
-			taxes['03']['taxes']['0.00']['base'] = 0
-			taxes['03']['taxes']['0.00']['amount'] = 0
 
 		return {'TaxesTotal': taxes, 'WithholdingTaxesTotal': withholding_taxes}
 
@@ -738,17 +746,18 @@ class AccountInvoice(models.Model):
 
 						if tax_type == 'withholding_tax' and tax_id.amount == 0:
 							raise UserError(msg5 % tax_id.name)
-						elif tax_type == 'tax' and tax_id.amount <= 0:
+						elif tax_type == 'tax' and tax_id.amount < 0:
 							_logger.info('negativo tax')
 							raise UserError(msg6 % tax_id.name)
-
-						if tax_type == 'withholding_tax' and tax_id.amount > 0:
+						elif tax_type == 'tax' and tax_id.amount == 0:
+							pass
+						elif tax_type == 'withholding_tax' and tax_id.amount < 0:
 							invoice_lines[count]['WithholdingTaxesTotal'] = (
 								invoice_line._get_invoice_lines_taxes(
 									tax_id,
-									tax_id.amount,
+									abs(tax_id.amount),
 									invoice_lines[count]['WithholdingTaxesTotal']))
-						if tax_type == 'withholding_tax' and tax_id.amount < 0:
+						elif tax_type == 'withholding_tax' and tax_id.amount > 0:
 							# TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN.
 							# Solo la parte positiva que indicaria una autoretencion, Si la DIAN
 							# pide que se envie la parte negativa, seria quitar o comentar este if
@@ -769,23 +778,24 @@ class AccountInvoice(models.Model):
 				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['base'] = invoice_line.price_subtotal
 				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['amount'] = 0
 
+			if '03' not in invoice_lines[count]['TaxesTotal']:
+				invoice_lines[count]['TaxesTotal']['03'] = {}
+				invoice_lines[count]['TaxesTotal']['03']['total'] = 0
+				invoice_lines[count]['TaxesTotal']['03']['name'] = 'ICA'
+				invoice_lines[count]['TaxesTotal']['03']['taxes'] = {}
+				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00'] = {}
+				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['base'] = invoice_line.price_subtotal
+				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['amount'] = 0
+
 			if '04' not in invoice_lines[count]['TaxesTotal']:
 				invoice_lines[count]['TaxesTotal']['04'] = {}
 				invoice_lines[count]['TaxesTotal']['04']['total'] = 0
-				invoice_lines[count]['TaxesTotal']['04']['name'] = 'ICA'
+				invoice_lines[count]['TaxesTotal']['04']['name'] = 'INC'
 				invoice_lines[count]['TaxesTotal']['04']['taxes'] = {}
 				invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00'] = {}
 				invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['base'] = invoice_line.price_subtotal
 				invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['amount'] = 0
 
-			if '03' not in invoice_lines[count]['TaxesTotal']:
-				invoice_lines[count]['TaxesTotal']['03'] = {}
-				invoice_lines[count]['TaxesTotal']['03']['total'] = 0
-				invoice_lines[count]['TaxesTotal']['03']['name'] = 'INC'
-				invoice_lines[count]['TaxesTotal']['03']['taxes'] = {}
-				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00'] = {}
-				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['amount'] = 0
 
 			invoice_lines[count]['BrandName'] = brand_name
 			invoice_lines[count]['ModelName'] = model_name
