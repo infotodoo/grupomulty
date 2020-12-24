@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="paperformat_pos_receipt" model="report.paperformat">
+        <field name="name">Posreceipt-Paperformat</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">290</field>
+        <field name="page_width">80</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+	<report
+	    id="pos_receipt"
+	    model="pos.order"
+	    string="Receipt"
+	    report_type="qweb-pdf"
+	    name="pos_backend_receipt_report_app.receipt_pos"
+	    file="pos_backend_receipt_report_app.receipt_pos"
+	    attachment_use="True"
+        paperformat="paperformat_pos_receipt"
+	/>
+</odoo>

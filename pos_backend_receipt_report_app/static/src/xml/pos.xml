@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- /point_of_sale/static/src/img/logo.png -->
+
+    <t t-extend="Chrome">
+        <t t-jquery=".pos-logo" t-operation="replace">
+            <img class="pos-logo"  src="/pos_backend_receipt_report_app/static/src/img/logo.png" alt="Logo"/>
+        </t>
+    </t>
+
+    <t t-extend="OrderReceipt">
+        <t t-jquery=".pos-receipt-logo" t-operation="replace"></t>
+        <t t-jquery=".pos-receipt-order-data" t-operation="before">
+            <div t-if="order.get_client()" class="pos-receipt-contact pos-receipt-center-align">
+                Cliente: <t t-esc="order.get_client().name" /><br/>
+                <t t-if="order.get_client().vat">
+                    NT/CC: <t t-esc="order.get_client().vat" /><br/>
+                </t>
+                <t t-if="order.get_client().street">
+                    Dirección: <t t-esc="order.get_client().street" /><br/>
+                </t>
+                <t t-if="order.get_client().phone">
+                    Teléfono: <t t-esc="order.get_client().phone" /><br/>
+                </t>
+                <t t-if="order.get_client().email">
+                    Correo: <t t-esc="order.get_client().email" /><br/>
+                </t>
+            </div>
+            <br/>
+        </t>
+    </t>
+
+</templates>
