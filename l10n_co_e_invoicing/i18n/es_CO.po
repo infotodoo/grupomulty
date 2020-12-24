@@ -1070,7 +1070,7 @@ msgid ""
 msgstr ""
 "Error desconocido: %s \n"
 "\n"
-"Póngase en contacto con su administrador".
+"Póngase en contacto con su administrador."
 
 #. module: l10n_co_e_invoicing
 #: code:addons/l10n_co_e_invoicing/models/res_company.py:0
