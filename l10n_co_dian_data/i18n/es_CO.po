@@ -689,42 +689,42 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_023
 msgid "Bank check"
-msgstr ""
+msgstr "Cheque bancario"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_042
 msgid "Bank deposit"
-msgstr ""
+msgstr "Deposito bancario"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_045
 msgid "Banking Credit Transfer"
-msgstr ""
+msgstr "Transferencia de crédito bancario"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_047
 msgid "Banking Debit Transfer"
-msgstr ""
+msgstr "Transferencia de débito bancario"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_021
 msgid "Banking project"
-msgstr ""
+msgstr "Proyecto bancario"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_071
 msgid "Bonuses"
-msgstr ""
+msgstr "Bonificaciones"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_015
 msgid "Bookentry Credit"
-msgstr ""
+msgstr "Bookentry Crédito"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_016
 msgid "Bookentry Debit"
-msgstr ""
+msgstr "Bookentry Débito"
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_25120
@@ -1429,14 +1429,14 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.account_invoice_debit_note_view
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: l10n_co_dian_data
 #: code:addons/l10n_co_dian_data/wizards/l10n_co_account_invoice_discrepancy_response/account_invoice_debit_note.py:0
 #: code:addons/l10n_co_dian_data/wizards/l10n_co_account_invoice_discrepancy_response/account_invoice_refund.py:0
 #, python-format
 msgid "Cannot refund draft/proforma/cancelled invoice."
-msgstr ""
+msgstr "No se puede rectificar facturas en estado borrador/proforma/cancelado."
 
 #. module: l10n_co_dian_data
 #: code:addons/l10n_co_dian_data/wizards/l10n_co_account_invoice_discrepancy_response/account_invoice_debit_note.py:0
@@ -1445,87 +1445,88 @@ msgstr ""
 msgid ""
 "Cannot refund invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr ""
+msgstr "No se puede reembolsar la factura que ya está conciliada, la factura debe estar sin conciliar primero. Solo puede reembolsar esta factura."
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_010
 msgid "Cash"
-msgstr ""
+msgstr "Efectivo"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_032
 msgid "Cash Concentration / Credit Disbursement plus (CCD+)"
-msgstr ""
+msgstr "Concentración Efectivo / Desembolso Crédito plus (CCD+)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_033
 msgid "Cash Concentration / Debit Disbursement plus (CCD+)"
-msgstr ""
+msgstr "Concentración Efectivo / Desembolso Débito plus (CCD+)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_041
 msgid "Cash concentration / Credit Disbursement plus (CCD+)"
-msgstr ""
+msgstr "Concentración efectivo/Desembolso Crédito plus (CCD+)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_043
 msgid "Cash concentration / Debit Disbursement plus (CCD+)"
-msgstr ""
+msgstr "Concentración efectivo / Desembolso Débito plus (CCD+)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_035
 msgid "Cash concentration savings / Credit Disbursement (CCD)"
-msgstr ""
+msgstr "Concentración efectivo ahorros / Desembolso Crédito (CCD))"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_036
 msgid "Cash concentration savings / Debit Disbursement (CCD)"
-msgstr ""
+msgstr "Concentración efectivo ahorros / Desembolso Drédito (CCD)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_017
 msgid "Cash demand concentration / Credit Disbursement (CCD)"
-msgstr ""
+msgstr "Concentración de la demanda en efectivo/Desembolso Crédito (CCD)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_018
 msgid "Cash demand concentration / Disbursement (CCD) debit"
-msgstr ""
+msgstr " Concentración de la demanda en efectivo/Desembolso (CCD) débito"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_022
 msgid "Certified banking project"
-msgstr ""
+msgstr "Proyecto bancario certificado"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_025
 msgid "Certified check"
-msgstr ""
+msgstr "Cheque certificado"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_020
 msgid "Check"
-msgstr ""
+msgstr "Cheque"
 
 #. module: l10n_co_dian_data
+#: model:ir.model.fields,help:l10n_co_dian_data.field_account_bank_statement_import_journal_creation__debit_note_sequence
 #: model:ir.model.fields,help:l10n_co_dian_data.field_account_journal__debit_note_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " debit notes made from this journal"
-msgstr ""
+msgstr "Marque esta casilla si no desea compartir la misma secuencia para las facturas y notas de débito realizadas desde este diario."
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,help:l10n_co_dian_data.field_res_company__country_enforce_cities
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
-msgstr ""
+msgstr "Marque esta casilla para asegurarse de que cada dirección creada en ese país tenga una 'Ciudad' elegida en la lista de ciudades del país."
 
 #. module: l10n_co_dian_data
 #: model:ir.actions.act_window,name:l10n_co_dian_data.action_res_city_full
 #: model:ir.ui.menu,name:l10n_co_dian_data.locations_menu_cities
 msgid "Cities"
-msgstr ""
+msgstr "Ciudades"
 
 #. module: l10n_co_dian_data
 #: model:ir.model,name:l10n_co_dian_data.model_res_city
@@ -1885,6 +1886,7 @@ msgid "Debit Transfer"
 msgstr "Transferencia Débito"
 
 #. module: l10n_co_dian_data
+#: model:ir.model.fields,field_description:l10n_co_dian_data.field_account_bank_statement_import_journal_creation__debit_note_sequence
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_account_journal__debit_note_sequence
 msgid "Dedicated Debit Note Sequence"
 msgstr "Secuencia de notas de débito dedicada"
@@ -2183,26 +2185,26 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_company__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Forzar ciudades"
 
 #. module: l10n_co_dian_data
 #: code:addons/l10n_co_dian_data/models/l10n_co_partner_vat/res_partner.py:0
 #, python-format
 msgid "Error! Identification number can only have numbers"
-msgstr ""
+msgstr "¡Error! El número de identificación solo puede tener números."
 
 #. module: l10n_co_dian_data
 #: code:addons/l10n_co_dian_data/models/l10n_co_partner_vat/res_partner.py:0
 #, python-format
 msgid ""
 "Error! Number of digits in Identification number must bebetween 2 and 12"
-msgstr ""
+msgstr "¡Error! El número de dígitos del número de identificación debe estar entre 2 y 12"
 
 #. module: l10n_co_dian_data
 #: code:addons/l10n_co_dian_data/exceptions.py:0
 #, python-format
 msgid "Error(s) with partner %d's name."
-msgstr ""
+msgstr "Error(s) con el nombre del socio %d's."
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_25269
@@ -2979,12 +2981,12 @@ msgstr "Apunte contable"
 #. module: l10n_co_dian_data
 #: model:ir.model.fields.selection,name:l10n_co_dian_data.selection__res_partner__person_type__1
 msgid "Juridical Person and assimilated"
-msgstr ""
+msgstr "Persona Juridica y asimilada"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_008
 msgid "Keep"
-msgstr ""
+msgstr "Mantener"
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_23350
@@ -3747,12 +3749,12 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_account_move__payment_mean_code_id
 msgid "Mean of Payment"
-msgstr ""
+msgstr "Medio de pago"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_000
 msgid "Mutual agreement"
-msgstr ""
+msgstr "Acuerdo mutuo"
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_05483
@@ -4511,27 +4513,27 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model:ir.model,name:l10n_co_dian_data.model_res_partner_document_type
 msgid "Partner Document Type"
-msgstr ""
+msgstr "Tipo de documento de socio"
 
 #. module: l10n_co_dian_data
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.res_config_settings_view_form
 msgid "Partner Names Order"
-msgstr ""
+msgstr "Orden de nombres de socios"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_config_settings__partner_names_order_changed
 msgid "Partner Names Order Changed"
-msgstr ""
+msgstr "Orden de nombres de socios cambiada"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_config_settings__partner_names_order
 msgid "Partner names order"
-msgstr ""
+msgstr "Orden de nombres de socios"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_037
 msgid "Payment Corporate Business Savings Credit (CTP)"
-msgstr ""
+msgstr "Pago Negocio Corporativo Ahorros Crédito (CTP)"
 
 #. module: l10n_co_dian_data
 #: model:ir.actions.act_window,name:l10n_co_dian_data.account_payment_mean_code_action
@@ -4539,12 +4541,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.account_payment_mean_code_view_form
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.account_payment_mean_code_view_tree
 msgid "Payment Means"
-msgstr ""
+msgstr "Medios de pago"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_account_move__payment_mean_id
 msgid "Payment Method"
-msgstr ""
+msgstr "Método de pago"
 
 #. module: l10n_co_dian_data
 #: model:ir.actions.act_window,name:l10n_co_dian_data.account_payment_mean_action
@@ -4552,78 +4554,78 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.account_payment_mean_view_form
 #: model_terms:ir.ui.view,arch_db:l10n_co_dian_data.account_payment_mean_view_tree
 msgid "Payment Methods"
-msgstr ""
+msgstr "Métodos de pago"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_034
 msgid "Payment and pre-agreed deposit (PPD)"
-msgstr ""
+msgstr "Pago y depósito pre acordado (PPD)"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_096
 msgid "Payment method requested not used"
-msgstr ""
+msgstr "Método de pago solicitado no usuado"
 
 #. module: l10n_co_dian_data
 #: model:ir.model,name:l10n_co_dian_data.model_account_payment_mean_code
 msgid "Payment methods"
-msgstr ""
+msgstr "Métodos de pago"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_partner__person_type
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_users__person_type
 msgid "Person Type"
-msgstr ""
+msgstr "Tipo persona"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_city_zip__phone_prefix
 msgid "Phone Prefix"
-msgstr ""
+msgstr "Prefijo telefónico"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_050
 msgid "Post-twist"
-msgstr ""
+msgstr "Postgiro"
 
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_ir_sequence_date_range__prefix
 msgid "Prefix"
-msgstr ""
+msgstr "Prefijo"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_060
 msgid "Promissory note"
-msgstr ""
+msgstr "Nota promisoria"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_065
 msgid "Promissory note signed by a bank endorsed by another bank"
-msgstr ""
+msgstr "Nota promisoria firmada por un banco avalada por otro banco"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_067
 msgid "Promissory note signed by a third party endorsed by a bank"
-msgstr ""
+msgstr "Nota promisoria firmada por un tercero avalada por un banco"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_064
 msgid "Promissory note signed by the bank"
-msgstr ""
+msgstr "Nota promisoria firmada pro el banco"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_061
 msgid "Promissory note signed by the creditor"
-msgstr ""
+msgstr "Nota promisoria firmada por el acreedor"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_063
 msgid "Promissory note signed by the creditor, endorsed by a third party"
-msgstr ""
+msgstr "Nota promisoria firmada por el acreedor, avalada por un tercero"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_062
 msgid "Promissory note signed by the creditor, endorsed by the bank"
-msgstr ""
+msgstr "Nota promisoria firmada por el acreedor, avalada por el banco"
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_25592
@@ -6279,6 +6281,7 @@ msgstr ""
 "                        <span style=\"font-weight:bold;\">Por favor, debe informar a la administración.</span>"
 
 #. module: l10n_co_dian_data
+#: model:ir.model.fields,help:l10n_co_dian_data.field_account_bank_statement_import_journal_creation__debit_note_sequence_id
 #: model:ir.model.fields,help:l10n_co_dian_data.field_account_journal__debit_note_sequence_id
 msgid ""
 "This field contains the information related to the numbering of the debit "
@@ -6462,7 +6465,7 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_partner_document_type__checking_required
 msgid "VAT Check Required"
-msgstr ""
+msgstr "Se requiere verificación de VAT"
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_05858
