@@ -60,6 +60,7 @@ class AccountInvoiceDianDocument(models.Model):
     invoice_url = fields.Char(string='Invoice Url')
     cufe_cude_uncoded = fields.Char(string='CUFE/CUDE Uncoded')
     cufe_cude = fields.Char(string='CUFE/CUDE')
+    origin_cufe_cude = fields.Char(string='CUFE/CUDE original')
     software_security_code_uncoded = fields.Char(
         string='SoftwareSecurityCode Uncoded')
     software_security_code = fields.Char(
@@ -1110,6 +1111,20 @@ class AccountInvoiceDianDocument(models.Model):
         self.write({'zipped_file': b64encode(self._get_zipped_file()).decode("utf-8", "ignore")})
         self.sent_zipped_file()
         self.GetStatusZip()
+    
+    def change_cufe(self):
+        if 'procesado anteriormente.' in self.get_status_zip_response and not self.origin_cufe_cude:
+            cufe_origin = self.cufe_cude
+            new_cufe = self.get_status_zip_response.replace("- Regla: 90, Rechazo: Documento con CUFE '", '').replace("' procesado anteriormente.", '')
+            self.origin_cufe_cude = cufe_origin
+            self.cufe_cude = new_cufe
+        else:
+            raise ValidationError('El cufe no ha sido procesado anteriormente')
+    
+    def return_cufe(self):
+        if self.origin_cufe_cude:
+            self.cufe_cude = self.origin_cufe_cude
+            self.origin_cufe_cude = ''
 
 
 class AccountInvoiceDianDocumentLine(models.Model):

@@ -91,8 +91,11 @@
                                 <field name="mail_sent"/>
                             </group>
                             <group string="Codes">
+                                <button name="change_cufe" string="Cambiar CUFE" type="object" class="oe_link" groups="base.group_no_one"/>
+                                <button name="return_cufe" string="Retornar CUFE" type="object" class="oe_link" attrs="{'invisible': [('origin_cufe_cude','in', (False, ''))]}" groups="base.group_no_one"/>
                                 <field name="cufe_cude_uncoded" readonly="1"/>
                                 <field name="cufe_cude" readonly="1"/>
+                                <field name="origin_cufe_cude" readonly="1" groups="base.group_no_one"/>
                                 <field name="software_security_code_uncoded" readonly="1"/>
                                 <field name="software_security_code" readonly="1"/>
                                 <field name="zip_key" readonly="1"/>
