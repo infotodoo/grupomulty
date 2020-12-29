@@ -80,6 +80,7 @@
     </cac:DiscrepancyResponse>
 <!--TODO 1.0 TODAS LAS FACTURAS DEBEN SER DEL MISMO ADQUIRIENTE-->
 <!--Si DebitNoteTypeCode igual a 30 es obligatorio-->
+	{% if BillingReference.ID %}
 	<cac:BillingReference>
 		<cac:InvoiceDocumentReference>
 			<cbc:ID>{{BillingReference.ID}}</cbc:ID>
@@ -87,6 +88,7 @@
 			<cbc:IssueDate>{{BillingReference.IssueDate}}</cbc:IssueDate>
 		</cac:InvoiceDocumentReference>
 	</cac:BillingReference>
+	{% endif %}
 <!--TODO 2.0: Creo que esto para colocar el numero de la orden, en nuestro caso, seria la cotizacion>
 	<cac:OrderReference>
 		<cbc:ID>{{OrderReferenceID}}</cbc:ID>

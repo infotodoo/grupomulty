@@ -77,6 +77,7 @@ referencia la factura por ejemplo en servicios públicos>
 	</cac:DiscrepancyResponse>
 <!--TODAS LAS FACTURAS DEBEN SER DEL MISMO ADQUIRIENTE-->
 <!--Si CreditNoteTypeCode igual a 20 es obligatorio-->
+	{% if BillingReference.ID %}
 	<cac:BillingReference>
 		<cac:InvoiceDocumentReference>
 			<cbc:ID>{{BillingReference.ID}}</cbc:ID>
@@ -84,6 +85,7 @@ referencia la factura por ejemplo en servicios públicos>
 			<cbc:IssueDate>{{BillingReference.IssueDate}}</cbc:IssueDate>
 		</cac:InvoiceDocumentReference>
 	</cac:BillingReference>
+	{% endif %}
 <!--TODO: Creo que esto para colocar el numero de la orden, en nuestro caso, seria la cotizacion>
 	<cac:OrderReference>
 		<cbc:ID>{{OrderReferenceID}}</cbc:ID>
