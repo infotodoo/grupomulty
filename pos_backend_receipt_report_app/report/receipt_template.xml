@@ -11,6 +11,9 @@
                             <t t-if="o.company_id.phone">
                                 Tel.: <t t-esc="o.company_id.phone" /><br />
                             </t>
+                            <t t-if="o.company_id.vat">
+                                NIT: <t t-esc="o.company_id.vat" /><br />
+                            </t>
                             <t t-if="o.company_id.email">
                                 <t t-esc="o.company_id.email" /><br />
                             </t>
@@ -42,11 +45,11 @@
                                     <tr>
                                         <td style="width:60%;">
                                             <span style="padding-left:2em;">
-                                                <t t-esc="line.qty" t-options="{'widget': 'float', 'precision': currency_precision}" /> <t t-esc="line.product_id.uom_id.name" /> x <t t-esc="line.price_unit - line.discount_val" t-options="{'widget': 'float', 'precision': currency_precision}" />
+                                                <t t-esc="line.qty" t-options="{'widget': 'float', 'precision': currency_precision}" /> <t t-esc="line.product_id.uom_id.name" /> x <t t-esc="line.price_unit - line.discount_val / line.qty" t-options="{'widget': 'float', 'precision': currency_precision}" />
                                             </span>
                                         </td>
                                         <td style="text-align:right;width:50%;">
-                                            <t t-esc="line.price_subtotal_incl" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+                                            <t t-esc="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
                                         </td>
                                     </tr>
                                 </t>
@@ -58,13 +61,36 @@
                                             </span>
                                         </td>
                                         <td style="text-align:right;width:50%;">
-                                            <t t-esc="line.price_subtotal_incl" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+                                            <t t-esc="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
                                         </td>
                                     </tr>
                                 </t>
                             </t>
                         </table>
                         <br />
+                        <table t-if="o.amount_tax != 0" style="width:100%;">
+                            <tr>
+                                <td colspan="2" style="text-align:right;">
+                                    --------
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">
+                                    <span>Subtotal</span>
+                                </td>
+                                <td style="width:50%;text-align:right;">
+                                    <span><t t-esc="o.subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}' /></span>
+                                </td>
+                            </tr>
+                            <tr t-foreach="o.lines.mapped('tax_ids_after_fiscal_position')" t-as="tax">
+                                <td style="width:50%;">
+                                    <span><t t-esc="tax.name" /></span>
+                                </td>
+                                <td style="width:50%;text-align:right;">
+                                    <t t-esc="tax.amount / 100 * sum(o.lines.filtered(lambda x: tax.id in x.tax_ids_after_fiscal_position.ids).mapped('price_subtotal'))" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+                                </td>
+                            </tr>
+                        </table>
                         <table style="width:100%;">
                             <tr>
                                 <td colspan="2" style="text-align:right;">
@@ -130,6 +156,40 @@
                         </div>
                         <br /><br /><br />
                         <div style="text-align:center;font-size:75%">
+
+                            <t t-if="o.config_id.loyalty_id.name and o.loyalty_points != 0">
+                                <div style="font-weight: bold;font-size: 125%;text-align: center;">
+                                    <div  style="font-weight: normal;font-size: 100%;">--------------------------------</div>
+                                    <br />
+                                    <t t-esc="o.config_id.loyalty_id.name" />
+                                </div>
+                                <br />
+                                <div style="font-size:100%;">
+                                    <t t-esc="o.partner_id.name" />
+                                </div>
+                                <br />
+                                <table style="width:100%;">
+                                    <tr style="font-size:100%;">
+                                        <td style="width:70%;">
+                                            <span>Puntos Ganados</span>
+                                        </td>
+                                        <td style="width:30%;text-align:right;">
+                                            <span><t t-esc="o.loyalty_points" /></span>
+                                        </td>
+                                    </tr>
+                                    <tr style="font-size:100%;">
+                                        <td style="width:70%;">
+                                            <span>Puntos Totales</span>
+                                        </td>
+                                        <td style="width:30%;text-align:right;">
+                                            <span><t t-esc="o.partner_id.loyalty_points" /></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <br />
+                            </t>
+
                             <div t-if="o.partner_id">
                                 Cliente: <t t-esc="o.partner_id.name" /><br/>
                                 <t t-if="o.partner_id.vat">
@@ -146,6 +206,7 @@
                                 </t>
                                 <br /><br />
                             </div>
+                            
                             <div>
                                 <t t-esc="o.pos_reference" />
                             </div>
@@ -159,77 +220,6 @@
                     </div>
                 </div>
             </t>
-        </t>
-    </template>
-
-    <template id="receipt_pos1">
-        <t t-call="web.html_container">
-            <t t-call="web.external_layout">
-                <t t-foreach="docs" t-as="o">
-                    <div class="page" style="padding-top:70px"/>
-                        <h2>Order Reference : <span t-field="o.name" style="font-size:28px"/></h2>
-                        <div class="row">
-                            <h5 style="margin-left:15px">Customer : <span t-field="o.partner_id" style="font-size:15px"/></h5>
-                            <h5 style="margin-left:45px">Date : <span t-field="o.date_order" style="font-size:15px" /></h5>
-                        </div>
-                        <h5>Sales Person : <span t-field="o.user_id" style="font-size:15px"/></h5>
-                        <h5>Receipt Number : <span t-field="o.pos_reference" style="font-size:15px"/></h5>
-                        <table class="table table-sm o_main_table" style="margin-top:120px">
-                            <tr>
-                                <th class="text-left">Product</th>
-                                <th class="text-right">Quantity</th>
-                                <th class="text-right">Unit Price</th>
-                                <th class="text-right">Subtotal</th>
-                            </tr>
-                            <tbody class="sale_tbody">
-                                <t t-foreach="o.lines" t-as="line">
-                                    <tr>
-                                        <td class="text-left">
-                                            <span t-field="line.product_id"/><br/>
-                                            <h6 style="font-size:12px">with <span t-field="line.discount"/>% <br/>discount</h6>     
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="line.qty"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="line.price_unit"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="line.price_subtotal_incl"/>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                        <div class="clearfix">
-                            <div id="total" class="row" name="total">
-                                <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
-                                    <table class="table table-sm">
-                                        <tr class="border-black o_total">
-                                            <td><strong>Subtotal</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.subtotal"/>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-black o_total">
-                                            <td><strong>Tax</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.amount_tax"/>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-black o_total">
-                                            <td><strong>Total</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.amount_total"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>                        
-                    <div style="page-break-before:always;"/>
-                </t> 
-            </t>      
         </t>
     </template>
 </odoo>    

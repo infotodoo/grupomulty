@@ -51,9 +51,9 @@ class Posinherit(models.Model):
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
-    discount_val = fields.Float(compute='_compute_discount_val', store=True)
+    discount_val = fields.Float(compute='_compute_discount_val')#, store=True)
 
     @api.depends('qty','price_unit', 'price_subtotal_incl')
     def _compute_discount_val(self):
         for rec in self:
-            rec.discount_val = round(rec.qty * rec.price_unit - rec.price_subtotal_incl, 2)
+            rec.discount_val = round(rec.qty * rec.price_unit * rec.discount / 100, 2)
