@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+	<record id="view_posinherit_form" model="ir.ui.view">
+		<field name="name">posinherit.view.in</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <button name="refund" type="object" attrs="{'invisible':[('state','=','draft')]}" position="after">
+                <button name="action_mail_possend" string="Send Email" type="object" />
+            </button>
+        </field>
+    </record>
+</odoo>
