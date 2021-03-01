@@ -723,6 +723,7 @@ class AccountInvoice(models.Model):
 			invoice_lines[count]['Quantity'] = '{:.2f}'.format(invoice_line.quantity)
 			invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(reference_price)
 			invoice_lines[count]['LineExtensionAmount'] = '{:.2f}'.format(invoice_line.price_subtotal)
+			invoice_lines[count]['PricingReference'] = '{:.2f}'.format(invoice_line.product_id.standard_price or 0.0)
 			invoice_lines[count]['MultiplierFactorNumeric'] = '{:.2f}'.format(invoice_line.discount)
 			invoice_lines[count]['AllowanceChargeAmount'] = '{:.2f}'.format(disc_amount)
 			invoice_lines[count]['AllowanceChargeBaseAmount'] = '{:.2f}'.format(total_wo_disc)

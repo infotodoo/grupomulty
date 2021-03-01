@@ -217,7 +217,7 @@ ajuste que se da mediante un Nota Débito>
                     </cac:Party>
 				</cac:ShareholderParty-->
 			</cac:PartyLegalEntity>
-		<!--TODO: opcional, Grupo de detalles con información de contacto del consorcio>-->
+		<!--TODO: opcional, Grupo de detalles con información de contacto del consorcio-->
 			{% if AccountingSupplierParty.Telephone or AccountingSupplierParty.Telefax or AccountingSupplierParty.ElectronicMail %}
 			<cac:Contact>
 			<!--TODO 3.0: opcional, de momento se manda  info de la empresa sin nombre de contacto>
@@ -501,15 +501,17 @@ ajuste que se da mediante un Nota Débito>
 	servicios AIU por concepto de:” El contribuyente debe incluir el objeto del contrato facturado-->
 		<cbc:Note>Información Adicional: Texto libre para añadir información adicional al artículo.</cbc:Note>
 	<!--TODO: unitCode debe ser dinamico-->
-		<cbc:InvoicedQuantity unitCode="EA">{{InvoiceLine.Quantity}}</cbc:InvoicedQuantity>
+		<cbc:InvoicedQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
-	<!--TODO, Obligatorio de informar si se trata de muestras comerciales.>
+	<!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
+	{% if InvoiceLine.LineExtensionAmount == 0.0 %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">100.00</cbc:PriceAmount>
-				<cbc:PriceTypeCode>03</cbc:PriceTypeCode>
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PricingReference}}</cbc:PriceAmount>
+				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
-		</cac:PricingReference-->
+		</cac:PricingReference>
+	{% endif %}
 	<!--TODO, pueden ser mas descuentos? es obligatorio?, informacion completa?
 	puede iterar en el campo ID aumenta segun la cantidad de descuentos o cargos por lineas-->
 		<cac:AllowanceCharge>
@@ -608,7 +610,7 @@ ajuste que se da mediante un Nota Débito>
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>
-			<cbc:BaseQuantity unitCode="EA">{{InvoiceLine.Quantity}}</cbc:BaseQuantity>
+			<cbc:BaseQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:BaseQuantity>
 		</cac:Price>
 	</cac:InvoiceLine>
 	{% endfor -%}

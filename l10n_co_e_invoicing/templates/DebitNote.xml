@@ -546,11 +546,12 @@
         <cbc:Note>Información Adicional: Texto libre para añadir información adicional al artículo.</cbc:Note-->
 		<cbc:DebitedQuantity unitCode="{{DebitNoteLine.unitCode}}">{{DebitNoteLine.Quantity}}</cbc:DebitedQuantity>
         <cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{DebitNoteLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
-		{% if DebitNoteLine.LineExtensionAmount == 0 -%}
+		<!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
+		{% if DebitNoteLine.LineExtensionAmount == 0.0 %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{DebitNoteLine.PriceAmount}}</cbc:PriceAmount>
-				<cbc:PriceTypeCode>01</cbc:PriceTypeCode>
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{DebitNoteLine.PricingReference}}</cbc:PriceAmount>
+				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
 		{% endif %}
