@@ -504,7 +504,7 @@ Especifación de este grupo igual a la del documento Invoice>
 		<cbc:CreditedQuantity unitCode="{{CreditNoteLine.unitCode}}">{{CreditNoteLine.Quantity}}</cbc:CreditedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
     <!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
-	{% if InvoiceLine.LineExtensionAmount == 0.0 %}
+	{% if InvoiceLine.LineExtensionAmount == 0 %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
 				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.PricingReference}}</cbc:PriceAmount>

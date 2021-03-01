@@ -504,7 +504,7 @@ ajuste que se da mediante un Nota Débito>
 		<cbc:InvoicedQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
 	<!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
-	{% if InvoiceLine.LineExtensionAmount == 0.0 %}
+	{% if InvoiceLine.LineExtensionAmount == 0 %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
 				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PricingReference}}</cbc:PriceAmount>
