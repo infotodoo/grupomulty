@@ -507,7 +507,7 @@ Especifación de este grupo igual a la del documento Invoice>
 	{% if InvoiceLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.PricingReference}}</cbc:PriceAmount>
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PriceAmount> <!-- {{CreditNoteLine.PricingReference}} -->
 				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>

@@ -507,7 +507,7 @@ ajuste que se da mediante un Nota Débito>
 	{% if InvoiceLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PricingReference}}</cbc:PriceAmount>
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PriceAmount> <!-- {{InvoiceLine.PricingReference}} -->
 				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
