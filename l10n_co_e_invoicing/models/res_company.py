@@ -11,6 +11,8 @@ from odoo.exceptions import ValidationError
 from requests import post, exceptions
 from lxml import etree
 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 class ResCompany(models.Model):
@@ -20,11 +22,8 @@ class ResCompany(models.Model):
     out_invoice_sent = fields.Integer(string='out_invoice Sent')
     out_refund_sent = fields.Integer(string='out_refund Sent')
     in_refund_sent = fields.Integer(string='in_refund Sent')
-    profile_execution_id = fields.Selection(
-        [('1', 'Production'), ('2', 'Test')],
-        'Destination Environment of Document',
-        default='2',
-        required=True)
+    profile_execution_id = fields.Selection([('1', 'Production'),
+                                             ('2', 'Test')], 'Destination Environment of Document', default='2', required=True)
     test_set_id = fields.Char(string='Test Set Id')
     software_id = fields.Char(string='Software Id')
     software_pin = fields.Char(string='Software PIN')
@@ -60,7 +59,8 @@ class ResCompany(models.Model):
 
     def write(self, vals):
         rec = super(ResCompany, self).write(vals)
-        get_pkcs12(self.certificate_file, self.certificate_password)
+        if self.certificate_file and self.certificate_password:
+            get_pkcs12(self.certificate_file, self.certificate_password)
 
         return rec
 

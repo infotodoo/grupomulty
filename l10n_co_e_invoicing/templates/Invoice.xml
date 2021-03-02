@@ -116,12 +116,15 @@ ajuste que se da mediante un Nota Débito>
 		<cbc:ID>12314129 GR</cbc:ID>
         <cbc:IssueDate>2019-12-12</cbc:IssueDate>
 	</cac:ReceiptDocumentReference-->
-<!--TODO: Obligatorio para InvoiceTypeCode = 03 (Contingencia)>
+<!--TODO: Obligatorio para InvoiceTypeCode = 03 (Contingencia)>-->
+	{% if InvoiceTypeCode == '03' %}
 	<cac:AdditionalDocumentReference>
-		<cbc:ID>12314129 GR</cbc:ID>
-        <cbc:IssueDate>2019-12-12</cbc:IssueDate>
-        <cbc:DocumentTypeCode>14.1.4 del anexo tecnico version 1.8</cbc:DocumentTypeCode>
-	</cac:AdditionalDocumentReference-->
+		<cbc:ID>{{ID}}</cbc:ID>
+        <cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
+        <cbc:DocumentTypeCode>FTC</cbc:DocumentTypeCode>
+	</cac:AdditionalDocumentReference>
+	{% endif %} 
+	<!--EL EMISOR-->
 	<cac:AccountingSupplierParty>
 		<cbc:AdditionalAccountID>{{AccountingSupplierParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
@@ -237,12 +240,13 @@ ajuste que se da mediante un Nota Débito>
 			{% endif %}
 		</cac:Party>
 	</cac:AccountingSupplierParty>
+	<!--EL RECEPTOR-->
 	<cac:AccountingCustomerParty>
 		<cbc:AdditionalAccountID>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
 			<cac:PartyIdentification>
-                <cbc:ID schemeName="{{AccountingCustomerParty.IDschemeName}}"
-                    schemeID="{{AccountingCustomerParty.IDschemeID}}">{{AccountingCustomerParty.CompanyID}}</cbc:ID>
+                <cbc:ID {% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
+				 	schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:ID>
             </cac:PartyIdentification>
 			<cac:PartyName>
 				<cbc:Name>{{AccountingCustomerParty.Name}}</cbc:Name>
@@ -268,7 +272,7 @@ ajuste que se da mediante un Nota Débito>
 				<cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
 				<cbc:CompanyID schemeAgencyID="195"
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"
+					{% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
 					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
 			<!--TODO, listName el anexo dice que eliminar o valor No aplica-->
 				<cbc:TaxLevelCode listName="{{AccountingCustomerParty.listName}}">{{AccountingCustomerParty.TaxLevelCode}}</cbc:TaxLevelCode>
@@ -296,7 +300,7 @@ ajuste que se da mediante un Nota Débito>
 				<cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
 				<cbc:CompanyID schemeAgencyID="195"
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"
+					{% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
 					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
 				<cac:CorporateRegistrationScheme>
 					<cbc:Name>{{AccountingCustomerParty.CorporateRegistrationSchemeName}}</cbc:Name>
@@ -379,16 +383,18 @@ ajuste que se da mediante un Nota Débito>
 <!--TODO, falta definir que modulo del icoterms se elige-->
 	<cac:DeliveryTerms>
 		<cbc:SpecialTerms>Portes Pagados</cbc:SpecialTerms>
-		<cbc:LossRiskResponsibilityCode>CFR</cbc:LossRiskResponsibilityCode>
-		<cbc:LossRisk>Costo y Flete</cbc:LossRisk>
+		<cbc:LossRiskResponsibilityCode>{{DeliveryTerms.LossRiskResponsibilityCode}}</cbc:LossRiskResponsibilityCode>
+		<cbc:LossRisk>{{DeliveryTerms.LossRisk}}</cbc:LossRisk>
 	</cac:DeliveryTerms>
 <!--TODO, modulo payment means incompleto-->
+	<!--VENCIMIENTO-->
 	<cac:PaymentMeans>
 		<cbc:ID>{{PaymentMeansID}}</cbc:ID>
 		<cbc:PaymentMeansCode>{{PaymentMeansCode}}</cbc:PaymentMeansCode>
 		<cbc:PaymentDueDate>{{PaymentDueDate}}</cbc:PaymentDueDate>
 		<!--<cbc:PaymentID>{{PaymentID}}</cbc:PaymentID>-->
 	</cac:PaymentMeans>
+	<!--CONDICIONES DE PAGO -->
 <!--TODO: Grupo de campos para informaciónrelacionadas con un anticipo -->
 	<!--cac:PrepaidPayment>
 		<cbc:ID>SFR3123856</cbc:ID>
@@ -440,6 +446,8 @@ ajuste que se da mediante un Nota Débito>
 		<cbc:CalculationRate>3100</cbc:CalculationRate>
 		<cbc:Date>2019-06-21</cbc:Date>
 	</cac:PaymentAlternativeExchangeRate-->
+
+	<!--IMPUESTOS Y/O RETENCIONES-->
 	{% for TaxTotalID, TaxTotal in TaxesTotal.items() -%}
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -499,7 +507,7 @@ ajuste que se da mediante un Nota Débito>
 	<!--TODO: Obligatorio de informar para el caso de facturas por contratos de servicio tipo AIU.
 	Para el ítem Adminsitración. En este caso la cbc:Note debe empezar por el texto: “Contrato de
 	servicios AIU por concepto de:” El contribuyente debe incluir el objeto del contrato facturado-->
-		<cbc:Note>Información Adicional: Texto libre para añadir información adicional al artículo.</cbc:Note>
+		<cbc:Note>{{InvoiceLine.Note}}</cbc:Note>
 	<!--TODO: unitCode debe ser dinamico-->
 		<cbc:InvoicedQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
@@ -507,7 +515,7 @@ ajuste que se da mediante un Nota Débito>
 	{% if InvoiceLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PriceAmount> <!-- {{InvoiceLine.PricingReference}} -->
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PricingReference}}</cbc:PriceAmount>
 				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
@@ -523,6 +531,7 @@ ajuste que se da mediante un Nota Débito>
 			<cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeBaseAmount}}</cbc:BaseAmount>
 		</cac:AllowanceCharge>
 	<!--TODO, revisar que impuestos se deben y no informar?-->
+	<!--IMPUESTOS Y/O RETENCIONES-->
 		{% for TaxTotalID, TaxTotal in InvoiceLine.TaxesTotal.items() -%}
 		<cac:TaxTotal>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -567,21 +576,20 @@ ajuste que se da mediante un Nota Débito>
 			<cbc:Description>{{InvoiceLine.ItemDescription}}</cbc:Description>
 		<!--TODO, Cantidad de unidad de este artículo por empaque>
 			<cbc:PackSizeNumeric>{{InvoiceLine.PackSizeNumeric}}</cbc:PackSizeNumeric-->
-		<!--TODO, Marca: Marca del artículo>
-			<cbc:BrandName>{{InvoiceLine.BrandName}}</cbc:BrandName-->
-		<!--TODO, Modelo: Modelo del artículo>
-			<cbc:ModelName>{{InvoiceLine.BrandName}}</cbc:ModelName-->
+		<!--TODO, Marca: Marca del artículo-->
+			<cbc:BrandName>{{InvoiceLine.BrandName}}</cbc:BrandName>
+		<!--TODO, Modelo: Modelo del artículo-->
+			<cbc:ModelName>{{InvoiceLine.ModelName}}</cbc:ModelName>
 		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con el vendedor-->
 			<cac:SellersItemIdentification>
-				<cbc:ID>AOHV84-225</cbc:ID>
-				<cbc:ExtendedID>AOHV84-225</cbc:ExtendedID>
+				<cbc:ID>{{InvoiceLine.SellersItemIdentification}}</cbc:ID>
+				<cbc:ExtendedID></cbc:ExtendedID>
 			</cac:SellersItemIdentification>
 		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con un estándar-->
 			<cac:StandardItemIdentification>
-				<cbc:ID schemeID="999"
-					schemeName="EAN13"
-					schemeAgencyID=""
-					schemeAgencyName="">AOHV84-225</cbc:ID>
+				<cbc:ID schemeID="{{InvoiceLine.StandardschemeID}}"
+					schemeName="{{InvoiceLine.StandardschemeName}}"
+					{% if InvoiceLine.StandardschemeAgencyID %}schemeAgencyID="{{InvoiceLine.StandardschemeAgencyID}}"{% endif %}>{{InvoiceLine.StandardItemIdentification}}</cbc:ID>
 			</cac:StandardItemIdentification>
 		<!--TODO, opcional, Grupo de información para adicionar información específica del ítem que puede
 		ser solicitada por autoridades o entidades diferentes a la DIAN>
@@ -590,23 +598,25 @@ ajuste que se da mediante un Nota Débito>
 				<cbc:Value></cbc:Value>
 			</cac:AdditionalItemProperty-->
 		<!--TODO, Grupo de información que describen el Mandante de la operación de venta. Aplica
-		solo para mandatos, y se debe informar a nivel de ítem>
+		solo para mandatos, y se debe informar a nivel de ítem-->
+		{% if CustomizationID == '11' %}
 			<cac:InformationContentProviderParty>
 				<cac:PowerOfAttorney>
 					<cac:AgentParty>
 						<cac:PartyIdentification>
 							<cbc:ID schemeAgencyID="195"
 								schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-								schemeID="{{TaxRepresentativeParty.IDschemeID}}"
-								schemeName="{{TaxRepresentativeParty.IDschemeName}}">{{TaxRepresentativeParty.ID}}</cbc:ID>
+								schemeID="{{InformationContentProviderParty.IDschemeID}}"
+								schemeName="{{InformationContentProviderParty.IDschemeName}}">{{InformationContentProviderParty.ID}}</cbc:ID>
 						</cac:PartyIdentification>
 					</cac:AgentParty>
 				</cac:PowerOfAttorney>
-			</cac:InformationContentProviderParty-->
+			</cac:InformationContentProviderParty>
+		{% endif %}
 		<!--TODO, borrar no aparece en el anexo tecnico, pero la factura de la dian si recibe este valor-->
-			<cac:AdditionalItemIdentification>
+			<!-- <cac:AdditionalItemIdentification>
 				<cbc:ID schemeID="999" schemeName="EAN13">6543542313534</cbc:ID>
-			</cac:AdditionalItemIdentification>
+			</cac:AdditionalItemIdentification> -->
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>

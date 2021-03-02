@@ -7,9 +7,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='journal_id']" position="before">
                     <field name="payment_mean_id" options="{'no_create': True}" 
-                        attrs="{'required': [('type','in',('out_invoice', 'out_refund'))]}"/>
+                        attrs="{'required': [('type','in',('out_invoice', 'out_refund'))],
+                                'readonly': [('state', '!=', 'draft')]}"/>
                     <field name="payment_mean_code_id" options="{'no_create': True}" 
-                        attrs="{'invisible': [('type', '!=', 'out_invoice')],'!required': [('type', '!=', 'out_invoice')]}"/>
+                        attrs="{'invisible': [('type', '!=', 'out_invoice')],
+                                '!required': [('type', '!=', 'out_invoice')],
+                                'readonly': [('state', '!=', 'draft')]}"/>
                 </xpath>
             </field>
         </record>

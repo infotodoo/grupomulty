@@ -26,3 +26,6 @@ class ProductTemplate(models.Model):
         comodel_name='product.scheme',
         string='Product Scheme',
         default=_default_product_scheme)
+    product_scheme_code = fields.Char(string='Standard code')
+    brand_name = fields.Char(string='Brand name')
+    model_name = fields.Char(string='Model name')

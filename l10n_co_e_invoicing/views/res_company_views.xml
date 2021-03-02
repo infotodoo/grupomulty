@@ -17,7 +17,7 @@
                             <field name="software_id" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
                             <field name="software_pin" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
                             <field name="certificate_filename" invisible="1"/>
-                            <field name="certificate_file" widget="binary"  filename="certificate_filename" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
+                            <field name="certificate_file" widget="binary" filename="certificate_filename" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
                             <field name="certificate_password" attrs="{'required': [('einvoicing_enabled', '=', True)]}"/>
                             <field name="files_path"/>
                             <field name="einvoicing_email"/>
@@ -32,7 +32,7 @@
                                     <field name="email"/>
                                 </tree>
                             </field>
-                            <field name="tributary_information" widget="html"/>
+                            <field name="tributary_information"/>
                             <label for="get_numbering_range_response"/>
                             <div>
                                 <button name="action_GetNumberingRange" string="GetNumberingRange" type="object" class="oe_stat_button" icon="fa-check"/>

@@ -20,6 +20,32 @@ class AccountJournal(models.Model):
         help="This field contains the information related to the numbering of the debit note "
              "entries of this journal.",
         copy=False)
+    debit_note_sequence_number_next = fields.Integer(string='Debit Notes Next Number',
+        help='The next sequence number will be used for the next Debit note.',
+        compute='_compute_debit_seq_number_next',
+        inverse='_inverse_debit_seq_number_next')
+    
+    # do not depend on 'refund_sequence_id.date_range_ids', because
+    # refund_sequence_id._get_current_sequence() may invalidate it!
+    @api.depends('debit_note_sequence_id.use_date_range', 'debit_note_sequence_id.number_next_actual')
+    def _compute_debit_seq_number_next(self):
+        '''Compute 'sequence_number_next' according to the current sequence in use,
+        an ir.sequence or an ir.sequence.date_range.
+        '''
+        for journal in self:
+            if journal.debit_note_sequence_id and journal.debit_note_sequence:
+                sequence = journal.debit_note_sequence_id._get_current_sequence()
+                journal.debit_note_sequence_number_next = sequence.number_next_actual
+            else:
+                journal.debit_note_sequence_number_next = 1
+
+    def _inverse_debit_seq_number_next(self):
+        '''Inverse 'debit_note_sequence_number_next' to edit the current sequence next number.
+        '''
+        for journal in self:
+            if journal.debit_note_sequence_id and journal.debit_note_sequence and journal.debit_note_sequence_number_next:
+                sequence = journal.debit_note_sequence_id._get_current_sequence()
+                sequence.sudo().number_next = journal.debit_note_sequence_number_next
 
     def write(self, vals):
         if vals.get('refund_sequence'):

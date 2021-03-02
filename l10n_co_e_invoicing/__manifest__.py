@@ -9,8 +9,8 @@
     "version": "10.0.1.0.0",
     "author": "EXA Auto Parts Github@exaap, "
               "Diego Carvajal Github@diegoivanc"
-              "Joan Marín Github@joanmarin",
-              "Bernardo D. Lara Guevara bl@todoo.co"
+              "Joan Marín Github@joanmarin"
+              "Bernardo D. Lara bl@todoo.co",
     "website": "http://www.exaap.com",
     "license": "AGPL-3",
     "summary": "Colombian E-Invoicing",

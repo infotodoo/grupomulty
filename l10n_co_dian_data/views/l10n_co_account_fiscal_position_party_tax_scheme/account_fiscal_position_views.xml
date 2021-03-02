@@ -8,6 +8,7 @@
                 <xpath expr="//field[@name='active']" position="after">
                     <field name="tax_level_code_id"
                         options="{'no_create': True}"
+                        widget="many2many_tags"
                         required='1'/>
                     <field name="tax_scheme_id"
                         options="{'no_create': True}"

@@ -108,6 +108,7 @@ Especifación de este grupo igual a la del documento Invoice>
         <cbc:IssueDate>2019-12-12</cbc:IssueDate>
         <cbc:DocumentTypeCode>14.1.4 del anexo tecnico version 1.8</cbc:DocumentTypeCode>
 	</cac:AdditionalDocumentReference-->
+	<!--EL EMISOR-->
 	<cac:AccountingSupplierParty>
 		<cbc:AdditionalAccountID>{{AccountingSupplierParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
@@ -153,7 +154,7 @@ Especifación de este grupo igual a la del documento Invoice>
 					<cac:Country>
 						<cbc:IdentificationCode>{{AccountingSupplierParty.CountryIdentificationCode}}</cbc:IdentificationCode>
 					<!--TODO: languageID podria variar-->
-                        <cbc:Name languageID="es">{{AccountingCustomerParty.CountryName}}</cbc:Name>
+                        <cbc:Name languageID="es">{{AccountingSupplierParty.CountryName}}</cbc:Name>
 					</cac:Country>
 				</cac:RegistrationAddress>
 				<cac:TaxScheme>
@@ -173,6 +174,7 @@ Especifación de este grupo igual a la del documento Invoice>
                 <!--TODO: ideal desarrollar un modulo solo para esto registry partner-->
 					<cbc:Name>{{AccountingSupplierParty.CorporateRegistrationSchemeName}}</cbc:Name>
 				</cac:CorporateRegistrationScheme>
+			<!-- X? CONSORCIOS -->
             <!--Si se va a opera bajo modalidad de Consorcio, entonces este grupo de información debe ser informada.
             De debe completar un grupo de elementos por cada participante del consorcio.>
                 <cac:ShareholderParty>
@@ -194,11 +196,10 @@ Especifación de este grupo igual a la del documento Invoice>
                     </cac:Party>
 				</cac:ShareholderParty-->
 			</cac:PartyLegalEntity>
-        <!--TODO: opcional, Grupo de detalles con información de contacto del consorcio-->
+        <!-- TODO: opcional, Grupo de detalles con información de contacto del consorcio -->
 			{% if AccountingSupplierParty.Telephone or AccountingSupplierParty.Telefax or AccountingSupplierParty.ElectronicMail %}
 			<cac:Contact>
-			<!--TODO 3.0: opcional, de momento se manda  info de la empresa sin nombre de contacto>
-				<cbc:Name>Diana Cruz</cbc:Name-->
+			<!--<cbc:Name>Diana Cruz</cbc:Name-->
 				{% if AccountingSupplierParty.Telephone %}
 				<cbc:Telephone>{{AccountingSupplierParty.Telephone}}</cbc:Telephone>
 				{% endif %}
@@ -208,18 +209,18 @@ Especifación de este grupo igual a la del documento Invoice>
 				{% if AccountingSupplierParty.ElectronicMail %}
 				<cbc:ElectronicMail>{{AccountingSupplierParty.ElectronicMail}}</cbc:ElectronicMail>
 				{% endif %}
-			<!--TODO 2.0: opcional, de momento se manda info de la empresa no se sabe que mandar aca de momento>
-                <cbc:Note></cbc:Note-->
+                <!-- <cbc:Note></cbc:Note> -->
 			</cac:Contact>
 			{% endif %}
 		</cac:Party>
 	</cac:AccountingSupplierParty>
+	<!--EL RECEPTOR-->
 	<cac:AccountingCustomerParty>
 		<cbc:AdditionalAccountID>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
             <cac:PartyIdentification>
-                <cbc:ID schemeName="{{AccountingCustomerParty.IDschemeName}}"
-                    schemeID="{{AccountingCustomerParty.IDschemeID}}">{{AccountingCustomerParty.CompanyID}}</cbc:ID>
+                <cbc:ID {% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
+					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:ID>
             </cac:PartyIdentification>
 			<cac:PartyName>
 				<cbc:Name>{{AccountingCustomerParty.Name}}</cbc:Name>
@@ -245,7 +246,7 @@ Especifación de este grupo igual a la del documento Invoice>
 				<cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
 				<cbc:CompanyID schemeAgencyID="195"
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"
+					{% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
 					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
 				<!--TODO, listName el anexo dice que eliminar o valor No aplica-->
 				<cbc:TaxLevelCode listName="{{AccountingCustomerParty.listName}}">{{AccountingCustomerParty.TaxLevelCode}}</cbc:TaxLevelCode>
@@ -269,20 +270,21 @@ Especifación de este grupo igual a la del documento Invoice>
 					<cbc:Name>{{AccountingCustomerParty.TaxSchemeName}}</cbc:Name>
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
+			<!-- MULTIPLES ADQUIRIENTES -->
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
 				<cbc:CompanyID schemeAgencyID="195"
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"
+					{% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
 					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
 				<cac:CorporateRegistrationScheme>
 					<cbc:Name>{{AccountingCustomerParty.CorporateRegistrationSchemeName}}</cbc:Name>
 				</cac:CorporateRegistrationScheme>
 			</cac:PartyLegalEntity>
-		<!--TODO: opcional, Grupo de detalles con información de contacto del receptor>-->
+		<!-- TODO: opcional, Grupo de detalles con información de contacto del receptor> -->
 			{% if AccountingCustomerParty.CompanyID != '2222222222' and (AccountingCustomerParty.Telephone or AccountingCustomerParty.Telefax or AccountingCustomerParty.ElectronicMail) %}
 			<cac:Contact>
-			<!--TODO 2.0: opcional, de momento se manda  info de la empresa sin nombre de contacto>-->
+				<!-- <cbc:Name>{{ReceiverName}}</cbc:Name> -->
 				{% if AccountingCustomerParty.Telephone %}
 				<cbc:Telephone>{{AccountingCustomerParty.Telephone}}</cbc:Telephone>
 				{% endif %}
@@ -292,8 +294,7 @@ Especifación de este grupo igual a la del documento Invoice>
 				{% if AccountingCustomerParty.ElectronicMail %}
 				<cbc:ElectronicMail>{{AccountingCustomerParty.ElectronicMail}}</cbc:ElectronicMail>
 				{% endif %}
-			<!--TODO 2.0: opcional, de momento se manda info de la empresa no se sabe que mandar aca de momento>
-				<cbc:Note></cbc:Note-->
+			<!--<cbc:Note></cbc:Note-->
 			</cac:Contact>
 			{% endif %}
         <!-- TODO: Para informarse si AdditionalAccountID = 2  -->
@@ -331,23 +332,27 @@ Especifación de este grupo igual a la del documento Invoice>
 		<!--cbc:ActualDeliveryDate>11001</cbc:ActualDeliveryDate>
 		<cbc:ActualDeliveryTime>Bogotá, D.c. </cbc:ActualDeliveryTime-->
 	<!--TODO, direccion de entrega-->
+		{% if AccountingCustomerParty.CompanyID != '2222222222' %}
 		<cac:DeliveryAddress>
-			<cbc:ID>11001</cbc:ID>
-			<cbc:CityName>Bogotá, D.c. </cbc:CityName>
-			<cbc:PostalZone>Bogotá, D.c. </cbc:PostalZone>
-			<cbc:CountrySubentity>Bogotá, D.c. 11</cbc:CountrySubentity>
-			<cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
+			<cbc:ID>{{Delivery.AddressID}}</cbc:ID>
+			<cbc:CityName>{{Delivery.AddressCityName}}</cbc:CityName>
+			{% if Delivery.AddressPostalZone %}
+			<cbc:PostalZone>{{Delivery.AddressPostalZone}}</cbc:PostalZone>
+			{% endif %}
+			<cbc:CountrySubentity>{{Delivery.AddressCountrySubentity}}</cbc:CountrySubentity>
+			<cbc:CountrySubentityCode>{{Delivery.AddressCountrySubentityCode}}</cbc:CountrySubentityCode>
 			<cac:AddressLine>
-				<cbc:Line>CARRERA 8 No 20-14/40</cbc:Line>
+				<cbc:Line>{{Delivery.AddressLine}}</cbc:Line>
 			</cac:AddressLine>
 			<cac:Country>
-				<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+				<cbc:IdentificationCode>{{Delivery.CountryIdentificationCode}}</cbc:IdentificationCode>
 			<!--TODO: languageID podria variar-->
-				<cbc:Name languageID="es">Colombia</cbc:Name>
+				<cbc:Name languageID="es">{{Delivery.CountryName}}</cbc:Name>
 			</cac:Country>
 		</cac:DeliveryAddress>
+		{% endif %}
 	<!--TODO, podria ser un fragmento no necesario siempre-->
-		<cac:DeliveryParty>
+		<!--<cac:DeliveryParty>
 			<cac:PartyName>
 				<cbc:Name>Empresa de transporte</cbc:Name>
 			</cac:PartyName>
@@ -363,7 +368,7 @@ Especifación de este grupo igual a la del documento Invoice>
 					</cac:AddressLine>
 					<cac:Country>
 						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
+					TODO: languageID podria variar
 						<cbc:Name languageID="es">Colombia</cbc:Name>
 					</cac:Country>
 				</cac:Address>
@@ -386,7 +391,7 @@ Especifación de este grupo igual a la del documento Invoice>
 					</cac:AddressLine>
 					<cac:Country>
 						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
+					TODO: languageID podria variar
 						<cbc:Name languageID="es">Colombia</cbc:Name>
 					</cac:Country>
 				</cac:RegistrationAddress>
@@ -412,16 +417,16 @@ Especifación de este grupo igual a la del documento Invoice>
 				<cbc:ElectronicMail>eric.vanboxsom@gosocket.net</cbc:ElectronicMail>
 				<cbc:Note>Test descripcion contacto</cbc:Note>
 			</cac:Contact>
-		</cac:DeliveryParty>
+		</cac:DeliveryParty>-->
 	</cac:Delivery>
 <!--TODO, falta definir que modulo del icoterms se elige-->
 	<cac:DeliveryTerms>
 		<cbc:SpecialTerms>Portes Pagados</cbc:SpecialTerms>
-		<cbc:LossRiskResponsibilityCode>CFR</cbc:LossRiskResponsibilityCode>
-		<cbc:LossRisk>Costo y Flete</cbc:LossRisk>
+		<cbc:LossRiskResponsibilityCode>{{DeliveryTerms.LossRiskResponsibilityCode}}</cbc:LossRiskResponsibilityCode>
+		<cbc:LossRisk>{{DeliveryTerms.LossRisk}}</cbc:LossRisk>
 	</cac:DeliveryTerms>
 <!--TODO, modulo payment means incompleto-->
-
+	<!--VENCIMIENTO-->
 	<cac:PaymentMeans>
 		<cbc:ID>{{PaymentMeansID}}</cbc:ID>
 		<cbc:PaymentMeansCode>{{PaymentMeansCode}}</cbc:PaymentMeansCode>
@@ -462,6 +467,7 @@ Especifación de este grupo igual a la del documento Invoice>
 		<cbc:Amount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:Amount>
 		<cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:BaseAmount>
 	</cac:AllowanceCharge-->
+	<!--IMPUESTOS Y/O RETENCIONES-->
 	{% for TaxTotalID, TaxTotal in TaxesTotal.items() -%}
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -484,6 +490,7 @@ Especifación de este grupo igual a la del documento Invoice>
 		{% endfor -%}
 	</cac:TaxTotal>
 	{% endfor -%}
+	<!-- Retenciones no van en Nota Credito -->
 	<cac:LegalMonetaryTotal>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{LineExtensionAmount}}</cbc:LineExtensionAmount>
 		<cbc:TaxExclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxExclusiveAmount}}</cbc:TaxExclusiveAmount>
@@ -499,19 +506,20 @@ Especifación de este grupo igual a la del documento Invoice>
     <!--TODO: Obligatorio de informar para el caso de facturas por contratos de servicio tipo AIU.
 	Para el ítem Adminsitración. En este caso la cbc:Note debe empezar por el texto: “Contrato de
 	servicios AIU por concepto de:” El contribuyente debe incluir el objeto del contrato facturado-->
-        <cbc:Note>Información Adicional: Texto libre para añadir información adicional al artículo.</cbc:Note>
+        <cbc:Note>{{CreditNoteLine.Note}}</cbc:Note>
     <!--TODO: unitCode debe ser dinamico-->
 		<cbc:CreditedQuantity unitCode="{{CreditNoteLine.unitCode}}">{{CreditNoteLine.Quantity}}</cbc:CreditedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
-    <!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
-	{% if InvoiceLine.LineExtensionAmount == '0.00' %}
+    <!-- TODO, Obligatorio de informar si se trata de muestras comerciales. -->
+	{% if CreditNoteLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PriceAmount> <!-- {{CreditNoteLine.PricingReference}} -->
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.PricingReference}}</cbc:PriceAmount>
 				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
 	{% endif %}
+		<!--IMPUESTOS Y/O RETENCIONES-->
         {% for TaxTotalID, TaxTotal in CreditNoteLine.TaxesTotal.items() -%}
 		<cac:TaxTotal>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -548,21 +556,20 @@ Especifación de este grupo igual a la del documento Invoice>
 		    <cbc:Description>{{CreditNoteLine.ItemDescription}}</cbc:Description>
 		<!--TODO, Cantidad de unidad de este artículo por empaque>
 			<cbc:PackSizeNumeric>{{CreditNoteLine.PackSizeNumeric}}</cbc:PackSizeNumeric-->
-		<!--TODO, Marca: Marca del artículo>
-			<cbc:BrandName>{{CreditNoteLine.BrandName}}</cbc:BrandName-->
-		<!--TODO, Modelo: Modelo del artículo>
-			<cbc:ModelName>{{CreditNoteLine.BrandName}}</cbc:ModelName-->
+		<!--TODO, Marca: Marca del artículo-->
+			<cbc:BrandName>{{CreditNoteLine.BrandName}}</cbc:BrandName>
+		<!--TODO, Modelo: Modelo del artículo-->
+			<cbc:ModelName>{{CreditNoteLine.ModelName}}</cbc:ModelName>
 		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con el vendedor-->
 			<cac:SellersItemIdentification>
-				<cbc:ID>AOHV84-225</cbc:ID>
-				<cbc:ExtendedID>AOHV84-225</cbc:ExtendedID>
+				<cbc:ID>{{CreditNoteLine.SellersItemIdentification}}</cbc:ID>
+				<cbc:ExtendedID></cbc:ExtendedID>
 			</cac:SellersItemIdentification>
 		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con un estándar-->
 			<cac:StandardItemIdentification>
-				<cbc:ID schemeID="999"
-					schemeName="EAN13"
-					schemeAgencyID=""
-					schemeAgencyName="">AOHV84-225</cbc:ID>
+				<cbc:ID schemeID="{{CreditNoteLine.StandardschemeID}}"
+					schemeName="{{CreditNoteLine.StandardschemeName}}"
+					{% if CreditNoteLine.StandardschemeAgencyID %}schemeAgencyID="{{CreditNoteLine.StandardschemeAgencyID}}"{% endif %}>{{CreditNoteLine.StandardItemIdentification}}</cbc:ID>
 			</cac:StandardItemIdentification>
 		<!--TODO, opcional, Grupo de información para adicionar información específica del ítem que puede
 		ser solicitada por autoridades o entidades diferentes a la DIAN>
@@ -571,23 +578,25 @@ Especifación de este grupo igual a la del documento Invoice>
 				<cbc:Value></cbc:Value>
 			</cac:AdditionalItemProperty-->
 		<!--TODO, Grupo de información que describen el Mandante de la operación de venta. Aplica
-		solo para mandatos, y se debe informar a nivel de ítem>
+		solo para mandatos, y se debe informar a nivel de ítem>-->
+		{% if BillingReference.CustomizationID == '11' %}
 			<cac:InformationContentProviderParty>
 				<cac:PowerOfAttorney>
 					<cac:AgentParty>
 						<cac:PartyIdentification>
 							<cbc:ID schemeAgencyID="195"
 								schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-								schemeID="{{TaxRepresentativeParty.IDschemeID}}"
-								schemeName="{{TaxRepresentativeParty.IDschemeName}}">{{TaxRepresentativeParty.ID}}</cbc:ID>
+								schemeID="{{InformationContentProviderParty.IDschemeID}}"
+								schemeName="{{InformationContentProviderParty.IDschemeName}}">{{InformationContentProviderParty.ID}}</cbc:ID>
 						</cac:PartyIdentification>
 					</cac:AgentParty>
 				</cac:PowerOfAttorney>
-			</cac:InformationContentProviderParty-->
+			</cac:InformationContentProviderParty>
+		{% endif %}
 		<!--TODO, borrar no aparece en el anexo tecnico, pero la factura de la dian si recibe este valor-->
-			<cac:AdditionalItemIdentification>
+			<!-- <cac:AdditionalItemIdentification>
 				<cbc:ID schemeID="999" schemeName="EAN13">6543542313534</cbc:ID>
-			</cac:AdditionalItemIdentification>
+			</cac:AdditionalItemIdentification> -->
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.PriceAmount}}</cbc:PriceAmount>

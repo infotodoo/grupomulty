@@ -111,6 +111,7 @@
         <cbc:IssueDate>2019-12-12</cbc:IssueDate>
         <cbc:DocumentTypeCode>14.1.4 del anexo tecnico version 1.8</cbc:DocumentTypeCode>
 	</cac:AdditionalDocumentReference-->
+	<!--EL EMISOR-->
 	<cac:AccountingSupplierParty>
 		<cbc:AdditionalAccountID>{{AccountingSupplierParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
@@ -181,6 +182,7 @@
 					<cbc:Name>{{AccountingSupplierParty.CorporateRegistrationSchemeName}}</cbc:Name>
 				</cac:CorporateRegistrationScheme>
 				{% endif %}
+			<!-- X? CONSORCIOS -->
             <!--TODO 3.0 Si se va a opera bajo modalidad de Consorcio, entonces este grupo de información debe ser informada.
             	De debe completar un grupo de elementos por cada participante del consorcio.>
                 <cac:ShareholderParty>
@@ -222,6 +224,7 @@
 			{% endif %}
 		</cac:Party>
 	</cac:AccountingSupplierParty>
+	<!-- RECEPTOR -->
 	<cac:AccountingCustomerParty>
 		<cbc:AdditionalAccountID>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
@@ -289,6 +292,7 @@
 					<cbc:Name>{{AccountingCustomerParty.TaxSchemeName}}</cbc:Name>
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
+			<!-- MULTIPLES ADQUIRIENTES -->
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
 				<cbc:CompanyID schemeAgencyID="195"
@@ -544,13 +548,13 @@
 		Para el ítem Adminsitración. En este caso la cbc:Note debe empezar por el texto: “Contrato de
 		servicios AIU por concepto de:” El contribuyente debe incluir el objeto del contrato facturado>
         <cbc:Note>Información Adicional: Texto libre para añadir información adicional al artículo.</cbc:Note-->
+		<cbc:Note>{{DebitNoteLine.Note}}</cbc:Note>
 		<cbc:DebitedQuantity unitCode="{{DebitNoteLine.unitCode}}">{{DebitNoteLine.Quantity}}</cbc:DebitedQuantity>
         <cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{DebitNoteLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
-		<!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
 		{% if DebitNoteLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PriceAmount> <!--{{DebitNoteLine.PricingReference}} -->
+				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{DebitNoteLine.PricingReference}}</cbc:PriceAmount>
 				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
@@ -616,15 +620,17 @@
 			{% if DebitNoteLine.ModelName %}
 			<cbc:ModelName>{{DebitNoteLine.ModelName}}</cbc:ModelName>
 			{% endif %}
-		<!--TODO 2.0, Grupo de datos de identificación del artículo o servicio de acuerdo con el vendedor>
+		<!--TODO 2.0, Grupo de datos de identificación del artículo o servicio de acuerdo con el vendedor-->
 			<cac:SellersItemIdentification>
-				<cbc:ID>AOHV84-225</cbc:ID>
-				<cbc:ExtendedID>AOHV84-225</cbc:ExtendedID>
-			</cac:SellersItemIdentification-->
+				<cbc:ID>{{DebitNoteLine.SellersItemIdentification}}</cbc:ID>
+				<cbc:ExtendedID></cbc:ExtendedID>
+			</cac:SellersItemIdentification>
 		<!--TODO 2.0, Grupo de datos de identificación del artículo o servicio de acuerdo con un estándar-->
 		<!--OPCIONAL schemeName="Estándar de adopción del contribuyente" schemeAgencyID="" schemeAgencyName=""-->
 			<cac:StandardItemIdentification>
-			<cbc:ID schemeID="999">{{DebitNoteLine.StandardItemIdentification}}</cbc:ID>
+				<cbc:ID schemeID="{{DebitNoteLine.StandardschemeID}}"
+						schemeName="{{DebitNoteLine.StandardschemeName}}"
+						{% if DebitNoteLine.StandardschemeAgencyID %}schemeAgencyID="{{DebitNoteLine.StandardschemeAgencyID}}"{% endif %}>{{DebitNoteLine.StandardItemIdentification}}</cbc:ID>
 			</cac:StandardItemIdentification>
 		<!--TODO 2.0, opcional, Grupo de información para adicionar información específica del ítem que puede
 			ser solicitada por autoridades o entidades diferentes a la DIAN>
@@ -639,8 +645,8 @@
 						<cac:PartyIdentification>
 							<cbc:ID schemeAgencyID="195"
 								schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-								schemeID="{{DebitNoteLine.InformationContentProviderParty.IDschemeID}}"
-								schemeName="{{DebitNoteLine.InformationContentProviderParty.IDschemeName}}">{{DebitNoteLine.InformationContentProviderParty.ID}}</cbc:ID>
+								schemeID="{{InformationContentProviderParty.IDschemeID}}"
+								schemeName="{{InformationContentProviderParty.IDschemeName}}">{{InformationContentProviderParty.ID}}</cbc:ID>
 						</cac:PartyIdentification>
 					</cac:AgentParty>
 				</cac:PowerOfAttorney>

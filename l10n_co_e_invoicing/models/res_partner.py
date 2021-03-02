@@ -3,7 +3,7 @@
 # Copyright 2019 Diego Carvajal <Github@diegoivanc>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, models, _
+from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
 
@@ -21,6 +21,7 @@ class ResPartner(models.Model):
 		msg8 = _("'%s' does not have a fiscal position correctly configured.")
 		msg9 = _("'%s' does not have a fiscal position established.")
 		msg10 = _("E-Invoicing Agent: '%s' does not have a E-Invoicing Email.")
+		msg11 = _("The partner '%s' does not have a Email.")
 		name = self.name
 		zip_code = False
 		identification_document = self.identification_document
@@ -60,9 +61,9 @@ class ResPartner(models.Model):
 
 		if not self.identification_document:
 			raise UserError(msg7 % self.name)
-
-
-
+		
+		if not self.email:
+			raise UserError(msg11 % self.name)
 
 		if self.property_account_position_id:
 			if (not self.property_account_position_id.tax_level_code_id
@@ -130,13 +131,22 @@ class ResPartner(models.Model):
 			'MiddleName': middle_name,
 			'Telephone': telephone,
 			'Telefax': '',
-			'ElectronicMail': self.email
+			'ElectronicMail': self.email,
 		}
 
 
 	def _get_tax_representative_party_values(self):
+		msg1 = _("'%s' does not have a DIAN document type established.")
+		msg2 = _("'%s' does not have a identification document established.")
+		msg3 = _("'%s' does not have a verification digit established.")
+		if not self.document_type_id:
+			raise UserError(msg1 % self.name)
+		if not self.identification_document:
+			raise UserError(msg2 % self.name)
+		if self.document_type_id.code == '31' and not self.check_digit:
+			raise UserError(msg3 % self.name)
 		return {
-			'IDschemeID': self.check_digit,
+			'IDschemeID': self.check_digit or '',
 			'IDschemeName': self.document_type_id.code,
 			'ID': self.identification_document}
 

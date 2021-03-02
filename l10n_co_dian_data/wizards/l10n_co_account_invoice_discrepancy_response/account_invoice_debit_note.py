@@ -43,11 +43,6 @@ class AccountInvoiceDebitNote(models.TransientModel):
         help='Debit Note base on this type. You can not Modify and Cancel if the invoice is '
              'already reconciled')
     reason = fields.Char(string='Reason')
-
-    @api.onchange('discrepancy_response_code_id')
-    def _onchange_discrepancy_response_code_id(self):
-        if self.discrepancy_response_code_id:
-            self.description = self.discrepancy_response_code_id.name
     
 
     def reverse_moves(self):
@@ -136,7 +131,48 @@ class AccountInvoiceDebitNote(models.TransientModel):
         return True
 
 
-    def invoice_debit_note(self):
+    def invoice_debit_note_original(self):
         data_debit_note = self.read(['filter_debit_note'])[0]['filter_debit_note']
 
         return self.reverse_moves()
+    
+    def invoice_debit_note(self):
+        moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
+
+        moves_vals_list = []
+        for move in moves:
+            default_values = {
+                'ref': _('Reversal of: %s, %s') % (move.name, self.description) if self.description else _('Reversal of: %s') % (move.name),
+                'date': self.date or move.date,
+                'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
+                #'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
+                'invoice_payment_term_id': move.invoice_payment_term_id.id or False,
+                #'auto_post': True if self.date > fields.Date.context_today(self) else False,
+                'refund_type': 'debit',
+                'discrepancy_response_code_id': self.discrepancy_response_code_id.id,
+                'payment_mean_id': move.payment_mean_id.id or False,
+                'debit_origin_id': move.id,
+            }
+
+            moves_vals_list.append(move.copy_data(default_values)[0])
+        new_moves = self.env['account.move'].create(moves_vals_list)
+        for new_move in new_moves:
+            new_move._onchange_invoice_dates()
+            new_move._recompute_dynamic_lines()
+        # Create action.
+        action = {
+            'name': _('Reverse Moves'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+        }
+        if len(new_moves) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': new_moves.id,
+            })
+        else:
+            action.update({
+                'view_mode': 'tree,form',
+                'domain': [('id', 'in', new_moves.ids)],
+            })
+        return action

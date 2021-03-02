@@ -52,12 +52,12 @@ class ResPartner(models.Model):
         for rec in self:
             if not rec.zip_id:
                 continue
-            if rec.zip_id.city_id.state_id != rec.state_id:
+            if rec.state_id and rec.zip_id.city_id.state_id != rec.state_id:
                 raise ValidationError(
                     _("The state of the partner %s differs from that in " "location %s")
                     % (rec.name, rec.zip_id.name)
                 )
-            if rec.zip_id.city_id.country_id != rec.country_id:
+            if rec.country_id and rec.zip_id.city_id.country_id != rec.country_id:
                 raise ValidationError(
                     _(
                         "The country of the partner %s differs from that in "
@@ -65,7 +65,7 @@ class ResPartner(models.Model):
                     )
                     % (rec.name, rec.zip_id.name)
                 )
-            if rec.type != 'contact' and rec.zip_id.city_id != rec.city_id:
+            if rec.city_id and rec.type != 'contact' and rec.zip_id.city_id != rec.city_id:
                 raise ValidationError(
                     _("The city of partner %s differs from that in " "location %s")
                     % (rec.name, rec.zip_id.name)
@@ -79,3 +79,7 @@ class ResPartner(models.Model):
         if self.zip_id and self.state_id != self.zip_id.city_id.state_id:
             vals.update({"zip_id": False, "zip": False, "city": False})
         self.update(vals)
+        if self.state_id and not self.zip_id:
+            cities_ids = self.env['res.city'].search([('state_id','=',self.state_id.id)]).ids
+            return {'domain': {'zip_id': [('city_id', 'in', cities_ids)],
+                               'city_id': [('id', 'in', cities_ids)]}}

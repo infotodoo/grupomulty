@@ -19,11 +19,10 @@
         <cac:PartyTaxScheme> <!--datos del proveedor (el que vende)-->
             <cbc:RegistrationName>{{AccountingSupplierParty.Name}}</cbc:RegistrationName>
             <cbc:CompanyID schemeAgencyID="195"
-					schesmeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
 					schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}"
 					schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
          <!-- dejar el schemeAgencyID como está-->
-            <cbc:TaxLevelCode listName="48">{{AccountingSupplierParty.TaxLevelCode}}</cbc:TaxLevelCode>
+            <cbc:TaxLevelCode listName="{{AccountingSupplierParty.ListName}}">{{AccountingSupplierParty.TaxLevelCode}}</cbc:TaxLevelCode>
             <cac:TaxScheme>
 					<cbc:ID>{{AccountingSupplierParty.TaxSchemeID}}</cbc:ID>
 					<cbc:Name>{{AccountingSupplierParty.TaxSchemeName}}</cbc:Name>
@@ -34,9 +33,8 @@
         <cac:PartyTaxScheme>
             <cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
             <cbc:CompanyID schemeAgencyID="195"
-					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}"
-					schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
+					schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"
+					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
             <cbc:TaxLevelCode listName="{{AccountingCustomerParty.listName}}">{{AccountingCustomerParty.TaxLevelCode}}</cbc:TaxLevelCode>
             <cac:TaxScheme>
 				<cbc:ID>{{AccountingCustomerParty.TaxSchemeID}}</cbc:ID>

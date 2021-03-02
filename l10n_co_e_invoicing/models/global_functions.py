@@ -85,7 +85,7 @@ def get_template_xml(values, template_name):
     template_xml = env.get_template('{}.xml'.format(template_name))
     xml = template_xml.render(values)
 
-    return xml.replace('&', '&amp;')
+    return xml.replace('&', '&amp;').replace('&amp;amp;', '&amp;')
 
    
 #https://github.com/etobella/python-xades

@@ -12,14 +12,15 @@ import re
 #sys.setdefaultencoding('utf8')
 #from StringIO import StringIO
 from io import StringIO ## for Python 3
-from datetime import datetime
+from datetime import datetime, timedelta
 from base64 import b64encode, b64decode
 from zipfile import ZipFile
 from . import global_functions
 from pytz import timezone
 from requests import post, exceptions
 from lxml import etree
-from odoo import models, fields, _
+
+from odoo import models, fields, _, api
 from odoo.exceptions import ValidationError, UserError
 from odoo.http import request
 
@@ -29,9 +30,9 @@ from io import BytesIO
 import logging
 _logger = logging.getLogger(__name__)
 
+import ssl
 
-
-
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 DIAN = {'wsdl-hab': 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?wsdl',
@@ -95,6 +96,11 @@ class AccountInvoiceDianDocument(models.Model):
         [('debit', 'Debit Note'),
          ('credit', 'Credit Note'),
          ('invoice', 'Invoice')])
+
+    def state_to_cancel(self):
+        if self.state == 'done' or self.get_status_zip_status_code == '00':
+            raise ValidationError(_('No puede cancelar un documento DIAN autorizado'))
+        self.state == 'cancel'
 
     def go_to_dian_document(self):
         return {
@@ -179,8 +185,11 @@ class AccountInvoiceDianDocument(models.Model):
     def _get_pdf_file(self):
         template = self.env['ir.actions.report'].browse(self.company_id.report_template.id)
         #pdf = self.env.ref('account.move').render_qweb_pdf([self.invoice_id.id])[0]
-        pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.invoice_id.id)[0]
-        pdf = base64.b64encode(pdf)
+        if template:
+            pdf = template.render_qweb_pdf(self.invoice_id.id)
+        else:
+            pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.invoice_id.id)
+        pdf = base64.b64encode(pdf[0])
         pdf_name = re.sub(r'\W+', '', self.invoice_id.name) + '.pdf'
 
         _logger.info('pdf')
@@ -215,7 +224,7 @@ class AccountInvoiceDianDocument(models.Model):
         pdf_attachment = self.env['ir.attachment'].create({
             'name': self.invoice_id.name + '.pdf',
             'type': 'binary',
-            'datas': self.invoice_id._get_pdf_file()})
+            'datas': self._get_pdf_file()})
 
         _logger.info('pdf attachment')
         _logger.info(pdf_attachment)
@@ -264,12 +273,13 @@ class AccountInvoiceDianDocument(models.Model):
                     self.write({'state': 'done'})
 
                     if self.get_status_zip_status_code != '00':
-                        if self.invoice_id.type == "out_invoice":
+                        if (self.invoice_id.type == "out_invoice"
+                            and not self.invoice_id.refund_type):
                             self.company_id.out_invoice_sent += 1
                         elif (self.invoice_id.type == "out_refund"
                               and self.invoice_id.refund_type != "debit"):
                             self.company_id.out_refund_sent += 1
-                        elif (self.invoice_id.type == "out_refund"
+                        elif (self.invoice_id.type == "out_invoice"
                               and self.invoice_id.refund_type == "debit"):
                             self.company_id.out_refund_sent += 1
 
@@ -377,13 +387,13 @@ class AccountInvoiceDianDocument(models.Model):
         _logger.info('impresion')
         _logger.info(self.invoice_id.refund_type)
 
-        if self.invoice_id.type == 'out_invoice':
+        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
             xml_filename_prefix = 'fv'
             dddddddd = str(out_invoice_sent + 1).zfill(8)
         elif self.invoice_id.type == 'out_refund' and self.invoice_id.refund_type != 'debit':
             xml_filename_prefix = 'nc'
             dddddddd = str(out_refund_sent + 1).zfill(8)
-        elif self.invoice_id.type == 'out_refund' and self.invoice_id.refund_type == 'debit':
+        elif self.invoice_id.type == 'out_invoice' and self.invoice_id.refund_type == 'debit':
             xml_filename_prefix = 'nd'
             dddddddd = str(out_refund_sent + 1).zfill(8)
 
@@ -411,6 +421,8 @@ class AccountInvoiceDianDocument(models.Model):
 
 
     def _get_xml_values(self, ClTec):
+        msg7 = _('The Incoterm is not defined for this export type invoice')
+
         active_dian_resolution = self.invoice_id._get_active_dian_resolution()
         einvoicing_taxes = self.invoice_id._get_einvoicing_taxes()
         _logger.info(self.invoice_id.create_date)
@@ -423,6 +435,17 @@ class AccountInvoiceDianDocument(models.Model):
         IssueTime = create_date.astimezone(
             timezone('America/Bogota')).strftime('%H:%M:%S-05:00')
 
+        LossRiskResponsibilityCode = self.invoice_id.invoice_incoterm_id.code or ''
+        LossRisk = self.invoice_id.invoice_incoterm_id.name or ''
+        if self.invoice_id.invoice_type_code == '02':
+            if not self.invoice_id.invoice_incoterm_id:
+                raise UserError(msg7)
+            elif not self.invoice_id.invoice_incoterm_id.name or not self.invoice_id.invoice_incoterm_id.code:
+                raise UserError('Incoterm is not properly parameterized')
+            else:
+                LossRiskResponsibilityCode = self.invoice_id.invoice_incoterm_id.code
+                LossRisk = self.invoice_id.invoice_incoterm_id.name
+
         supplier = self.company_id.partner_id
         customer = self.invoice_id.partner_id
         NitOFE = supplier.identification_document
@@ -432,7 +455,7 @@ class AccountInvoiceDianDocument(models.Model):
         SoftwarePIN = False
         IdSoftware = self.company_id.software_id
 
-        if self.invoice_id.type == 'out_invoice':
+        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
             ClTec = active_dian_resolution['technical_key']
         else:
             SoftwarePIN = self.company_id.software_pin
@@ -506,16 +529,17 @@ class AccountInvoiceDianDocument(models.Model):
             'UUID': cufe_cude['CUFE/CUDE'],
             'IssueDate': IssueDate,
             'IssueTime': IssueTime,
-            'LineCountNumeric': len(self.invoice_id.invoice_line_ids),
+            'LineCountNumeric': len(self.invoice_id.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_section', 'line_note'))),
             'DocumentCurrencyCode': self.invoice_id.currency_id.name,
             'Delivery': customer._get_delivery_values(),
-            'DeliveryTerms': {'LossRiskResponsibilityCode': False, 'LossRisk': False},
+            'DeliveryTerms': {'LossRiskResponsibilityCode': LossRiskResponsibilityCode, 'LossRisk': LossRisk},
             'AccountingSupplierParty': supplier._get_accounting_partner_party_values(),
             'AccountingCustomerParty': customer._get_accounting_partner_party_values(),
             # TODO: No esta completamente calro los datos de que tercero son
             'TaxRepresentativeParty': supplier._get_tax_representative_party_values(),
+            'InformationContentProviderParty': self.invoice_id.mandante_id._get_tax_representative_party_values() if self.invoice_id.mandante_id else {},
             'PaymentMeansID': self.invoice_id.payment_mean_id.code,
-            'PaymentMeansCode': '10',
+            'PaymentMeansCode': self.invoice_id.payment_mean_code_id.code or '10',
             #'PaymentMeansCode': self.invoice_id.payment_mean_code_id,
             #'PaymentDueDate': self.invoice_id.date_due,
             'DueDate': self.invoice_id.invoice_date_due,
@@ -526,10 +550,8 @@ class AccountInvoiceDianDocument(models.Model):
             'LineExtensionAmount': '{:.2f}'.format(self.invoice_id.amount_untaxed),
             'TaxExclusiveAmount': '{:.2f}'.format(self.invoice_id.amount_untaxed),
             'TaxInclusiveAmount': '{:.2f}'.format(TaxInclusiveAmount),#ValTot
-            'PayableAmount': '{:.2f}'.format(PayableAmount)}
-
-
-
+            'PayableAmount': '{:.2f}'.format(PayableAmount),
+            }
 
     def _get_invoice_values(self):
         xml_values = self._get_xml_values(False)
@@ -577,60 +599,57 @@ class AccountInvoiceDianDocument(models.Model):
 
         return xml_values
 
-    def _get_invoice_values3(self):
-        msg1 = _("Your journal: %s, has no a invoice sequence")
-        msg2 = _("Your active dian resolution has no technical key, "
-                 "contact with your administrator.")
-        msg3 = _("Your journal: %s, has no a invoice sequence with type equal to E-Invoicing")
-        msg4 = _("Your journal: %s, has no a invoice sequence with type equal to"
-                 "Contingency Checkbook E-Invoicing")
-        sequence = self.invoice_id.journal_id.sequence_id
-        ClTec = False
+    # def _get_invoice_values3(self):
+    #     msg1 = _("Your journal: %s, has no a invoice sequence")
+    #     msg2 = _("Your active dian resolution has no technical key, "
+    #              "contact with your administrator.")
+    #     msg3 = _("Your journal: %s, has no a invoice sequence with type equal to E-Invoicing")
+    #     msg4 = _("Your journal: %s, has no a invoice sequence with type equal to"
+    #              "Contingency Checkbook E-Invoicing")
+    #     sequence = self.invoice_id.journal_id.sequence_id
+    #     ClTec = False
 
-        if not sequence:
-            raise UserError(msg1 % self.invoice_id.journal_id.name)
+    #     if not sequence:
+    #         raise UserError(msg1 % self.invoice_id.journal_id.name)
 
-        active_dian_resolution = self.invoice_id._get_active_dian_resolution()
+    #     active_dian_resolution = self.invoice_id._get_active_dian_resolution()
 
-        if self.invoice_id.invoice_type_code in ('01', '02'):
-            ClTec = active_dian_resolution['technical_key']
+    #     if self.invoice_id.invoice_type_code in ('01', '02'):
+    #         ClTec = active_dian_resolution['technical_key']
 
-            if not ClTec:
-                raise UserError(msg2)
+    #         if not ClTec:
+    #             raise UserError(msg2)
 
-        if self.invoice_id.invoice_type_code != '03':
-            if sequence.dian_type != 'e-invoicing':
-                raise UserError(msg3 % self.invoice_id.journal_id.name)
-        else:
-            if sequence.dian_type != 'contingency_checkbook_e-invoicing':
-                raise UserError(msg4 % self.invoice_id.journal_id.name)
+    #     if self.invoice_id.invoice_type_code != '03':
+    #         if sequence.dian_type != 'e-invoicing':
+    #             raise UserError(msg3 % self.invoice_id.journal_id.name)
+    #     else:
+    #         if sequence.dian_type != 'contingency_checkbook_e-invoicing':
+    #             raise UserError(msg4 % self.invoice_id.journal_id.name)
 
-        xml_values = self._get_xml_values(ClTec)
-        xml_values['InvoiceControl'] = active_dian_resolution
-        # Tipos de operacion
-        # Punto 14.1.5.1. del anexo tecnico version 1.8
-        # 10 Estandar *
-        # 09 AIU
-        # 11 Mandatos
-        xml_values['CustomizationID'] = self.invoice_id.operation_type
-        # Tipos de factura
-        # Punto 14.1.3 del anexo tecnico version 1.8
-        # 01 Factura de Venta
-        # 02 Factura de Exportación
-        # 03 Factura por Contingencia Facturador
-        # 04 Factura por Contingencia DIAN
-        xml_values['InvoiceTypeCode'] = self.invoice_id.invoice_type_code
-        xml_values['InvoiceLines'] = self.invoice_id._get_invoice_lines()
+    #     xml_values = self._get_xml_values(ClTec)
+    #     xml_values['InvoiceControl'] = active_dian_resolution
+    #     # Tipos de operacion
+    #     # Punto 14.1.5.1. del anexo tecnico version 1.8
+    #     # 10 Estandar *
+    #     # 09 AIU
+    #     # 11 Mandatos
+    #     xml_values['CustomizationID'] = self.invoice_id.operation_type
+    #     # Tipos de factura
+    #     # Punto 14.1.3 del anexo tecnico version 1.8
+    #     # 01 Factura de Venta
+    #     # 02 Factura de Exportación
+    #     # 03 Factura por Contingencia Facturador
+    #     # 04 Factura por Contingencia DIAN
+    #     xml_values['InvoiceTypeCode'] = self.invoice_id.invoice_type_code
+    #     xml_values['InvoiceLines'] = self.invoice_id._get_invoice_lines()
 
-        return xml_values
-
+    #     return xml_values
 
 
     def _get_credit_note_values(self):
-
         xml_values = self._get_xml_values(False)
-
-        if self.invoice_id.operation_type == '10':
+        if self.invoice_id.operation_type == '10' or self.invoice_id.reversed_entry_id:
             billing_reference = self.invoice_id._get_billing_reference()
         else:
             billing_reference = False
@@ -656,7 +675,7 @@ class AccountInvoiceDianDocument(models.Model):
             billing_reference = {
                 'ID': self.invoice_id.id_invoice_refound,
                 'UUID': self.invoice_id.uuid_invoice,
-                'IssueDate': self.invoice_id.issue_date_invoice,
+                'IssueDate': self.invoice_id.issue_date_invoice or '',
                 'CustomizationID': self.invoice_id.customizationid_invoice}
 
         #TODO 2.0: Exclusivo en referencias a documentos (elementos DocumentReference)
@@ -668,14 +687,12 @@ class AccountInvoiceDianDocument(models.Model):
         xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
         xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
         xml_values['CreditNoteLines'] = self.invoice_id._get_invoice_lines()
-
         return xml_values
 
 
     def _get_debit_note_values(self):
-
         xml_values = self._get_xml_values(False)
-        if self.invoice_id.operation_type == '10':
+        if self.invoice_id.operation_type == '10' or self.invoice_id.debit_origin_id:
             billing_reference = self.invoice_id._get_billing_reference()
         else:
             billing_reference = False
@@ -704,8 +721,6 @@ class AccountInvoiceDianDocument(models.Model):
                 'UUID': self.invoice_id.uuid_invoice,
                 'IssueDate': self.invoice_id.issue_date_invoice,
                 'CustomizationID': self.invoice_id.customizationid_invoice}
-
-
         #Exclusivo en referencias a documentos (elementos DocumentReference)
         #Punto 14.1.3 del anexo tecnico version 1.8
         #92 Nota Débito
@@ -719,69 +734,51 @@ class AccountInvoiceDianDocument(models.Model):
 
         return xml_values
 
-    def _get_credit_note_valuesc(self):
-        msg = _("Your journal: %s, has no a credit note sequence")
+    # def _get_credit_note_valuesc(self):
+    #     msg = _("Your journal: %s, has no a credit note sequence")
+    #     if not self.invoice_id.journal_id.refund_sequence_id:
+    #         raise UserError(msg % self.invoice_id.journal_id.name)
+    #     xml_values = self._get_xml_values(False)
+    #     # Punto 14.1.5.2. del anexo tecnico version 1.8
+    #     # 20 Nota Crédito que referencia una factura electrónica.
+    #     # 22 Nota Crédito sin referencia a facturas*.
+    #     # 23 Nota Crédito para facturación electrónica V1 (Decreto 2242).
+    #     xml_values['CustomizationID'] = '20'
+    #     # Exclusivo en referencias a documentos (elementos DocumentReference)
+    #     # Punto 14.1.3 del anexo tecnico version 1.8
+    #     # 91 Nota Crédito
+    #     xml_values['CreditNoteTypeCode'] = '91'
+    #     billing_reference = self.invoice_id._get_billing_reference()
+    #     xml_values['BillingReference'] = billing_reference
+    #     xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
+    #     xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
+    #     xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
+    #     xml_values['CreditNoteLines'] = self.invoice_id._get_invoice_lines()
+    #     return xml_values
 
-        if not self.invoice_id.journal_id.refund_sequence_id:
-            raise UserError(msg % self.invoice_id.journal_id.name)
-
-        xml_values = self._get_xml_values(False)
-        # Punto 14.1.5.2. del anexo tecnico version 1.8
-        # 20 Nota Crédito que referencia una factura electrónica.
-        # 22 Nota Crédito sin referencia a facturas*.
-        # 23 Nota Crédito para facturación electrónica V1 (Decreto 2242).
-        xml_values['CustomizationID'] = '20'
-        # Exclusivo en referencias a documentos (elementos DocumentReference)
-        # Punto 14.1.3 del anexo tecnico version 1.8
-        # 91 Nota Crédito
-        xml_values['CreditNoteTypeCode'] = '91'
-        billing_reference = self.invoice_id._get_billing_reference()
-        xml_values['BillingReference'] = billing_reference
-        xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
-        xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
-        xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
-        xml_values['CreditNoteLines'] = self.invoice_id._get_invoice_lines()
-
-        return xml_values
-
-    def _get_debit_note_valuesc(self):
-        msg = _("Your journal: %s, has no a credit note sequence")
-
-        if not self.invoice_id.journal_id.refund_sequence_id:
-            raise UserError(msg % self.invoice_id.journal_id.name)
-
-        xml_values = self._get_xml_values(False)
-        # Punto 14.1.5.3. del anexo tecnico version 1.8
-        # 30 Nota Débito que referencia una factura electrónica.
-        # 32 Nota Débito sin referencia a facturas*.
-        # 33 Nota Débito para facturación electrónica V1 (Decreto 2242).
-        xml_values['CustomizationID'] = '30'
-        # Exclusivo en referencias a documentos (elementos DocumentReference)
-        # Punto 14.1.3 del anexo tecnico version 1.8
-        # 92 Nota Débito
-        # TODO: Parece que este valor se informa solo en la factura de venta
-        # parece que en exportaciones
-        # xml_values['DebitNoteTypeCode'] = '92'
-        billing_reference = self.invoice_id._get_billing_reference()
-        xml_values['BillingReference'] = billing_reference
-        xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
-        xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
-        xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
-        xml_values['DebitNoteLines'] = self.invoice_id._get_invoice_lines()
-
-        return xml_values
-
-
-
-
-
-
-
-
-
-
-
-
+    # def _get_debit_note_valuesc(self):
+    #     msg = _("Your journal: %s, has no a credit note sequence")
+    #     if not self.invoice_id.journal_id.refund_sequence_id:
+    #         raise UserError(msg % self.invoice_id.journal_id.name)
+    #     xml_values = self._get_xml_values(False)
+    #     # Punto 14.1.5.3. del anexo tecnico version 1.8
+    #     # 30 Nota Débito que referencia una factura electrónica.
+    #     # 32 Nota Débito sin referencia a facturas*.
+    #     # 33 Nota Débito para facturación electrónica V1 (Decreto 2242).
+    #     xml_values['CustomizationID'] = '30'
+    #     # Exclusivo en referencias a documentos (elementos DocumentReference)
+    #     # Punto 14.1.3 del anexo tecnico version 1.8
+    #     # 92 Nota Débito
+    #     # TODO: Parece que este valor se informa solo en la factura de venta
+    #     # parece que en exportaciones
+    #     # xml_values['DebitNoteTypeCode'] = '92'
+    #     billing_reference = self.invoice_id._get_billing_reference()
+    #     xml_values['BillingReference'] = billing_reference
+    #     xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
+    #     xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
+    #     xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
+    #     xml_values['DebitNoteLines'] = self.invoice_id._get_invoice_lines()
+    #     return xml_values
 
     def _get_xml_file(self):
         # if self.invoice_id.type == "out_invoice":
@@ -800,7 +797,7 @@ class AccountInvoiceDianDocument(models.Model):
         _logger.info('credit')
         _logger.info(self.invoice_id.refund_type)
 
-        if self.invoice_id.type == "out_invoice":
+        if self.invoice_id.type == "out_invoice" and not self.invoice_id.refund_type:
             xml_without_signature = global_functions.get_template_xml(
                 self._get_invoice_values(),
                 'Invoice')
@@ -808,11 +805,10 @@ class AccountInvoiceDianDocument(models.Model):
             xml_without_signature = global_functions.get_template_xml(
                 self._get_credit_note_values(),
                 'CreditNote')
-        elif self.invoice_id.type == "out_refund" and self.invoice_id.refund_type == "debit":
+        elif self.invoice_id.type == "out_invoice" and self.invoice_id.refund_type == "debit":
             xml_without_signature = global_functions.get_template_xml(
                 self._get_debit_note_values(),
                 'DebitNote')
-
 
         xml_with_signature = global_functions.get_xml_with_signature(
             xml_without_signature,
@@ -830,7 +826,6 @@ class AccountInvoiceDianDocument(models.Model):
         zipfile_content.write(b64decode(self.xml_file))
         zipfile.writestr(self.xml_filename, zipfile_content.getvalue())
         zipfile.close()
-
         return output.getvalue()
 
     def action_set_files(self):

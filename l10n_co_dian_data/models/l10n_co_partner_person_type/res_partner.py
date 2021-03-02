@@ -4,10 +4,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 # from odoo.addons.partner_firstname import exceptions
-
+from odoo.osv import expression
+from openerp.exceptions import UserError, ValidationError
 from ... import exceptions
+
 
 _logger = logging.getLogger(__name__)
 
@@ -29,6 +31,12 @@ class ResPartner(models.Model):
     othernames = fields.Char("Other Names")
     person_type = fields.Selection([("1", "Juridical Person and assimilated"),
                                     ("2", "Natural Person and assimilated")], string="Person Type")
+    same_identification_document_partner_id = fields.Many2one(
+        'res.partner',
+        string='Partner with same identification document',
+        compute='_compute_same_identification_document_partner_id',
+        store=False
+    )
 
     @api.onchange("person_type")
     def onchange_person_type(self):
@@ -68,6 +76,14 @@ class ResPartner(models.Model):
         for partner in self:
             partner.name = self._get_computed_name(
                 partner.firstname, partner.othernames, partner.lastname, partner.lastname2)
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if not args:
+            args = []
+        criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
+        domain = criteria_operator + [('identification_document', '=ilike', name + '%'), ('name', operator, name)]
+        return self.search(domain + args, limit=limit).name_get()
 
     @api.model
     def create(self, vals):
@@ -135,9 +151,6 @@ class ResPartner(models.Model):
         You can override this method to read configuration from language,
         country, company or other"""
         return (self.env["ir.config_parameter"].sudo().get_param("partner_names_order", self._names_order_default()))
-
-
-    
 
     def _inverse_name_after_cleaning_whitespace(self):
         """Clean whitespace in :attr:`~.name` and split it.
@@ -245,18 +258,42 @@ class ResPartner(models.Model):
                 result['othernames'] = parts[1]
         return result
 
-    @api.constrains("firstname", "othernames", "lastname", "lastname2")
-    def _check_name(self):
-        """Ensure at least one name is set."""
+    # @api.constrains("firstname", "othernames", "lastname", "lastname2")
+    # def _check_name(self):
+    #     """Ensure at least one name is set."""
+    #     for record in self:
+    #         if all(
+    #             (
+    #                 record.type == "contact" or record.is_company,
+    #                 not (record.firstname or record.lastname or 
+    #                      record.othernames or record.lastname2),
+    #             )
+    #         ):
+    #             raise exceptions.EmptyNamesError(record)
+
+    @api.depends('identification_document')
+    def _compute_same_identification_document_partner_id(self):
+        for partner in self:
+            # use _origin to deal with onchange()
+            partner_id = partner._origin.id
+            domain = [('identification_document', '=', partner.identification_document)]
+            if partner_id:
+                domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
+            partner.same_identification_document_partner_id = bool(partner.identification_document) and not partner.parent_id and self.env['res.partner'].search(domain, limit=1)
+
+    @api.constrains("identification_document")
+    def _check_identification_document_unique(self):
+        '''
+        constrain temporal para cargue de datos
+        mientras thomas define estructura fuerte en documento de indentificación
+        '''
         for record in self:
-            if all(
-                (
-                    record.type == "contact" or record.is_company,
-                    not (record.firstname or record.lastname or 
-                         record.othernames or record.lastname2),
+            if record.parent_id or not record.identification_document:
+                continue
+            if record.same_identification_document_partner_id:
+                raise ValidationError(
+                    _("The Identification Document %s already exists in another partner.") % record.identification_document
                 )
-            ):
-                raise exceptions.EmptyNamesError(record)
 
     @api.model
     def _install_partner_firstname(self):
@@ -272,6 +309,8 @@ class ResPartner(models.Model):
         # Force calculations there
         records._inverse_name()
         _logger.info("%d partners updated installing module.", len(records))
+
+
 
     # Disabling SQL constraint givint a more explicit error using a Python
     # contstraint

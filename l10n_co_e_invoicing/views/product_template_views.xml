@@ -8,12 +8,18 @@
                 <page name="einvoicing" string="E-Invoicing">
                     <group>
                         <group>
-                            <field name="margin_percentage"/>
-                            <field name="reference_price"/>
+                            <field name="brand_name"/>
+                            <field name="model_name"/>
                         </group>
                         <group>
                             <field name="product_scheme_id" required="1"/>
+                            <field name="product_scheme_code"/>
                         </group>
+                        <group>
+                            <field name="margin_percentage"/>
+                            <field name="reference_price"/>
+                        </group>
+                        <group></group>
                     </group>
                 </page>
             </xpath>

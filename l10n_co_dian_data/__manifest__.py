@@ -81,7 +81,7 @@
 
         "views/l10n_co_account_fiscal_position_listname/account_fiscal_position_views.xml",
 
-        #"security/l10n_co_product_uom/ir.model.access.csv",
+        "security/l10n_co_product_uom/ir.model.access.csv",
 		"data/l10n_co_product_uom/product.uom.code.csv",
 		"views/l10n_co_product_uom/product_uom_views.xml",
 

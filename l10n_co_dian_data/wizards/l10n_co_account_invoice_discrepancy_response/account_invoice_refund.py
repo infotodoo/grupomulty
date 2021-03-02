@@ -16,11 +16,6 @@ class AccountInvoiceRefund(models.TransientModel):
         comodel_name='account.invoice.discrepancy.response.code',
         string='Correction concept for Refund Invoice')
     
-    @api.onchange('discrepancy_response_code_id')
-    def _onchange_discrepancy_response_code_id(self):
-        if self.discrepancy_response_code_id:
-            self.reason = self.discrepancy_response_code_id.name
-    
     # @api.multi
     # def compute_refund(self, mode='refund'):
     #     inv_obj = self.env['account.invoice']

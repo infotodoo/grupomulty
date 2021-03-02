@@ -11,6 +11,7 @@
                     <field name="type_account" string="Tipo"/>
                     <field name="cufe_cude"/>
                     <field name="xml_filename"/>
+                    <field name="get_status_zip_status_code"/>
                     <field name="state"/>
                     <field name="company_id"
                         groups="base.group_multi_company"
@@ -19,14 +20,31 @@
             </field>
         </record>
 
+        <record id="account_invoice_dian_document_view_search" model="ir.ui.view">
+            <field name="name">account.invoice.dian.document.view.search</field>
+            <field name="model">account.invoice.dian.document</field>
+            <field name="arch" type="xml">
+                <search string="Search Description">
+                    <field name="invoice_id"/>
+                    <field name="type_account"/>
+                    <field name="get_status_zip_status_code"/>
+
+                    <group string="Group By" name="groupby">
+                        <filter name="status_groupby" string="Status DIAN" context="{'group_by': 'get_status_zip_status_code'}"/>
+                        <filter name="createdate_groupby" string="Fecha de Creación" context="{'group_by': 'create_date:month'}"/>
+                        <filter name="type_groupby" string="Tipo de Documento" context="{'group_by': 'type_account'}"/>
+                        <filter name="invoice_groupby" string="Factura" context="{'group_by': 'invoice_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="account_invoice_dian_document_view_form" model="ir.ui.view">
             <field name="model">account.invoice.dian.document</field>
             <field name="arch" type="xml">
                 <form string="DIAN Document">
                     <header>
-                        <field name="state"
-                            widget="statusbar"
-                            statusbar_visible="draft,sent,done,cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,done,cancel"/>
                        <button name="action_set_files"
                             string="Set Files"
                             type="object"

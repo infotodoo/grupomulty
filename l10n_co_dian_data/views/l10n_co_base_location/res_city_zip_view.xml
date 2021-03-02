@@ -7,8 +7,14 @@
         <field name="arch" type="xml">
             <form string="Zip">
                 <group>
-                    <field name="name"/>
-                    <field name="city_id"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="city_id"/>
+                    </group>
+                    <group>
+                        <field name="dian_code"/>
+                        <field name="phone_prefix"/>
+                    </group>
                 </group>
             </form>
         </field>
@@ -33,6 +39,7 @@
         <field name="arch" type="xml">
             <search string="Search zip">
                 <field name="name"/>
+                <field name="dian_code"/>
                 <field name="city_id"/>
             </search>
         </field>
