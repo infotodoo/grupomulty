@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve" noupdate="1">
+
+    <t t-extend="ClientDetails">
+        <t t-jquery="div.client-details-box" t-operation="prepend">
+            <div class='client-detail'>
+                <span class='label'>Is a company?</span>
+                <t t-if='partner.is_company'>
+                    <input class='detail client-is-company' name='is_company' type='checkbox' disabled='disabled' checked='checked'></input>
+                </t>
+                <t t-if='!partner.is_company'>
+                    <input class='detail client-is-company' name='is_company' type='checkbox' disabled='disabled'></input>
+                </t>
+            </div>
+            <div class='client-details-left'>
+                <div class='client-detail'>
+                    <span class='label'>Tipo de Persona</span>
+                    <t t-foreach='widget.pos.persontypes' t-as='person_type'>
+                        <t t-if='person_type.id === partner.person_type'>
+                            <span class='detail client-person-type'><t t-esc='person_type.name' /></span>
+                        </t>
+                    </t>
+
+                </div>
+            </div>
+            <div class='client-details-right'>
+                <div class='client-detail'>
+                    <span class='label'>Identification number</span>
+                    <t t-if='partner.identification_document'>
+                        <span class='detail client-identification-number'><t t-esc='partner.identification_document' /></span>
+                    </t>
+                </div>
+            </div>
+<!--            <div class='client-details-left'>-->
+<!--                <div class='client-detail'>-->
+<!--                    <span class='label'>Identification type</span>-->
+
+<!--                    <t t-foreach='widget.pos.document_type_id' t-as='document_type_id'>-->
+<!--                        <t t-if='document_type_id.id === partner.document_type_id'>-->
+<!--                            <span class='detail client-identification-type'><t t-esc='document_type_id.name' /></span>-->
+<!--                        </t>-->
+<!--                    </t>-->
+
+<!--                </div>-->
+<!--            </div>-->
+<!--            <t t-if='partner.document_type_id == 31'>-->
+<!--                <div class='client-details-right'>-->
+<!--                    <div class='client-detail'>-->
+<!--                        <span class='label'>Formated nit</span>-->
+<!--                        <span class='detail client-formatednit'><t t-esc='partner.formatedNit' /></span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </t>-->
+<!--            <t t-if='partner.document_type_id != 31'>-->
+<!--                <div class='client-details-right' style="visibility:hidden">-->
+<!--                    <div class='client-detail' >-->
+<!--                        <span class='label'>Formated nit</span>-->
+<!--                        <span class='detail empty'>N/A</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </t>-->
+
+            <t t-if='!partner.is_company'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>First name</span>
+                        <span class='detail client-first-name'><t t-esc='partner.firstname' /></span>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Lastname</span>
+                        <span class='detail client-first-lastname'><t t-esc='partner.lastname' /></span>
+                    </div>
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>Second name</span>
+                        <span class='detail client-second-name'><t t-esc='partner.othernames' /></span>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Second lastname</span>
+                        <span class='detail client-second-lastname'><t t-esc='partner.lastname2' /></span>
+                    </div>
+                </div>
+            </t>
+        </t>
+
+        <t t-jquery=".client-details-right:eq(-1)" t-operation="replace">
+<!--            <div class='client-detail'>-->
+<!--                <span class='label'>Country</span>-->
+<!--                <t t-foreach='widget.pos.countries' t-as='country'>-->
+<!--                    <t t-if='country.id === partner.country_id[0]'>-->
+<!--                        <span class='detail client-address-country'><t t-esc='country.name' /></span>-->
+<!--                    </t>-->
+<!--                </t>-->
+<!--            </div>-->
+<!--            <div class='client-detail'>-->
+<!--                <span class='label'>Department</span>-->
+
+<!--                <t t-foreach='widget.pos.departments' t-as='department'>-->
+<!--                    <t t-if='department.id === partner.state_id[0]'>-->
+<!--                    <span class='detail client-address-department'><t t-esc='department.name' /></span>-->
+<!--                    </t>-->
+<!--                </t>-->
+
+<!--            </div>-->
+<!--            <div class='client-detail'>-->
+<!--                <span class='label'>City</span>-->
+<!--                <t t-foreach='widget.pos.cities' t-as='city'>-->
+<!--                    <t t-if='city.id === partner.city[0]'>-->
+<!--                    <span class='detail client-address-city'><t t-esc='city.name' /></span>-->
+<!--                    </t>-->
+<!--                </t>-->
+<!--            </div>-->
+        </t>
+    </t>
+
+    <t t-extend="ClientLine">
+      <t t-jquery=".client-line td:eq(-1)" t-operation="replace">
+        <td>
+            <t t-if='partner.identification_document'>
+                <t t-esc='partner.identification_document' />
+            </t>
+        </td>
+      </t>
+    </t>
+
+    <t t-extend="ClientListScreenWidget">
+      <t t-jquery=".client-list tr th:eq(-1)" t-operation="replace">
+        <th>Identification</th>
+      </t>
+    </t>
+
+    <t t-extend="ClientDetailsEdit">
+        <t t-jquery="div.client-details-box" t-operation="prepend">
+<!--            <input class="detail client-companyname" name="companyName" style="display: none" t-att-value='partner.companyName'></input>-->
+<!--            <div class='client-detail'>-->
+<!--                <span class='label'>Is a company?</span>-->
+<!--                <t t-if='partner.is_company'>-->
+<!--                    <input class='detail client-is-company' name='is_company' type='checkbox' checked='checked'></input>-->
+<!--                </t>-->
+<!--                <t t-if='!partner.is_company'>-->
+<!--                    <input class='detail client-is-company' name='is_company' type='checkbox'></input>-->
+<!--                </t>-->
+<!--            </div>-->
+            <div class='client-details-left partner-names'>
+                <div class='client-detail'>
+                    <span class='label'>Person type</span>
+                    <select class='detail client-person_type' name='person_type'>
+                        <t t-foreach='widget.pos.persontypes' t-as='person_type'>
+                            <option t-att-value='person_type.id' t-att-selected="partner.person_type ? ((person_type.id === partner.person_type) ? true : undefined) : undefined">
+                                <t t-esc='person_type.name'/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+<!--            <div class='client-details-right' style="visibility:hidden">-->
+<!--                <div class='client-detail'>-->
+<!--                    <span class='label'></span>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class='client-details-right partner-names'>
+                <div class='client-detail'>
+                    <span class='label'>Identification number</span>
+                    <input class='detail client-identification-number' name='identification_document' t-att-value='partner.identification_document || ""' placeholder='Identification number'></input>
+                </div>
+            </div>
+<!--            <div class='client-details-left partner-names'>-->
+<!--                <div class='client-detail'>-->
+<!--                    <span class='label'>Identification type</span>-->
+<!--                    <select class='detail client-document_type_id' name='document_type_id'>-->
+<!--                        <t t-foreach='widget.pos.persontypes' t-as='document_type_id'>-->
+<!--                            <option t-att-value='document_type_id.id' t-att-selected="partner.document_type_id ? ((document_type_id.id === partner.document_type_id) ? true : undefined) : undefined">-->
+<!--                                <t t-esc='document_type_id.name'/>-->
+<!--                            </option>-->
+<!--                        </t>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class='client-details-right formated-nit'>-->
+<!--                <div class='client-detail'>-->
+<!--                <span class='label'>NIT</span>-->
+<!--                    <input class='detail client-formatednit pnposnit' name='formatedNit' t-att-value='partner.formatedNit' disabled='disabled' readonly='readonly'></input>-->
+<!--                </div>-->
+<!--            </div>-->
+              <div class='client-details-left partner-names'>
+                <div class='client-detail'>
+                        <span class='label'>Tipo de Documento</span>
+                        <select class='detail client-doctype needsclick' name='document_type_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.documentos' t-as='documentos'>
+                                <option t-att-value='documentos.id' t-att-selected="partner.document_type_id ? ((documentos.id === partner.document_type_id[0]) ? true : undefined) : undefined">
+                                    <t t-esc='documentos.name'/>
+                                </option>
+                            </t>
+                        </select>
+                </div>
+            </div>
+            <div class='client-details-left partner-names'>
+                <div class='client-detail'>
+                    <span class='label'>First name</span>
+                    <input class='detail client-first-name' name='firstname' t-att-value='partner.firstname || ""' placeholder='First name'></input>
+                </div>
+            </div>
+            <div class='client-details-right partner-names'>
+                <div class='client-detail'>
+                    <span class='label'>Second name</span>
+                    <input class='detail client-second-name' name='othernames' t-att-value='partner.othernames || ""' placeholder='Second name'></input>
+                </div>
+            </div>
+            <div class='client-details-left partner-names'>
+                <div class='client-detail'>
+                    <span class='label'>Lastname</span>
+                    <input class='detail client-first-lastname' name='lastname' t-att-value='partner.lastname || ""' placeholder='Lastname'></input>
+                </div>
+            </div>
+            <div class='client-details-right partner-names'>
+                <div class='client-detail'>
+                    <span class='label'>Second lastname</span>
+                    <input class='detail client-second-lastname' name='lastname2' t-att-value='partner.lastname2 || ""' placeholder='Second lastname'></input>
+                </div>
+            </div>
+            <div class='client-details-left partner-names'>
+                <div class='client-detail'>
+                        <span class='label'>Ubicacion</span>
+                        <select class='detail client-ubicacion-city needsclick' name='zip_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.cities' t-as='citiid'>
+                                <option t-att-value='citiid.id' t-att-selected="partner.zip_id ? ((citiid.id === partner.zip_id[0]) ? true : undefined) : undefined">
+                                    <t t-esc='citiid.city_id[1]'/>
+                                    <t t-esc='citiid.name'/>
+                                </option>
+                            </t>
+                        </select>
+                </div>
+            </div>
+            <div class='client-details-left partner-names'>
+                <div class='client-detail'>
+                        <span class='label'>Posición Fiscal</span>
+                        <select class='detail client-fiscal needsclick' name='zip_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.fiscal' t-as='fiscaldata'>
+                                <option t-att-value='fiscaldata.id' t-att-selected="partner.property_account_position_id ? ((fiscaldata.id === partner.property_account_position_id[0]) ? true : undefined) : undefined">
+                                    <t t-esc='fiscaldata.name'/>
+                                </option>
+                            </t>
+                        </select>
+                </div>
+            </div>
+             <div class='client-detail'>
+                        <span class='label'>Postcode</span>
+                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip || ""' placeholder='ZIP'></input>
+                    </div>
+
+        </t>
+
+        <t t-jquery=".client-details-left div:eq(-2)" t-operation="replace">
+            <div class='client-detail'>
+                <span class='label'>Department</span>
+                <select class='detail client-address-state' name='state_id'>
+                    <option value=''>None</option>
+                    <t t-foreach='widget.pos.departments' t-as='department'>
+                        <option t-att-value='department.id' t-att-country_id="department.country_id[0]" t-att-selected="partner.state_id ? ((department.id === partner.state_id[0]) ? true : undefined) : undefined">
+                            <t t-esc='department.name'/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+<!--            <div class='client-detail'>-->
+<!--                <span class='label'>City</span>-->
+<!--                <select class='detail client-address-city' name='city'>-->
+<!--                    <option value=''>None</option>-->
+<!--                    <t t-foreach='widget.pos.cities' t-as='city'>-->
+<!--                        <option t-att-value='city.id' t-att-state_id="city.state_id[0]" t-att-selected="partner.city ? ((city.id === partner.city[0]) ? true : undefined) : undefined">-->
+<!--							<t t-esc='city.name'/>-->
+<!--						</option>-->
+<!--                    </t>-->
+<!--                </select>-->
+<!--            </div>-->
+        </t>
+        <t t-jquery=".client-details-right div:eq(-1)" t-operation="replace">
+        </t>
+        <t t-jquery=".client-details-left div:eq(-3)" t-operation="replace">
+        </t>
+    </t>
+
+</templates>

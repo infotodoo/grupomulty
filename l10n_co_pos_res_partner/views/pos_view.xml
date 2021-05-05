@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+      <template id="l10n_co_pos_res_partner_js" name="l10n colombia pos res partner assets" inherit_id="point_of_sale.assets">
+          <xpath expr="." position="inside">
+              <script type="text/javascript" src="/l10n_co_pos_res_partner/static/src/js/main.js"></script>
+              <!-- <script type="text/javascript" src="/l10n_co_pos_res_partner/static/src/js/sequence.js"></script> -->
+              <link rel="stylesheet" href="/l10n_co_pos_res_partner/static/src/css/pnpos.css" type="text/css"/>
+          </xpath>
+      </template>
+
+    </data>
+</openerp>
