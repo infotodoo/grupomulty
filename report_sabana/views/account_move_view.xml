@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="account_move_view_form" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="total_weigth" readonly="1" attrs="{'invisible': [('type','not in', ['out_invoice','out_refund'])]}"/>
+                    <field name="total_weigth_1" readonly="1" attrs="{'invisible': [('type','in', ['out_invoice','out_refund'])]}"/>
+                    <field name="partner_deal_id" readonly="1" attrs="{'invisible': [('type','not in', ['out_invoice','out_refund'])]}"/>
+                    <field name="partner_deal_id_1" readonly="1" attrs="{'invisible': [('type','in', ['out_invoice','out_refund'])]}"/>
+                </xpath>
+                <xpath expr="//page[1]/field[@name='invoice_line_ids']/tree[1]/field[@name='name']" position="after">
+                    <field name="weigth" force_save="1"/>
+                </xpath>
+                <xpath expr="//page[2]/field[@name='line_ids']/tree[1]/field[@name='name']" position="after">
+                    <field name="weigth" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

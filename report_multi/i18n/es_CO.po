@@ -1,0 +1,205 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* report_multi
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-20 11:50+0000\n"
+"PO-Revision-Date: 2021-03-20 11:50+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__res_city_id
+msgid "Ciudad"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__create_uid
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__create_uid
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__create_date
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__create_date
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__code
+msgid "Código"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner__partner_deal_id
+#: model:ir.model.fields,field_description:report_multi.field_res_users__partner_deal_id
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_custom
+msgid "Deal Name"
+msgstr "Nombre del negocio"
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__name
+msgid "Descripción"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__display_name
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__display_name
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__id
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__id
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__id
+msgid "ID"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal____last_update
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type____last_update
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__write_uid
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__write_uid
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__write_date
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_type__write_date
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: report_multi
+#: model_terms:ir.actions.act_window,help:report_multi.action_stock_move
+#: model:ir.actions.act_window,name:report_multi.action_stock_move
+#: model:ir.model,name:report_multi.model_stock_move
+msgid "Movimientos de Existencias"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_deal__name
+msgid "Name"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner_zone__name
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_type_form
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_zone_form
+msgid "Nombre"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.ui.menu,name:report_multi.action_id_stock_move
+msgid "Picking"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_product_product
+msgid "Productos"
+msgstr ""
+
+#. module: report_multi
+#: model_terms:ir.actions.act_window,help:report_multi.action_view_res_partner_type
+msgid "Registrar un Tipo de Cliente"
+msgstr ""
+
+#. module: report_multi
+#: model_terms:ir.actions.act_window,help:report_multi.action_view_res_partner_zone
+msgid "Registrar una Zona"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de Venta"
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_stock_move__weight
+msgid "Secuencia por Peso"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_stock_picking
+msgid "Stock Picking"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_res_partner__partner_type_id
+#: model:ir.model.fields,field_description:report_multi.field_res_users__partner_type_id
+msgid "Tipo de Cliente"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.actions.act_window,name:report_multi.action_view_res_partner_type
+#: model:ir.ui.menu,name:report_multi.id_res_partner_type
+msgid "Tipos de Clientes"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model.fields,field_description:report_multi.field_product_product__zone
+#: model:ir.model.fields,field_description:report_multi.field_res_partner__zone
+#: model:ir.model.fields,field_description:report_multi.field_res_users__zone
+#: model:ir.model.fields,field_description:report_multi.field_sale_order__zone
+#: model:ir.model.fields,field_description:report_multi.field_stock_move__zone
+#: model:ir.model.fields,field_description:report_multi.field_stock_picking__zone
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_custom
+#: model_terms:ir.ui.view,arch_db:report_multi.view_sale_order_custom
+#: model_terms:ir.ui.view,arch_db:report_multi.view_stock_move_custom
+#: model_terms:ir.ui.view,arch_db:report_multi.view_stock_picking_custom
+msgid "Zona"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.actions.act_window,name:report_multi.action_view_res_partner_zone
+#: model:ir.ui.menu,name:report_multi.id_res_partner_zone
+msgid "Zonas"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_res_partner_deal
+msgid "res partner deal"
+msgstr "Nombre del negocio"
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_res_partner_type
+msgid "res.partner.type"
+msgstr ""
+
+#. module: report_multi
+#: model:ir.model,name:report_multi.model_res_partner_zone
+msgid "res.partner.zone"
+msgstr ""
+
+#. module: report_multi
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_type_form
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_type_tree
+msgid "type"
+msgstr ""
+
+#. module: report_multi
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_zone_form
+#: model_terms:ir.ui.view,arch_db:report_multi.view_res_partner_zone_tree
+msgid "zone"
+msgstr ""

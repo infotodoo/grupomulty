@@ -1,0 +1,6 @@
+<odoo>
+    <data>
+        <menuitem id="report_sabana_action" name="Sabana de datos" parent="account.menu_finance_receivables" action="report_sabana.action_report_sabana" sequence="2000"/>
+        <menuitem id="report_sabana_purchase_action" name="Sabana de datos" parent="account.menu_finance_payables" action="report_sabana.action_report_sabana_purchase" sequence="2000"/>
+    </data>
+</odoo>

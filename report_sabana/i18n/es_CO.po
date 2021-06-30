@@ -1,0 +1,229 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* report_sabana
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-20 11:49+0000\n"
+"PO-Revision-Date: 2021-03-20 11:49+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__categ_id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__categ_id
+msgid "Category"
+msgstr "Categoria"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__partner_type_id
+msgid "Customer Type"
+msgstr "Tipo de Cliente"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__date_bill
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__date_bill
+msgid "Date"
+msgstr "Fecha"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_account_move__partner_deal_id
+#: model:ir.model.fields,field_description:report_sabana.field_account_move__partner_deal_id_1
+#: model:ir.model.fields,field_description:report_sabana.field_purchase_order__partner_deal_id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__partner_deal_id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__partner_deal_id_1
+#: model:ir.model.fields,field_description:report_sabana.field_sale_order__partner_deal_id
+msgid "Deal Name"
+msgstr "Nombre del Negocio"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__discount
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__discount
+msgid "Discount %"
+msgstr "Descuento"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__display_name
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__display_name
+msgid "Display Name"
+msgstr "Nombre Público"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__id
+msgid "ID"
+msgstr ""
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__name
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__name
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana____last_update
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__nit
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__nit
+msgid "Nit"
+msgstr ""
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_account_move__pricelist
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__pricelist
+msgid "Pricelist"
+msgstr "Lista de Precios"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__product_id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_purchase_order
+msgid "Purchase Order"
+msgstr "Orden de Compra"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea de Orden de Compra"
+
+#. module: report_sabana
+#: model:ir.actions.act_window,name:report_sabana.action_report_sabana_purchase
+msgid "Purchase Sabana Report"
+msgstr "Reporte Sabana Compras"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__subtotal_purchase
+msgid "Purchase with tax"
+msgstr "Compra con impuestos"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__price_purchase
+msgid "Purchase without tax"
+msgstr "Compra sin impuestos"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__quantity
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__quantity
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: report_sabana
+#: model_terms:ir.ui.view,arch_db:report_sabana.report_sabana_purchase_view
+#: model_terms:ir.ui.view,arch_db:report_sabana.report_sabana_view
+msgid "Sabana de Datos"
+msgstr ""
+
+#. module: report_sabana
+#: model:ir.ui.menu,name:report_sabana.report_sabana_action
+#: model:ir.ui.menu,name:report_sabana.report_sabana_purchase_action
+msgid "Sabana de datos"
+msgstr ""
+
+#. module: report_sabana
+#: model:ir.actions.act_window,name:report_sabana.action_report_sabana
+msgid "Sale Sabana Report"
+msgstr "Reporte Sabana Ventas"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__subtotal
+msgid "Sale with tax"
+msgstr "Venta sin Impuesto"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__price
+msgid "Sale without tax"
+msgstr "Venta con impuestos"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de Venta"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+"#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
+"Línea de Orden de Ventas\n"
+"#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
+"Línea de Órdenes de Venta"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__tax
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__tax
+msgid "Tax"
+msgstr "Impuestos"
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_report_sabana_purchase
+msgid "This is the lines in the purchase sabana report"
+msgstr ""
+
+#. module: report_sabana
+#: model:ir.model,name:report_sabana.model_report_sabana
+msgid "This is the lines in the sabana report"
+msgstr ""
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_account_move__total_weigth
+#: model:ir.model.fields,field_description:report_sabana.field_account_move__total_weigth_1
+#: model:ir.model.fields,field_description:report_sabana.field_purchase_order__total_weigth
+#: model:ir.model.fields,field_description:report_sabana.field_sale_order__total_weigth
+msgid "Total Weigth"
+msgstr "Peso Total"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__partner_id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__partner_id_1
+msgid "Vendor"
+msgstr "Vendedor"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__partner_type_id
+msgid "Vendor Type"
+msgstr "Tipo de Vendedor"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__invoice_user_id
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__invoice_user_id
+msgid "Vendors"
+msgstr "Vendedor"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_account_move_line__weigth
+#: model:ir.model.fields,field_description:report_sabana.field_purchase_order_line__weigth
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__weigth
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__weigth
+#: model:ir.model.fields,field_description:report_sabana.field_sale_order_line__weigth
+msgid "Weigth"
+msgstr "Peso"
+
+#. module: report_sabana
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana__zone
+#: model:ir.model.fields,field_description:report_sabana.field_report_sabana_purchase__zone
+msgid "Zone"
+msgstr "Zona"

@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 manager_model_res_partner_zone,user_model_res_partner_zone,model_res_partner_zone,base.group_partner_manager,1,1,1,0
 manager_model_res_partner_type,user_model_res_partner_type,model_res_partner_type,base.group_partner_manager,1,1,1,0
-
+access_res_partner_deal_user,report_multi.res.partner.deal,model_res_partner_deal,base.group_partner_manager,1,1,1,1
 
 
 

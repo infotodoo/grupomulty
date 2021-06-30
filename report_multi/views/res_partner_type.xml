@@ -43,7 +43,18 @@
                 </p>
             </field>
         </record>
+        <record model="ir.actions.act_window" id="action_view_res_partner_deal">
+            <field name="name">Tipos de Clientes</field>
+            <field name="res_model">res.partner.deal</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Registrar el Negocio de sus clientes</p>
+            </field>
+        </record>
         <menuitem id="id_res_partner_type" name="Tipos de Clientes" parent="contacts.res_partner_menu_config"
-                  action="action_view_res_partner_type"/>
+                  action="action_view_res_partner_type" sequence="15"/>
+        <menuitem id="id_res_partner_deal" name="Deal Name" parent="contacts.res_partner_menu_config"
+                  action="action_view_res_partner_deal" sequence="20"/>
     </data>
 </odoo>
