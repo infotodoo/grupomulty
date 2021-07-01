@@ -6,7 +6,7 @@
             <field name="model">report.sabana</field>
             <field name="arch" type="xml">
                 <tree string="Sabana de Datos" create="0" edit="0">
-                   <field name="name"/>
+                   <field name="name_invoice"/>
                    <field name="type_credit"/>
                    <field name="date_bill"/>
                    <field name="nit"/>

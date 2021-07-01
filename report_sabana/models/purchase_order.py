@@ -18,7 +18,8 @@ class PurchaseOrder(models.Model):
         for record in self.order_line:
             if record.product_id:
                 if record.weigth != 0:
-                    weigth += record.weigth * record.product_uom_qty
+                    #weigth += record.weigth * record.product_qty
+                    weigth += record.weigth
                     self.write({'total_weigth':weigth})
                 else:
                     self.total_weigth = 0
@@ -33,12 +34,18 @@ class PurchaseOrderLine(models.Model):
 
     weigth = fields.Float('Weigth',store=True)
     
-    @api.onchange('product_id','product_uom_qty')
+    @api.onchange('product_id','product_uom_qty','product_qty')
     def _onchange_partner_id(self):
+        _logger.error('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
         for record in self:
             record.weigth = 0
+            _logger.error(record.product_id)
             if record.product_id:
-                record.weigth = record.product_id.weight * record.product_uom_qty
+                _logger.error(record.product_id.weight)
+                _logger.error(record.product_uom_qty)
+                record.weigth = record.product_id.weight * record.product_qty
+                _logger.error(record.weigth)
                 
     
     def _prepare_account_move_line(self, move):
