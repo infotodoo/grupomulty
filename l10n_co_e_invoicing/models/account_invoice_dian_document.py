@@ -113,33 +113,34 @@ class AccountInvoiceDianDocument(models.Model):
             'target': 'current'}
 
     def _generate_qr_code(self):
-        einvoicing_taxes = self.invoice_id._get_einvoicing_taxes()
-        ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
-        ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
-        ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
-        ValFac = self.invoice_id.amount_untaxed
-        ValOtroIm = ValImp2 - ValImp3
-        ValTolFac = ValFac + ValImp1 + ValImp2 + ValImp3
-        date_format = str(self.invoice_id.create_date)[0:19]
-        create_date = datetime.strptime(date_format, '%Y-%m-%d %H:%M:%S')
-        create_date = create_date.replace(tzinfo=timezone('UTC'))
-        nit_fac = self.company_id.partner_id.identification_document
-        nit_adq = self.invoice_id.partner_id.identification_document
-        cufe = self.cufe_cude
-        number = self.invoice_id.name
+        for record in self:
+            einvoicing_taxes = record.invoice_id._get_einvoicing_taxes()
+            ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
+            ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
+            ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
+            ValFac = record.invoice_id.amount_untaxed
+            ValOtroIm = ValImp2 - ValImp3
+            ValTolFac = ValFac + ValImp1 + ValImp2 + ValImp3
+            date_format = str(record.invoice_id.create_date)[0:19]
+            create_date = datetime.strptime(date_format, '%Y-%m-%d %H:%M:%S')
+            create_date = create_date.replace(tzinfo=timezone('UTC'))
+            nit_fac = record.company_id.partner_id.identification_document
+            nit_adq = record.invoice_id.partner_id.identification_document
+            cufe = record.cufe_cude
+            number = record.invoice_id.name
 
-        qr_data = "NumFac: " + number if number else 'NO_VALIDADA'
+            qr_data = "NumFac: " + number if number else 'NO_VALIDADA'
 
-        qr_data += "\nNitFac: " + nit_fac if nit_fac else ''
-        qr_data += "\nNitAdq: " + nit_adq if nit_adq else ''
-        qr_data += "\nValFac: " + '{:.2f}'.format(ValFac)
-        qr_data += "\nValIva: " + '{:.2f}'.format(ValImp1)
-        qr_data += "\nValOtroIm: " + '{:.2f}'.format(ValOtroIm)
-        qr_data += "\nValTolFac: " + '{:.2f}'.format(ValTolFac)
-        qr_data += "\nCUFE: " + cufe if cufe else ''
-        qr_data += "\n\n" + self.invoice_url if self.invoice_url else ''
+            qr_data += "\nNitFac: " + nit_fac if nit_fac else ''
+            qr_data += "\nNitAdq: " + nit_adq if nit_adq else ''
+            qr_data += "\nValFac: " + '{:.2f}'.format(ValFac)
+            qr_data += "\nValIva: " + '{:.2f}'.format(ValImp1)
+            qr_data += "\nValOtroIm: " + '{:.2f}'.format(ValOtroIm)
+            qr_data += "\nValTolFac: " + '{:.2f}'.format(ValTolFac)
+            qr_data += "\nCUFE: " + cufe if cufe else ''
+            qr_data += "\n\n" + record.invoice_url if record.invoice_url else ''
 
-        self.qr_image = global_functions.get_qr_code(qr_data)
+            record.qr_image = global_functions.get_qr_code(qr_data)
 
 
     def _get_GetStatus_values(self):
