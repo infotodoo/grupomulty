@@ -12,6 +12,9 @@
                 <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='name']" position="after">
                     <field name="weigth"/>
                 </xpath>
+		<xpath expr="//page[@name='order_lines']/field[@name='order_line']/form[1]/group/group/field[@name='product_id']" position="after">
+                    <field name="weigth"/>
+                </xpath>
                 <xpath expr="//page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='price_unit']" position="before">
                     <field name="bool_manager" invisible="1"/>
                 </xpath>
