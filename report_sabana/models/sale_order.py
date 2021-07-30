@@ -40,6 +40,45 @@ class SaleOrder(models.Model):
                              'partner_deal_id':self.partner_deal_id.id})
         return invoice_vals
 
+    @api.model
+    def create(self, vals):
+        if not 'discount' in vals.get('order_line')[0][2]:
+            product_obj = self.env['product.product'].browse(vals.get('order_line')[0][2].get('product_id'))
+            partner_obj = self.env['res.partner'].browse(vals.get('partner_id'))
+            
+            if 'pricelist_id' not in vals:
+                pricelist_id = self.env['product.pricelist'].browse(partner_obj.property_product_pricelist and partner_obj.property_product_pricelist.id or 0)
+            else:
+                pricelist_id = self.env['product.pricelist'].browse(vals.get('pricelist_id'))
+                
+            product_uom = self.env['uom.uom'].browse(vals.get('order_line')[0][2].get('product_uom'))
+            product_uom_qty = vals.get('order_line')[0][2].get('product_uom_qty')
+            date_order = vals.get('date_order')
+            
+            if not product_obj:
+                raise ValidationError('No existe producto definido')
+            
+            product = product_obj.with_context(
+                lang=partner_obj.lang,
+                partner=partner_obj,
+                quantity=product_uom_qty,
+                date=date_order,
+                pricelist=pricelist_id.id,
+                uom=product_uom.id,
+                fiscal_position=self.env.context.get('fiscal_position')
+            )
+            product_context = dict(self.env.context, partner_id=partner_obj.id, date=date_order, uom=product_uom.id)
+            price, rule_id = pricelist_id.with_context(product_context).get_product_price_rule(product_obj, product_uom_qty or 1.0, partner_obj)
+            new_sale_order = self.env['sale.order.line']
+            new_list_price, currency = new_sale_order.with_context(product_context)._get_real_price_currency(product, rule_id, product_uom_qty, product_uom, pricelist_id.id)
+            discount = (new_list_price - price) / new_list_price * 100
+            vals['order_line'][0][2].update({
+                'discount': float(discount),
+            })
+
+        res = super(SaleOrder, self).create(vals)
+        return res
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
