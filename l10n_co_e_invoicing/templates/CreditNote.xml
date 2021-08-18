@@ -51,7 +51,7 @@
 	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>{{CustomizationID}}</cbc:CustomizationID>
 <!--TODO: anexo tecnico dice que va ": Nota Crédito de Factura Electrónica de Venta"-->
-	<cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+	<cbc:ProfileID>DIAN 2.1: Nota Crédito de Factura Electrónica de Venta</cbc:ProfileID>
 	<cbc:ProfileExecutionID>{{ProfileExecutionID}}</cbc:ProfileExecutionID>
 	<cbc:ID>{{ID}}</cbc:ID>
 	<cbc:UUID schemeID="{{ProfileExecutionID}}" schemeName="CUDE-SHA384">{{UUID}}</cbc:UUID>
@@ -77,7 +77,7 @@ referencia la factura por ejemplo en servicios públicos>
 	</cac:DiscrepancyResponse>
 <!--TODAS LAS FACTURAS DEBEN SER DEL MISMO ADQUIRIENTE-->
 <!--Si CreditNoteTypeCode igual a 20 es obligatorio-->
-	{% if BillingReference.ID %}
+{% if BillingReference.ID %}
 	<cac:BillingReference>
 		<cac:InvoiceDocumentReference>
 			<cbc:ID>{{BillingReference.ID}}</cbc:ID>
@@ -85,7 +85,7 @@ referencia la factura por ejemplo en servicios públicos>
 			<cbc:IssueDate>{{BillingReference.IssueDate}}</cbc:IssueDate>
 		</cac:InvoiceDocumentReference>
 	</cac:BillingReference>
-	{% endif %}
+{% endif %}
 <!--TODO: Creo que esto para colocar el numero de la orden, en nuestro caso, seria la cotizacion>
 	<cac:OrderReference>
 		<cbc:ID>{{OrderReferenceID}}</cbc:ID>
@@ -199,7 +199,7 @@ Especifación de este grupo igual a la del documento Invoice>
         <!-- TODO: opcional, Grupo de detalles con información de contacto del consorcio -->
 			{% if AccountingSupplierParty.Telephone or AccountingSupplierParty.Telefax or AccountingSupplierParty.ElectronicMail %}
 			<cac:Contact>
-			<!--<cbc:Name>Diana Cruz</cbc:Name-->
+				<!--<cbc:Name>Diana Cruz</cbc:Name-->
 				{% if AccountingSupplierParty.Telephone %}
 				<cbc:Telephone>{{AccountingSupplierParty.Telephone}}</cbc:Telephone>
 				{% endif %}
@@ -294,7 +294,7 @@ Especifación de este grupo igual a la del documento Invoice>
 				{% if AccountingCustomerParty.ElectronicMail %}
 				<cbc:ElectronicMail>{{AccountingCustomerParty.ElectronicMail}}</cbc:ElectronicMail>
 				{% endif %}
-			<!--<cbc:Note></cbc:Note-->
+				<!--<cbc:Note></cbc:Note-->
 			</cac:Contact>
 			{% endif %}
         <!-- TODO: Para informarse si AdditionalAccountID = 2  -->

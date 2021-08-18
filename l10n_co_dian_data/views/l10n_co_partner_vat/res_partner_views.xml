@@ -32,5 +32,21 @@
                 </field>
             </field>
         </record>
+        <record id="action_tipo_documento" model="ir.actions.act_window">
+            <field name="name">Locations</field>
+            <field name="res_model">res.partner.document.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem
+        name="Tipo Documentos"
+        id="locations_menu_tipo"
+        parent="contacts.menu_localisation"
+        action="action_tipo_documento"
+        sequence="5"
+        />
+
+
     </data>
 </odoo>

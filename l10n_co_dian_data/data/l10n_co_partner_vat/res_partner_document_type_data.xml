@@ -38,6 +38,10 @@
             <field name="code">43</field>
             <field name="checking_required" eval="True"/>
         </record>
+        <record id="res_partner_doc_type_PEP" model="res.partner.document.type">
+            <field name="name">PEP</field>
+            <field name="code">47</field>
+        </record>
         <record id="res_partner_doc_type_NITEXTRAN" model="res.partner.document.type">
             <field name="name">NIT de Otro País</field>
             <field name="code">50</field>

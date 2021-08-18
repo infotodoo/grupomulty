@@ -116,8 +116,14 @@ class AccountInvoiceDianDocument(models.Model):
         for record in self:
             einvoicing_taxes = record.invoice_id._get_einvoicing_taxes()
             ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
-            ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
-            ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
+            try:
+                ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
+            except:
+                ValImp2 = 0
+            try:
+                ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
+            except:
+                ValImp3 = 0
             ValFac = record.invoice_id.amount_untaxed
             ValOtroIm = ValImp2 - ValImp3
             ValTolFac = ValFac + ValImp1 + ValImp2 + ValImp3
@@ -470,8 +476,14 @@ class AccountInvoiceDianDocument(models.Model):
 
         ValFac = self.invoice_id.amount_untaxed
         ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
-        ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
-        ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
+        try:
+            ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
+        except:
+            ValImp2 = 0
+        try:
+            ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
+        except:
+            ValImp3 = 0
         TaxInclusiveAmount = ValFac + ValImp1 + ValImp2 + ValImp3
         #El valor a pagar puede verse afectado, por anticipos, y descuentos y
         #cargos a nivel de factura

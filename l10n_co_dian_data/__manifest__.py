@@ -91,5 +91,8 @@
         "views/partner_address_ciiu/ciiu_value_views.xml",
         "views/partner_address_ciiu/street_code_views.xml",
         "views/partner_address_ciiu/res_partner_views.xml",
+
+        "views/l10n_co_account_invoice_discount/account_invoice_discount_views.xml",
+
     ],
 }

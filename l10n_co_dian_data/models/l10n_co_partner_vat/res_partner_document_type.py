@@ -21,6 +21,7 @@ class ResPartnerDocumentType(models.Model):
     checking_required = fields.Boolean(
         string='VAT Check Required',
         default=False)
+    active = fields.Boolean(default=True)
 
     def name_get(self):
         res = []

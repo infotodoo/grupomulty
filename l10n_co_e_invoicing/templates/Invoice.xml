@@ -63,7 +63,7 @@
 	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>{{CustomizationID}}</cbc:CustomizationID>
 <!--TODO: anexo tecnico dice que va ": Factura Electrónica de Venta"-->
-	<cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+	<cbc:ProfileID>DIAN 2.1: Factura Electrónica de Venta</cbc:ProfileID>
 	<cbc:ProfileExecutionID>{{ProfileExecutionID}}</cbc:ProfileExecutionID>
 	<cbc:ID>{{ID}}</cbc:ID>
 	<cbc:UUID schemeID="{{ProfileExecutionID}}" schemeName="CUFE-SHA384">{{UUID}}</cbc:UUID>
@@ -116,14 +116,14 @@ ajuste que se da mediante un Nota Débito>
 		<cbc:ID>12314129 GR</cbc:ID>
         <cbc:IssueDate>2019-12-12</cbc:IssueDate>
 	</cac:ReceiptDocumentReference-->
-<!--TODO: Obligatorio para InvoiceTypeCode = 03 (Contingencia)>-->
+	<!--TODO: Obligatorio para InvoiceTypeCode = 03 (Contingencia)>-->
 	{% if InvoiceTypeCode == '03' %}
 	<cac:AdditionalDocumentReference>
 		<cbc:ID>{{ID}}</cbc:ID>
         <cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
         <cbc:DocumentTypeCode>FTC</cbc:DocumentTypeCode>
 	</cac:AdditionalDocumentReference>
-	{% endif %} 
+	{% endif %}
 	<!--EL EMISOR-->
 	<cac:AccountingSupplierParty>
 		<cbc:AdditionalAccountID>{{AccountingSupplierParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
@@ -357,7 +357,7 @@ ajuste que se da mediante un Nota Débito>
 		<!--cbc:ActualDeliveryDate>11001</cbc:ActualDeliveryDate>
 		<cbc:ActualDeliveryTime>Bogotá, D.c. </cbc:ActualDeliveryTime-->
 	<!--TODO, direccion de entrega-->
-			{% if AccountingCustomerParty.CompanyID != '2222222222' %}
+		{% if AccountingCustomerParty.CompanyID != '2222222222' %}
 		<cac:DeliveryAddress>
 			<cbc:ID>{{Delivery.AddressID}}</cbc:ID>
 			<cbc:CityName>{{Delivery.AddressCityName}}</cbc:CityName>
@@ -451,7 +451,15 @@ ajuste que se da mediante un Nota Débito>
 	{% for TaxTotalID, TaxTotal in TaxesTotal.items() -%}
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
+		<cbc:RoundingAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:RoundingAmount>
+
+		{% set ftotal= {'total': 0.00} %}
 		{% for Percent, TaxSubtotal in TaxTotal.taxes.items() -%}
+		      {% set porcentaje = Percent | float %}
+		      {% set taxableamount = TaxSubtotal.base | float %}
+		      {% set taxamount = TaxSubtotal.amount | float %}
+		      {% if ftotal.update({'total': ftotal.total + (((taxableamount * porcentaje)/100)-taxamount)}) %}{% endif %}
+
 		<cac:TaxSubtotal>
 			<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
@@ -468,6 +476,7 @@ ajuste que se da mediante un Nota Débito>
 			</cac:TaxCategory>
 		</cac:TaxSubtotal>
 		{% endfor -%}
+
 	</cac:TaxTotal>
 	{% endfor -%}
 	{% for WithholdingTaxTotalID, WithholdingTaxTotal in WithholdingTaxesTotal.items() -%}
