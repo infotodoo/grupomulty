@@ -325,6 +325,14 @@ class AccountInvoice(models.Model):
 		company_currency = self.company_id.currency_id
 
 		for tax in self.line_ids:
+			_logger.info("tax.tax_line_id.amount")
+			_logger.info("tax.tax_line_id.amount")
+			_logger.info("tax.tax_line_id.amount")
+			_logger.info("tax.tax_line_id.amount")
+			_logger.info(tax.tax_line_id.amount)
+			_logger.info(tax.tax_line_id.tax_group_id)
+			_logger.info(tax.tax_line_id.tax_group_id.is_einvoicing)
+
 			if tax.tax_line_id.tax_group_id.is_einvoicing:
 				if not tax.tax_line_id.tax_group_id.tax_group_type_id:
 					raise UserError(msg1 % tax.name)
@@ -333,26 +341,29 @@ class AccountInvoice(models.Model):
 				tax_name = tax.tax_line_id.tax_group_id.tax_group_type_id.name
 				tax_type = tax.tax_line_id.tax_group_id.tax_group_type_id.type
 				rate = 1
+				date = fields.Date.context_today(self)
 				# tax_percent = '{:.2f}'.format(tax.tax_line_id.amount)
 				tax_percent = str('{:.2f}'.format(tax.tax_line_id.amount))
 
 				if tax_type == 'withholding_tax' and tax.tax_line_id.amount == 0:
 					raise UserError(msg2 % tax.name)
 				elif tax_type == 'tax' and tax.tax_line_id.amount < 0:
-					_logger.info('negativo einvoicing')
 					raise UserError(msg3 % tax.name)
-				elif tax_type == 'tax' and tax.tax_line_id.amount == 0:
-					pass
+				# elif tax_type == 'tax' and tax.tax_line_id.amount == 0:
+				# 	pass
 				elif tax_type == 'withholding_tax' and tax.tax_line_id.amount < 0:
 					if tax_code not in withholding_taxes:
 						withholding_taxes[tax_code] = {}
 						withholding_taxes[tax_code]['total'] = 0
 						withholding_taxes[tax_code]['name'] = tax_name
 						withholding_taxes[tax_code]['taxes'] = {}
-					
+
 					if float(tax_percent) < 0.0:
-						# tax_percent = '{:.2f}'.format(tax.tax_line_id.amount*(-1))
 						tax_percent = str('{:.2f}'.format(tax.tax_line_id.amount * (-1)))
+						# tax_percent = str(tax.tax_line_id.amount*(-1))
+						_logger.info('tax_percent')
+						_logger.info('tax_percent')
+						_logger.info(tax_percent)
 
 					if tax_percent not in withholding_taxes[tax_code]['taxes']:
 						withholding_taxes[tax_code]['taxes'][tax_percent] = {}
@@ -361,15 +372,23 @@ class AccountInvoice(models.Model):
 
 					if self.currency_id.id != company_currency.id:
 						currency = self.currency_id
-						_logger.info(currency)
+						# _logger.info(currency)
 						rate = currency._convert(rate, company_currency, self.company_id, date)
-						withholding_taxes[tax_code]['total'] += (((tax.tax_base_amount/rate) * tax.tax_line_id.amount) / 100) * (-1)
-						withholding_taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount/rate
-						withholding_taxes[tax_code]['taxes'][tax_percent]['amount'] += (((tax.tax_base_amount/rate) * tax.tax_line_id.amount) / 100) * (-1)
+						withholding_taxes[tax_code]['total'] += (((
+																			  tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100) * (
+																	-1)
+						withholding_taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount / rate
+						withholding_taxes[tax_code]['taxes'][tax_percent]['amount'] += (((
+																									 tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100) * (
+																						   -1)
 					else:
-						withholding_taxes[tax_code]['total'] += ((tax.tax_base_amount * tax.tax_line_id.amount) / 100) * (-1)
+						withholding_taxes[tax_code]['total'] += ((
+																			 tax.tax_base_amount * tax.tax_line_id.amount) / 100) * (
+																	-1)
 						withholding_taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount
-						withholding_taxes[tax_code]['taxes'][tax_percent]['amount'] += ((tax.tax_base_amount * tax.tax_line_id.amount) / 100) * (-1)
+						withholding_taxes[tax_code]['taxes'][tax_percent]['amount'] += ((
+																									tax.tax_base_amount * tax.tax_line_id.amount) / 100) * (
+																						   -1)
 
 				elif tax_type == 'withholding_tax' and tax.tax_line_id.amount > 0:
 					# TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN
@@ -388,37 +407,28 @@ class AccountInvoice(models.Model):
 						taxes[tax_code]['taxes'][tax_percent]['base'] = 0
 						taxes[tax_code]['taxes'][tax_percent]['amount'] = 0
 
-					_logger.info('taxesprueba')
-					_logger.info(tax)
-					_logger.info(tax.tax_base_amount)
-					_logger.info(tax.tax_line_id.amount)
-					_logger.info(tax.tax_line_id.amount)
-
-					rate = 1
 					# date = self._get_currency_rate_date() or fields.Date.context_today(self)
-					date = fields.Date.context_today(self)
-					_logger.info(self.currency_id)
-					_logger.info(company_currency)
 					if self.currency_id.id != company_currency.id:
 						currency = self.currency_id
-						_logger.info(currency)
 						rate = currency._convert(rate, company_currency, self.company_id, date)
 						taxes[tax_code]['total'] += (((tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100)
 						taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount / rate
-						taxes[tax_code]['taxes'][tax_percent]['amount'] += (((tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100)
+						taxes[tax_code]['taxes'][tax_percent]['amount'] += (
+									((tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100)
 					else:
 						taxes[tax_code]['total'] += ((tax.tax_base_amount * tax.tax_line_id.amount) / 100)
 						taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount
-						taxes[tax_code]['taxes'][tax_percent]['amount'] += ((tax.tax_base_amount * tax.tax_line_id.amount) / 100)
+						taxes[tax_code]['taxes'][tax_percent]['amount'] += (
+									(tax.tax_base_amount * tax.tax_line_id.amount) / 100)
 
-		if '01' not in taxes:
-			taxes['01'] = {}
-			taxes['01']['total'] = 0
-			taxes['01']['name'] = 'IVA'
-			taxes['01']['taxes'] = {}
-			taxes['01']['taxes']['0.00'] = {}
-			taxes['01']['taxes']['0.00']['base'] = 0
-			taxes['01']['taxes']['0.00']['amount'] = 0
+		# if '01' not in taxes:
+		# 	taxes['01'] = {}
+		# 	taxes['01']['total'] = 0
+		# 	taxes['01']['name'] = 'IVA'
+		# 	taxes['01']['taxes'] = {}
+		# 	taxes['01']['taxes']['0.00'] = {}
+		# 	taxes['01']['taxes']['0.00']['base'] = 0
+		# 	taxes['01']['taxes']['0.00']['amount'] = 0
 
 		# if '03' not in taxes:
 		# 	taxes['03'] = {}
@@ -438,9 +448,7 @@ class AccountInvoice(models.Model):
 		# 	taxes['04']['taxes']['0.00']['base'] = 0
 		# 	taxes['04']['taxes']['0.00']['amount'] = 0
 
-
 		return {'TaxesTotal': taxes, 'WithholdingTaxesTotal': withholding_taxes}
-
 	# def _get_accounting_supplier_party_values(self):
 	# 	msg1 = _("'%s' does not have a person type assigned")
 	# 	msg2 = _("'%s' does not have a state assigned")
@@ -528,120 +536,6 @@ class AccountInvoice(models.Model):
 			'IDschemeName': supplier.document_type_id.code,
 			'ID': supplier.identification_document}
 
-	def _get_invoice_linescopia(self):
-		msg1 = _("Your tax: '%s', has no e-invoicing tax group type, " +
-				 "contact with your administrator.")
-
-		msg2 = _("Your withholding tax: '%s', has positive amount, the withholding " +
-				 "taxes must have negative amount, contact with your administrator.")
-
-		msg3 = _("Your tax: '%s', has negative amount, the taxes must have " + 
-		         "positive amount, contact with your administrator.")
-		invoice_lines = {}
-		count = 1
-
-		for invoice_line in self.invoice_line_ids:
-			disc_amount = 0
-			total_wo_disc = 0
-
-			if invoice_line.price_subtotal != 0 and invoice_line.discount != 0:
-				disc_amount = (invoice_line.price_subtotal * invoice_line.discount ) / 100
-
-			if invoice_line.price_unit != 0 and invoice_line.quantity != 0:
-				total_wo_disc = invoice_line.price_unit * invoice_line.quantity
-
-			invoice_lines[count] = {}
-			invoice_lines[count]['Quantity'] = '{:.2f}'.format(
-				invoice_line.quantity)
-			invoice_lines[count]['LineExtensionAmount'] = '{:.2f}'.format(
-				invoice_line.price_subtotal)
-			invoice_lines[count]['MultiplierFactorNumeric'] = '{:.2f}'.format(
-				invoice_line.discount)
-			invoice_lines[count]['AllowanceChargeAmount'] = '{:.2f}'.format(
-				disc_amount)
-			invoice_lines[count]['AllowanceChargeBaseAmount'] = '{:.2f}'.format(
-				total_wo_disc)
-			invoice_lines[count]['TaxesTotal'] = {}
-			invoice_lines[count]['WithholdingTaxesTotal'] = {}
-			_logger.info('invoice line')
-			_logger.info(invoice_line)
-			_logger.info(invoice_line.tax_line_id)
-			#for tax in invoice_line.invoice_line_tax_ids:
-			for tax in invoice_line.tax_line_id:
-				if tax.amount_type == 'group':
-					tax_ids = tax.children_tax_ids
-				else:
-					tax_ids = tax
-
-				for tax_id in tax_ids:
-					if tax_id.tax_group_id.is_einvoicing:
-						if not tax_id.tax_group_id.tax_group_type_id:
-							raise UserError(msg1 % tax.name)
-
-						tax_type = tax_id.tax_group_id.tax_group_type_id.type
-
-						if tax_type == 'withholding_tax':
-							if tax_id.amount < 0:
-								invoice_lines[count]['WithholdingTaxesTotal'] = (
-									invoice_line._get_invoice_lines_taxes(
-										tax_id,
-										tax_id.amount * (-1),
-										invoice_lines[count]['WithholdingTaxesTotal']))
-							else:
-								raise UserError(msg2 % tax_id.name)
-						else:
-							if tax_id.amount > 0:
-								invoice_lines[count]['TaxesTotal'] = (
-									invoice_line._get_invoice_lines_taxes(
-										tax_id,
-										tax_id.amount,
-										invoice_lines[count]['TaxesTotal']))
-							else:
-								raise UserError(msg3 % tax_id.name)
-
-			if '01' not in invoice_lines[count]['TaxesTotal']:
-				invoice_lines[count]['TaxesTotal']['01'] = {}
-				invoice_lines[count]['TaxesTotal']['01']['total'] = 0
-				invoice_lines[count]['TaxesTotal']['01']['name'] = 'IVA'
-				invoice_lines[count]['TaxesTotal']['01']['taxes'] = {}
-				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00'] = {}
-				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['amount'] = 0
-			'''
-			if '04' not in invoice_lines[count]['TaxesTotal']:
-				invoice_lines[count]['TaxesTotal']['04'] = {}
-				invoice_lines[count]['TaxesTotal']['04']['total'] = 0
-				invoice_lines[count]['TaxesTotal']['04']['name'] = 'ICA'
-				invoice_lines[count]['TaxesTotal']['04']['taxes'] = {}
-				invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00'] = {}
-				invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-				invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['amount'] = 0
-
-			if '03' not in invoice_lines[count]['TaxesTotal']:
-				invoice_lines[count]['TaxesTotal']['03'] = {}
-				invoice_lines[count]['TaxesTotal']['03']['total'] = 0
-				invoice_lines[count]['TaxesTotal']['03']['name'] = 'INC'
-				invoice_lines[count]['TaxesTotal']['03']['taxes'] = {}
-				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00'] = {}
-				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-				invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['amount'] = 0
-			'''
-			if '06' not in invoice_lines[count]['WithholdingTaxesTotal']:
-				invoice_lines[count]['WithholdingTaxesTotal']['06'] = {}
-				invoice_lines[count]['WithholdingTaxesTotal']['06']['total'] = 0
-				invoice_lines[count]['WithholdingTaxesTotal']['06']['name'] = 'ReteRenta'
-				invoice_lines[count]['WithholdingTaxesTotal']['06']['taxes'] = {}
-				invoice_lines[count]['WithholdingTaxesTotal']['06']['taxes']['0.00'] = {}
-				invoice_lines[count]['WithholdingTaxesTotal']['06']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-				invoice_lines[count]['WithholdingTaxesTotal']['06']['taxes']['0.00']['amount'] = 0
-
-			invoice_lines[count]['ItemDescription'] = invoice_line.name
-			invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(
-				invoice_line.price_unit)
-
-			count += 1
-
-		return invoice_lines
 
 	def _get_invoice_lines(self):
 		msg1 = _("Your Unit of Measure: '%s', has no Unit of Measure Code, " +
@@ -660,7 +554,6 @@ class AccountInvoice(models.Model):
 		count = 1
 
 		for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
-			
 			if not invoice_line.product_uom_id.product_uom_code_id:
 				raise UserError(msg1 % invoice_line.product_uom_id.name)
 
@@ -676,8 +569,9 @@ class AccountInvoice(models.Model):
 				total_wo_disc = invoice_line.price_unit * invoice_line.quantity
 
 			if invoice_line.price_unit == 0 or invoice_line.quantity == 0:
-				raise ValidationError(_('Para facturación electrónica no está permitido lineas de producto con precio o cantidad en 0.'))
-			
+				raise ValidationError(
+					_('Para facturación electrónica no está permitido lineas de producto con precio o cantidad en 0.'))
+
 			if not invoice_line.product_id or not invoice_line.product_id.default_code:
 				raise UserError(msg2 % invoice_line.name)
 
@@ -698,7 +592,8 @@ class AccountInvoice(models.Model):
 			brand_name = invoice_line.product_id.brand_name or ''
 			model_name = invoice_line.product_id.model_name or ''
 
-			product_scheme_id = invoice_line.product_id.product_scheme_id or self.env['product.scheme'].search([('code','=','999')])
+			product_scheme_id = invoice_line.product_id.product_scheme_id or self.env['product.scheme'].search(
+				[('code', '=', '999')])
 
 			nota_ref = ''
 			if self.operation_type == '09':
@@ -722,7 +617,7 @@ class AccountInvoice(models.Model):
 			invoice_lines[count]['StandardschemeName'] = product_scheme_id.name or ''
 			invoice_lines[count]['StandardschemeAgencyID'] = product_scheme_id.scheme_agency_id or ''
 
-			for tax in invoice_line.tax_line_id:
+			for tax in invoice_line.tax_ids:
 
 				if tax.amount_type == 'group':
 					tax_ids = tax.children_tax_ids
@@ -739,11 +634,16 @@ class AccountInvoice(models.Model):
 						if tax_type == 'withholding_tax' and tax_id.amount == 0:
 							raise UserError(msg5 % tax_id.name)
 						elif tax_type == 'tax' and tax_id.amount < 0:
-							_logger.info('negativo tax')
 							raise UserError(msg6 % tax_id.name)
 						elif tax_type == 'tax' and tax_id.amount == 0:
+							_logger.info('entra a pass')
+							_logger.info('entra a pass')
+							_logger.info('entra a pass')
+							_logger.info(tax_id.amount)
 							pass
+
 						elif tax_type == 'withholding_tax' and tax_id.amount < 0:
+							_logger.info('entro a negativo')
 							invoice_lines[count]['WithholdingTaxesTotal'] = (
 								invoice_line._get_invoice_lines_taxes(
 									tax_id,
@@ -790,12 +690,16 @@ class AccountInvoice(models.Model):
 
 			invoice_lines[count]['BrandName'] = brand_name
 			invoice_lines[count]['ModelName'] = model_name
-			invoice_lines[count]['ItemDescription'] = str(invoice_line.name) if invoice_line.name != invoice_line.product_id.display_name else invoice_line.product_id.name or ''
+			invoice_lines[count]['ItemDescription'] = str(
+				invoice_line.name) if invoice_line.name != invoice_line.product_id.display_name else invoice_line.product_id.name or ''
 			invoice_lines[count]['InformationContentProviderParty'] = (
 				invoice_line._get_information_content_provider_party_values())
 			invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(
 				invoice_line.price_unit)
 
 			count += 1
-
+		_logger.info('taxestotal')
+		_logger.info('taxestotal')
+		_logger.info('taxestotal')
+		_logger.info(invoice_lines)
 		return invoice_lines

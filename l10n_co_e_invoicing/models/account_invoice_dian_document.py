@@ -115,7 +115,10 @@ class AccountInvoiceDianDocument(models.Model):
     def _generate_qr_code(self):
         for record in self:
             einvoicing_taxes = record.invoice_id._get_einvoicing_taxes()
-            ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
+            try:
+                ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
+            except:
+                ValImp1 = 0
             try:
                 ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
             except:
@@ -475,7 +478,10 @@ class AccountInvoiceDianDocument(models.Model):
             QRCodeURL = DIAN['catalogo-hab']
 
         ValFac = self.invoice_id.amount_untaxed
-        ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
+        try:
+            ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
+        except:
+            ValImp1 = 0
         try:
             ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
         except:

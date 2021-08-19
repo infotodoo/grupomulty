@@ -531,6 +531,7 @@ Especifación de este grupo igual a la del documento Invoice>
 				<cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
 				<cbc:unitCode></cbc:unitCode>
 				<cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
+				{% if TaxTotal.total > 0 %}
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>
 					<cac:TaxScheme>
@@ -538,6 +539,16 @@ Especifación de este grupo igual a la del documento Invoice>
 						<cbc:Name>{{TaxTotal.name}}</cbc:Name>
 					</cac:TaxScheme>
 				</cac:TaxCategory>
+				{% endif -%}
+				{% if TaxTotal.total == 0 %}
+				<cac:TaxCategory>
+					<cbc:Percent>0.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID></cbc:ID>
+						<cbc:Name></cbc:Name>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				{% endif -%}
 			</cac:TaxSubtotal>
 			{% endfor -%}
 		</cac:TaxTotal>

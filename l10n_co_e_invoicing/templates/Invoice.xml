@@ -452,7 +452,6 @@ ajuste que se da mediante un Nota Débito>
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
 		<cbc:RoundingAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:RoundingAmount>
-
 		{% set ftotal= {'total': 0.00} %}
 		{% for Percent, TaxSubtotal in TaxTotal.taxes.items() -%}
 		      {% set porcentaje = Percent | float %}
@@ -463,10 +462,7 @@ ajuste que se da mediante un Nota Débito>
 		<cac:TaxSubtotal>
 			<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
-		<!--TODO: Usado en el caso de que el tributo es un valor fijo>
-            <cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
-			<cbc:unitCode></cbc:unitCode>
-            <cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
+
 			<cac:TaxCategory>
 				<cbc:Percent>{{Percent}}</cbc:Percent>
 				<cac:TaxScheme>
@@ -513,14 +509,9 @@ ajuste que se da mediante un Nota Débito>
 	{% for InvoiceLineID, InvoiceLine in InvoiceLines.items() -%}
 	<cac:InvoiceLine>
 		<cbc:ID>{{InvoiceLineID}}</cbc:ID>
-	<!--TODO: Obligatorio de informar para el caso de facturas por contratos de servicio tipo AIU.
-	Para el ítem Adminsitración. En este caso la cbc:Note debe empezar por el texto: “Contrato de
-	servicios AIU por concepto de:” El contribuyente debe incluir el objeto del contrato facturado-->
 		<cbc:Note>{{InvoiceLine.Note}}</cbc:Note>
-	<!--TODO: unitCode debe ser dinamico-->
 		<cbc:InvoicedQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
-	<!--TODO, Obligatorio de informar si se trata de muestras comerciales.-->
 	{% if InvoiceLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
@@ -529,19 +520,16 @@ ajuste que se da mediante un Nota Débito>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
 	{% endif %}
-	<!--TODO, pueden ser mas descuentos? es obligatorio?, informacion completa?
-	puede iterar en el campo ID aumenta segun la cantidad de descuentos o cargos por lineas-->
-		<cac:AllowanceCharge>
+	<cac:AllowanceCharge>
 			<cbc:ID>1</cbc:ID>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReason>Descuento</cbc:AllowanceChargeReason>
 			<cbc:MultiplierFactorNumeric>{{InvoiceLine.MultiplierFactorNumeric}}</cbc:MultiplierFactorNumeric>
 			<cbc:Amount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeAmount}}</cbc:Amount>
 			<cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeBaseAmount}}</cbc:BaseAmount>
-		</cac:AllowanceCharge>
-	<!--TODO, revisar que impuestos se deben y no informar?-->
-	<!--IMPUESTOS Y/O RETENCIONES-->
+	</cac:AllowanceCharge>
 		{% for TaxTotalID, TaxTotal in InvoiceLine.TaxesTotal.items() -%}
+
 		<cac:TaxTotal>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
 			{% for Percent, TaxSubtotal in TaxTotal.taxes.items() -%}
@@ -552,6 +540,7 @@ ajuste que se da mediante un Nota Débito>
 				<cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
 				<cbc:unitCode></cbc:unitCode>
 				<cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
+				{% if TaxTotal.total > 0 %}
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>
 					<cac:TaxScheme>
@@ -559,6 +548,17 @@ ajuste que se da mediante un Nota Débito>
 						<cbc:Name>{{TaxTotal.name}}</cbc:Name>
 					</cac:TaxScheme>
 				</cac:TaxCategory>
+				{% endif -%}
+				{% if TaxTotal.total == 0 %}
+				<cac:TaxCategory>
+					<cbc:Percent>0.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID></cbc:ID>
+						<cbc:Name></cbc:Name>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+				{% endif -%}
+
 			</cac:TaxSubtotal>
 			{% endfor -%}
 		</cac:TaxTotal>
