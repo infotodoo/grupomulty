@@ -55,7 +55,7 @@ class AccountInvoice(models.Model):
 	issue_date_invoice = fields.Date('Fecha')
 	customizationid_invoice = fields.Integer(string="Tipo de operación Factura", default=10)
 	aiu = fields.Char(string='AIU')
-	
+
 	credit_note_ids = fields.One2many('account.move', 'reversed_entry_id', string="Notas crédito")
 
 	credit_note_count = fields.Integer('Number of Credit Notes', compute='_compute_credit_count')
@@ -68,7 +68,7 @@ class AccountInvoice(models.Model):
 		data_map = {datum['reversed_entry_id'][0]: datum['reversed_entry_id_count'] for datum in credit_data}
 		for inv in self:
 			inv.credit_note_count = data_map.get(inv.id, 0.0)
-	
+
 	def action_view_credit_notes(self):
 		self.ensure_one()
 		return {
@@ -87,7 +87,7 @@ class AccountInvoice(models.Model):
 
 		res = super(AccountInvoice, self).post()
 		for record in self:
-		
+
 			if record.company_id.einvoicing_enabled and record.journal_id.is_einvoicing:
 				if record.type in ("out_invoice", "out_refund"):
 					if len(self) > 1:
@@ -96,12 +96,12 @@ class AccountInvoice(models.Model):
 					rate = 1
 					# date = self._get_currency_rate_date() or fields.Date.context_today(self)
 					date = fields.Date.context_today(self)
-					
+
 					if record.currency_id.id != company_currency.id:
 						currency = record.currency_id
 						_logger.info(currency)
 						rate = currency._convert(rate, company_currency, record.company_id, date)
-						
+
 						record.trm = rate
 
 					if record.type == 'out_invoice' and record.refund_type == 'debit':
@@ -119,7 +119,7 @@ class AccountInvoice(models.Model):
 						'type_account': type_account
 					})
 					dian_document.action_set_files()
-					
+
 					if record.send_invoice_to_dian == '0':
 						if record.invoice_type_code in ('01', '02', '03'):
 							dian_document.action_sent_zipped_file()
@@ -225,6 +225,22 @@ class AccountInvoice(models.Model):
 
 		return res
 
+	def action_invoice_print(self):
+		""" Print the invoice and mark it as sent, so that we can see more
+			easily the next step of the workflow
+		"""
+		if any(not move.is_invoice(include_receipts=True) for move in self):
+			raise UserError(_("Only invoices could be printed."))
+
+		self.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
+		"""
+		if self.user_has_groups('account.group_account_invoice'):
+			return self.env.ref('account.account_invoices').report_action(self)
+		else:
+			return self.env.ref('account.account_invoices_without_payment').report_action(self)
+		"""
+		return self.env.ref('l10n_co_e_invoicing.account_e_invoices').report_action(self)
+
 	def _get_payment_exchange_rate(self):
 		company_currency = self.company_id.currency_id
 		rate = 1
@@ -252,7 +268,7 @@ class AccountInvoice(models.Model):
 				raise UserError('You cannot cancel a invoice sent to DIAN')
 
 		return res
-	
+
 	def _get_billing_reference(self):
 		billing_reference = {}
 		msg1 = ''
