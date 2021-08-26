@@ -359,7 +359,7 @@ class AccountInvoice(models.Model):
 						withholding_taxes[tax_code]['taxes'] = {}
 
 					if float(tax_percent) < 0.0:
-						tax_percent = str('{:.2f}'.format(tax.tax_line_id.amount * (-1)))
+						tax_percent = str('{:.3f}'.format(tax.tax_line_id.amount * (-1)))
 						# tax_percent = str(tax.tax_line_id.amount*(-1))
 						_logger.info('tax_percent')
 						_logger.info('tax_percent')
