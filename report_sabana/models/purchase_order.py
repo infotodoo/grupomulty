@@ -27,7 +27,6 @@ class PurchaseOrder(models.Model):
                 self.total_weigth = 0
         #return weight
 
-
                 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
