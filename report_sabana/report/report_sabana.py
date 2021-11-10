@@ -151,7 +151,7 @@ class ReportSabana(models.Model):
                 pp.weight * pol.qty as weigth,
                 pol.discount as discount,
                 pl.name as pricelist,
-                po.partner_id as partner_deal_id,
+                rp.partner_deal_id as partner_deal_id,
                 0::integer as team_id
 
 
