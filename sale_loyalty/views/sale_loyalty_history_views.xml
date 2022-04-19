@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_loyalty_points_history_view_form" model="ir.ui.view">
+        <field name="name">sale.loyalty.points.history.form</field>
+        <field name="model">sale.loyalty.points.history</field>
+        <field name="arch" type="xml">
+            <form string="Sale Loyalty Points History">
+                <header>
+                    <field name='state' widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name='partner_id' />
+                            <field name='sale_order_id' />
+                            <field name='date' />
+                        </group>
+                        <group>
+                            <field name='point_type' />
+                            <field name='points' />
+                            <field name="company_id" ref="base.main_company" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sale_loyalty_points_history_view_tree" model="ir.ui.view">
+        <field name="name">sale.loyalty.points.history.tree</field>
+        <field name="model">sale.loyalty.points.history</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Loyalty Points History" decoration-danger="state=='confirmed' and point_type=='redeem'" decoration-success="state=='confirmed' and point_type=='earn'"  decoration-info="state=='draft'" decoration-muted="state=='cancelled'" editable='top' default_order="date desc">
+                <field name='date' />
+                <field name='partner_id' />
+                <field name="sale_order_id" />
+                <field name="point_type" />
+                <field name="points" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+    <record id="sale_loyalty_points_history_view_search" model="ir.ui.view">
+        <field name="name">sale.loyalty.points.history.search</field>
+        <field name="model">sale.loyalty.points.history</field>
+        <field name="arch" type="xml">
+            <search string="Sale Loyalty Points History">
+                <field name='date'/>
+                <field name='partner_id'/>
+                <field name='sale_order_id'/>
+                <filter string="Earned" name="earn" domain="[('point_type', '=', 'earn')]"/>
+                <filter string="Redeemed" name="redeem" domain="[('point_type', '=', 'redeem')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="groupby_partner_id" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Sale Order" name="groupby_sale_order_id" context="{'group_by': 'sale_order_id'}"/>
+                    <filter string="Type" name="groupby_point_type" context="{'group_by': 'point_type'}"/>
+                    <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_loyalty_points_history" model="ir.actions.act_window">
+        <field name="name">Loyalty Points History</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.loyalty.points.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="sale_loyalty_points_history_view_search"/>
+    </record>
+    <menuitem
+        id="menu_loyalty_points_history"
+        action="action_loyalty_points_history"
+        parent="sale_loyalty.main_menu_loyalty_program"
+        sequence="2" />
+</odoo>

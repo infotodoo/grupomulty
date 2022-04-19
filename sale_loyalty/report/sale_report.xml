@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_sale_loyalty" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//tr[hasclass('o_total')]" position="after">
+            <tr class="border-black points_won">
+                <td><strong>Points Earned</strong></td>
+                <td class="text-right">
+                    <span t-if="doc.state not in ['sale', 'done']" t-field="doc.points_won" />
+                    <span t-if="doc.state in ['sale', 'done']" t-field="doc.temp_points_won" />
+                </td>
+            </tr>
+            <tr class="points_spent">
+                <td><strong>Points Redeemed</strong></td>
+                <td class="text-right">
+                    <span t-if="doc.state not in ['sale', 'done']" t-field="doc.points_spent" />
+                    <span t-if="doc.state in ['sale', 'done']" t-field="doc.temp_points_spent" />
+                </td>
+            </tr>
+            <tr class="border-black points_total">
+                <td><strong>Total Points</strong></td>
+                <td class="text-right">
+                    <span t-if="doc.state not in ['sale', 'done']" t-field="doc.points_total" />
+                    <span t-if="doc.state in ['sale', 'done']" t-field="doc.temp_points_total" />
+                </td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

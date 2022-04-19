@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_sale_loyalty" model="ir.ui.view">
+        <field name="name">sale.order.form.sale_loyalty</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="reward_line_available" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='tax_id']" position="after">
+                <field name="total_spent_point" attrs="{'column_invisible': [('parent.reward_line_available', '=', False)]}" />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="button_reward" type="object" string="Get Rewards" icon="fa-star" class="btn btn-primary" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                </button>
+                <button name="action_redeem_points" type="object" string="Redeem Points" icon="fa-star" class="btn btn-primary" attrs="{'invisible': ['|', ('amount_total', '&lt;=', 0.00), ('state', 'in', ['sale', 'done', 'cancel'])]}">
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='sale_total']//field[last()]" position="after">
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                    <label for="points_won" />
+                </div>
+                <field name="points_won" nolabel="1" class="oe_subtotal_footer_separator" readonly="1" style="font-weight: 100;font-size: 1em;padding-top: 5px;" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" />
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label" attrs="{'invisible': [('state', 'not in', ['sale', 'done', 'cancel'])]}">
+                    <label for="temp_points_won" string="Points Earned" />
+                </div>
+                <field name="temp_points_won" nolabel="1" class="oe_subtotal_footer_separator" readonly="1" style="font-weight: 100;font-size: 1em;padding-top: 5px;" attrs="{'invisible': [('state', 'not in', ['sale', 'done', 'cancel'])]}" />
+                <field name='points_spent' readonly="1" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" />
+                <field name='temp_points_spent' string="Points Redeemed" readonly="1" attrs="{'invisible': [('state', 'not in', ['sale', 'done', 'cancel'])]}" />
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                    <label for="points_total" />
+                </div>
+                <field name="points_total" nolabel="1" class="oe_subtotal_footer_separator" readonly="1" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}" />
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label" attrs="{'invisible': [('state', 'not in', ['sale', 'done', 'cancel'])]}">
+                    <label for="temp_points_total" string="Total Points" />
+                </div>
+                <field name="temp_points_total" nolabel="1" class="oe_subtotal_footer_separator" readonly="1" attrs="{'invisible': [('state', 'not in', ['sale', 'done', 'cancel'])]}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

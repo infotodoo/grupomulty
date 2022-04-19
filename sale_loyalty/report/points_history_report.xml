@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_loyalty_points_history_document">
+        <t t-call="web.external_layout">
+            <br/>
+            <div class="page">
+                <h2 class='text-center mb16'>Loyalty Points History</h2>
+                <h2>
+                    <span t-field="o.name" />
+                </h2>
+                <h6>
+                    Total Loyalty Points: <span t-field='o.sale_loyalty_points' />
+                </h6>
+                <table class="table table-sm o_main_table mt16" name="loyalty_points_history_line_table">
+                    <thead>
+                        <tr>
+                            <t t-set="colspan" t-value="6" />
+                            <th name="th_date" class="text-left"><span>Date</span></th>
+                            <th name="th_order" class="text-left"><span>Sale Order</span></th>
+                            <th name="th_type" class="text-left"><span>Type</span></th>
+                            <th name="th_points" class="text-right"><span>Points</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="loyalty_points_history_tbody">
+                        <t t-foreach="o.get_loyalty_points_history()" t-as="line">
+                            <tr>
+                                <td class="text-left"><span t-field="line.date" /></td>
+                                <td class="text-left"><span t-field="line.sale_order_id.name" /></td>
+                                <td class="text-left"><span t-field="line.point_type" /></td>
+                                <td class="text-right"><span t-field="line.points" /></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+    <template id="report_loyalty_points_history">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="sale_loyalty.report_loyalty_points_history_document" t-lang="lang" />
+            </t>
+        </t>
+    </template>
+    <report
+        id="loyalty_points_history"
+        model="res.partner"
+        string="Loyalty Points History"
+        report_type="qweb-pdf"
+        name="sale_loyalty.report_loyalty_points_history"
+        file="sale_loyalty.report_loyalty_points_history"
+        attachment="'Loyalty Points History.pdf'" />
+</odoo>
