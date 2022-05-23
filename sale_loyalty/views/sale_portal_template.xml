@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='total']//tr[hasclass('border-black')][2]" position="after">
+            <tr class="border-black">
+                <td><strong>Points Earned</strong></td>
+                <td class="text-right">
+                    <span t-if="sale_order.state not in ['sale', 'done']" data-id="points_won" t-field="sale_order.points_won" />
+                    <span t-if="sale_order.state in ['sale', 'done']" data-id="temp_points_won" t-field="sale_order.temp_points_won" />
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Points Redeemed</strong></td>
+                <td class="text-right">
+                    <span t-if="sale_order.state not in ['sale', 'done']" data-id="points_spent" t-field="sale_order.points_spent" />
+                    <span t-if="sale_order.state in ['sale', 'done']" data-id="temp_points_spent" t-field="sale_order.temp_points_spent" />
+                </td>
+            </tr>
+            <tr class="border-black">
+                <td><strong>Total Points</strong></td>
+                <td class="text-right">
+                    <span t-if="sale_order.state not in ['sale', 'done']" data-id="points_total" t-field="sale_order.points_total" />
+                    <span t-if="sale_order.state in ['sale', 'done']" data-id="temp_points_total" t-field="sale_order.temp_points_total" />
+                </td>
+            </tr>
+        </xpath>
+    </template>
+    <template id="portal_layout_inherit_sale_loyalty" inherit_id="portal.portal_layout">
+        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
+            <hr class="mt-1 mb-0" />
+            <div class='mt8'>
+                <b>
+                    <i class="fa fa-trophy mr8" />
+                    <span>Sale Loyalty Points : <t t-esc='user_id.partner_id.sale_loyalty_points' /></span>
+                </b>
+                <div class="mt4">
+                    Sale Loyalty Points Report: <a class="o_download_btn ml4" t-att-href="user_id.partner_id.get_portal_pdf_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/></a>
+                    <a class="o_print_btn ml4" t-att-href="user_id.partner_id.get_portal_pdf_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/></a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
