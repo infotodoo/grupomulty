@@ -11,7 +11,7 @@
     "website": "http://www.Coondev.com",
     "license": "AGPL-3",
     "summary": "Colombian E-Invoicing",
-    "depends": ["l10n_co_e_invoicing"],
+    "depends": ["l10n_co_e_invoicing",'report_sabana'],
     'external_dependencies': {
         'python': [
             'validators',
