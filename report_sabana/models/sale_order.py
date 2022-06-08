@@ -72,11 +72,11 @@ class SaleOrder(models.Model):
                 price, rule_id = pricelist_id.with_context(product_context).get_product_price_rule(product_obj, product_uom_qty or 1.0, partner_obj)
                 new_sale_order = self.env['sale.order.line']
                 new_list_price, currency = new_sale_order.with_context(product_context)._get_real_price_currency(product, rule_id, product_uom_qty, product_uom, pricelist_id.id)
-                if rule_id:
+                """if rule_id:
                     discount = self.env['product.pricelist.item'].browse(rule_id)
                     line[2].update({
                         'discount': float(discount.price_discount if discount else 0.0),
-                    })
+                    })"""
 
         res = super(SaleOrder, self).create(vals)
         return res
