@@ -569,7 +569,7 @@ class AccountInvoice(models.Model):
 		invoice_lines = {}
 		count = 1
 
-		for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
+		for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type or x.price_unit == 0):
 			if not invoice_line.product_uom_id.product_uom_code_id:
 				raise UserError(msg1 % invoice_line.product_uom_id.name)
 
