@@ -584,9 +584,9 @@ class AccountInvoice(models.Model):
 			if invoice_line.price_unit != 0 and invoice_line.quantity != 0:
 				total_wo_disc = invoice_line.price_unit * invoice_line.quantity
 
-			if invoice_line.price_unit == 0 or invoice_line.quantity == 0:
+			"""if invoice_line.price_unit == 0 or invoice_line.quantity == 0:
 				raise ValidationError(
-					_('Para facturación electrónica no está permitido lineas de producto con precio o cantidad en 0.'))
+					_('Para facturación electrónica no está permitido lineas de producto con precio o cantidad en 0.'))"""
 
 			if not invoice_line.product_id or not invoice_line.product_id.default_code:
 				raise UserError(msg2 % invoice_line.name)
