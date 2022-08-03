@@ -258,13 +258,13 @@ class AccountInvoiceDianDocument(models.Model):
                     self.write({'state': 'done'})
 
                     if self.get_status_zip_status_code != '00':
-                        if (self.invoice_id.move_type == "out_invoice"
+                        if (self.invoice_id.type == "out_invoice"
                             and not self.invoice_id.refund_type):
                             self.company_id.out_invoice_sent += 1
-                        elif (self.invoice_id.move_type == "out_refund"
+                        elif (self.invoice_id.type == "out_refund"
                               and self.invoice_id.refund_type != "debit"):
                             self.company_id.out_refund_sent += 1
-                        elif (self.invoice_id.move_type == "out_invoice"
+                        elif (self.invoice_id.type == "out_invoice"
                               and self.invoice_id.refund_type == "debit"):
                             self.company_id.out_refund_sent += 1
 
@@ -367,13 +367,13 @@ class AccountInvoiceDianDocument(models.Model):
         in_refund_sent = self.company_id.in_refund_sent
         zip_sent = out_invoice_sent + out_refund_sent + in_refund_sent
 
-        if self.invoice_id.move_type == 'out_invoice' and not self.invoice_id.refund_type:
+        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
             xml_filename_prefix = 'fv'
             dddddddd = str(out_invoice_sent + 1).zfill(8)
-        elif self.invoice_id.move_type == 'out_refund' and self.invoice_id.refund_type != 'debit':
+        elif self.invoice_id.type == 'out_refund' and self.invoice_id.refund_type != 'debit':
             xml_filename_prefix = 'nc'
             dddddddd = str(out_refund_sent + 1).zfill(8)
-        elif self.invoice_id.move_type == 'out_invoice' and self.invoice_id.refund_type == 'debit':
+        elif self.invoice_id.type == 'out_invoice' and self.invoice_id.refund_type == 'debit':
             xml_filename_prefix = 'nd'
             dddddddd = str(out_refund_sent + 1).zfill(8)
 
@@ -433,7 +433,7 @@ class AccountInvoiceDianDocument(models.Model):
         SoftwarePIN = False
         IdSoftware = self.company_id.software_id
 
-        if self.invoice_id.move_type == 'out_invoice' and not self.invoice_id.refund_type:
+        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
             ClTec = active_dian_resolution['technical_key']
         else:
             SoftwarePIN = self.company_id.software_pin
@@ -706,15 +706,15 @@ class AccountInvoiceDianDocument(models.Model):
         #         self._get_debit_note_values(),
         #         'DebitNote')
 
-        if self.invoice_id.move_type == "out_invoice" and not self.invoice_id.refund_type:
+        if self.invoice_id.type == "out_invoice" and not self.invoice_id.refund_type:
             xml_without_signature = global_functions.get_template_xml(
                 self._get_invoice_values(),
                 'Invoice')
-        elif self.invoice_id.move_type == "out_refund" and self.invoice_id.refund_type != "debit":
+        elif self.invoice_id.type == "out_refund" and self.invoice_id.refund_type != "debit":
             xml_without_signature = global_functions.get_template_xml(
                 self._get_credit_note_values(),
                 'CreditNote')
-        elif self.invoice_id.move_type == "out_invoice" and self.invoice_id.refund_type == "debit":
+        elif self.invoice_id.type == "out_invoice" and self.invoice_id.refund_type == "debit":
             xml_without_signature = global_functions.get_template_xml(
                 self._get_debit_note_values(),
                 'DebitNote')
@@ -1015,11 +1015,11 @@ class AccountInvoiceDianDocument(models.Model):
                     if element.text == '00':
                         self.write({'state': 'done'})
 
-                        if self.invoice_id.move_type == 'out_invoice':
+                        if self.invoice_id.type == 'out_invoice':
                             self.company_id.out_invoice_sent += 1
-                        elif self.invoice_id.move_type == 'out_refund':
+                        elif self.invoice_id.type == 'out_refund':
                             self.company_id.out_refund_sent += 1
-                        elif self.invoice_id.move_type == 'in_refund':
+                        elif self.invoice_id.type == 'in_refund':
                             self.company_id.in_refund_sent += 1
 
                     status_code = element.text

@@ -70,7 +70,7 @@ class PosOrderInherit(models.Model):
 										'product_uom_qty' :i.get('quantity'),
 										'picking_id':pick_id.id,
 										'location_id':pick_id.location_id.id,
-										# 'move_type' : 'direct',
+										# 'type' : 'direct',
 										'location_dest_id':pick_id.location_dest_id.id,
 										'product_uom':product_obj.uom_id.id,
 										'picking_type_id' :stock_picking_type.id

@@ -168,7 +168,7 @@ class AccountInvoice(models.Model):
 				if record._get_warn_pfx_state():
 					raise ValidationError(_('Factura electrónica bloqueada. \n\n El Certificado .pfx de la compañia %s está vencido.') % record.company_id.name)
 	
-				if record.move_type in ("in_invoice", "in_refund"):
+				if record.type in ("in_invoice", "in_refund"):
 					dian_document_obj = self.env['account.invoice.dian.document']
 					dian_document = dian_document_obj.create({
 						'invoice_id': record.id,
@@ -176,7 +176,7 @@ class AccountInvoice(models.Model):
 						'type_account': type_account
 					})
 					dian_document.accuse_recibo()
-				if record.move_type in ("out_invoice", "out_refund"):
+				if record.type in ("out_invoice", "out_refund"):
 					company_currency = record.company_id.currency_id
 					self.approve_token = self.approve_token if self.approve_token else str(uuid.uuid4())
 					self.invoice_rating = 'not_rating'
@@ -188,9 +188,9 @@ class AccountInvoice(models.Model):
 						rate = currency._convert(rate, company_currency, record.company_id, date)
 						record.trm = rate
 
-					if record.move_type == 'out_invoice' and record.refund_type == 'debit':
+					if record.type == 'out_invoice' and record.refund_type == 'debit':
 						type_account = 'debit'
-					elif record.move_type == 'out_refund' and record.refund_type != 'debit':
+					elif record.type == 'out_refund' and record.refund_type != 'debit':
 						type_account = 'credit'
 					else:
 						type_account = 'invoice'
