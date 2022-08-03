@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <template id="approve_electronic_invoice_messages" name="Calificacion de Factura Electronica">
+            <t t-call="web.layout">
+                <div class="container">
+                    <div clas="row">
+                        <h1 class="text-center">Factura Electrónica</h1>
+                        <h4 class="text-center text-muted" style="margin-bottom: 32px;">¡La calificacion de su Factura Electronica se ha realizaco con éxito!</h4>
+
+                        <div style="margin-left: 80px;">
+                            Ha <b t-esc="'Aprobado' if rating == 'aprobada' else 'Rechazado'"/>
+                            la factura  "<b t-esc="invoice.name"/>"<br/>
+                        </div>
+
+                        <div class="clearfix"/>
+                        <t t-if="rating == 'rechazada'">
+                            <p style="margin-top:32px;">
+                                Porfavor Notificanos el motivo por el cual se rechazo la factura.
+                                Estaremos realizando el respectivo seguimiento para resolver sus inquietudes.
+                            </p>
+                            <form class="form-horizontal" t-attf-action="/approve-electronic-invoice/#{token}/refuse_text" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <textarea class="form-control" name="refuse_text" rows="8" t-att-value="invoice.refuse_text"/>
+                                <button type="submit" class="btn btn-primary" style="margin-top:8px;">Notificar Motivo</button>
+                            </form>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="electronic_invoice_notification_refuse" name="Notificacion de Rechazo de Factura Electronica">
+            <t t-call="web.layout">
+                <div class="container">
+                    <div class="text-center" style="margin-top:128px">
+                        <i class="fa fa-check-circle fa-5x text-success" />
+                    </div>
+                    <h2 class="text-center">¡Gracias por su Respuesta!</h2>
+                    <div class="text-center">
+                        <p>Estaremos realizando el respectivo seguimiento para resolver sus inquietudes.</p>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="invoice_rating_refuse" name="Factura Electronica Calificada con Anterioridad">
+            <t t-call="web.layout">
+                <div class="container">
+                    <div clas="row">
+                        <h1 class="text-center">Factura Electrónica</h1>
+                        <h4 class="text-center text-muted" style="margin-bottom: 32px;">Esta factura ya fue calificada Anteriormente.</h4>
+                        <div style="margin-left: 80px;">
+                            Estado de calificación: <b t-esc="'Aprobada' if rating == 'approve' else 'Rechazada'"/><br/>
+                            Factura No.: "<b t-esc="invoice.name"/>"<br/>
+                            <t t-if="rating == 'rechazada'">
+                                <textarea class="form-control" name="invoice.refuse_text" rows="8" t-att-value="invoice.refuse_text"><t t-esc="invoice.refuse_text"/></textarea><br/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

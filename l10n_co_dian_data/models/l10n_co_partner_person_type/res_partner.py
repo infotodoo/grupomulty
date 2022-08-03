@@ -7,7 +7,7 @@ import logging
 from odoo import api, fields, models, _
 # from odoo.addons.partner_firstname import exceptions
 from odoo.osv import expression
-from openerp.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from ... import exceptions
 
 
@@ -19,7 +19,7 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
-    firstname = fields.Char("First name", index=True)
+    firstname = fields.Char("Primer Nombre", index=True)
     lastname = fields.Char("Last name", index=True)
     name = fields.Char(
         compute="_compute_name",

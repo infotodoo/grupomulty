@@ -2419,7 +2419,7 @@ msgstr "Número Final"
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_partner__firstname
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_users__firstname
 msgid "First name"
-msgstr "Número inicial"
+msgstr "Primer Nombre"
 
 #. module: l10n_co_dian_data
 #: model:ir.model,name:l10n_co_dian_data.model_account_fiscal_position
@@ -2889,7 +2889,7 @@ msgstr ""
 #. module: l10n_co_dian_data
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_ir_sequence_date_range__number_from
 msgid "Initial Number"
-msgstr "Número inicial"
+msgstr ""
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_001
@@ -3365,7 +3365,7 @@ msgstr "Ultima actualización el"
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_partner__lastname
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_users__lastname
 msgid "Last name"
-msgstr "Apellido"
+msgstr "Primer Apellido"
 
 #. module: l10n_co_dian_data
 #: model:account.payment.mean.code,name:l10n_co_dian_data.account_payment_mean_code_026
@@ -3982,7 +3982,7 @@ msgstr "Orden para redactar el nombre completo del socio"
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_partner__othernames
 #: model:ir.model.fields,field_description:l10n_co_dian_data.field_res_users__othernames
 msgid "Other Names"
-msgstr "Otros nombres"
+msgstr "Segundo nombre"
 
 #. module: l10n_co_dian_data
 #: model:res.city,name:l10n_co_dian_data.res_city_co_15511

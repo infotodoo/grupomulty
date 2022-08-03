@@ -17,9 +17,8 @@
         - l10n_co_account_fiscal_position_listname: Regímenes fiscales para la localizacion Colombiana.
         - l10n_co_product_uom: Código de unidades Colombiano.
     """,
-    'author': "Todoo SAS, "
-              "Bernardo D. Lara Guevara bl@todoo.co",
-    'website': "https://www.todoo.co/",
+    'author': "DRACOSOFT,",
+    'website': "https://www.dracosoft.com.co/",
     'category': 'Localization',
     'version': '0.1',
     'depends': ['account', 'base_setup', 'base_vat', 'product', 'base_address_city', 'contacts'],
@@ -91,8 +90,5 @@
         "views/partner_address_ciiu/ciiu_value_views.xml",
         "views/partner_address_ciiu/street_code_views.xml",
         "views/partner_address_ciiu/res_partner_views.xml",
-
-        "views/l10n_co_account_invoice_discount/account_invoice_discount_views.xml",
-
     ],
 }

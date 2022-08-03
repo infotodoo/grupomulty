@@ -45,7 +45,7 @@ class AccountInvoiceLine(models.Model):
                 price_subtotal_signed,
                 self.invoice_id.company_id.currency_id)
 
-        if (self.invoice_id.type in ['in_refund', 'out_refund']
+        if (self.invoice_id.move_type in ['in_refund', 'out_refund']
                 and self.invoice_id.refund_type == 'credit'):
             sign = -1
 

@@ -75,7 +75,8 @@
                       <t t-if="o.company_id.einvoicing_enabled == True">
                         <t t-foreach="o.dian_document_lines" t-as="dd">
                           <t t-if="dd.state == 'done' or dd.state == 'sent'">
-                            <img class="image" t-attf-src="data:image/png;base64,{{dd.qr_image}}" style="width:115px;height:115px;margin-bottom:1px"/>
+                            <img class="image" t-attf-src="data:image/png;base64,{{dd.qr_image}}" style="width:150px;height:150px;margin-bottom:5px"/>
+                            <span t-field="o.name"/>
                           </t>
                         </t>
                       </t>
@@ -155,16 +156,12 @@
 <!--                            <strong>Zona:</strong><span class="m-0" t-field="o.partner_id.zone"/>-->
 <!--                        </div>-->
                     </div>
-                    <!--<h3><strong>Factura Electrónica de Venta <span t-esc="o.name"/></strong> </h3>-->
-                    <h3><t t-if="o.move_type == 'out_invoice'"><strong>FACTURA ELECTRONICA DE VENTA N°</strong></t>
-                            <t t-elif="o.move_type == 'out_refund' and o.refund_type=='credit'"><strong>NOTA CREDITO ELECTRONICA DE VENTA</strong></t>
-                            <t t-elif="o.move_type == 'out_refund' and o.refund_type=='debit'"><strong>NOTA DEBITO ELECTRONICA DE VENTA</strong></t>
-                        <b><t t-esc="o.name"/></b></h3>
+                    <h3><strong>Factura Electrónica de Venta <span t-esc="o.name"/></strong> </h3>
                     <t t-esc="o.journal_id.resolution_text" t-options="{'widget': 'html'}"/>
                     <div id="informations" class="row mt32 mb32">
                         <div class="col-auto mw-100 mb-4">
                             <strong>Fecha De Facturacion:</strong>
-                            <p class="m-0" t-field="o.create_date"/>
+                            <p class="m-0" t-field="o.invoice_date"/>
                         </div>
                         <div class="col-auto mw-100 mb-4">
                             <strong>Fecha De Vencimiento:</strong>
@@ -185,8 +182,7 @@
                       <t t-foreach="o.dian_document_lines" t-as="dd">
                           <t t-if="dd.state == 'done'">
                             <div style="width: 100%; font-size:12px;">
-                                <p> <t t-if="o.move_type == 'out_invoice'"><strong> CUFE :</strong></t>
-                            <t t-elif="o.move_type == 'out_refund' and o.refund_type=='credit'"><strong>CUDE :</strong></t><span t-field="dd.cufe_cude"/></p>
+                                <p><strong>CUFE: </strong><span t-field="dd.cufe_cude"/></p>
                             </div>
                             <div style="width: 100%; font-size:12px;">
                                 <p><strong>Fecha Y Hora de Emision: </strong><span t-field="dd.create_date"/></p>
@@ -251,16 +247,16 @@
                                         <span class="text-nowrap" t-field="line.price_unit"/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="iva/(line.price_unit/100)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                        <span t-esc="iva/(line.price_unit/100)" t-options='{"widget": "float", "precision": 2}'/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="priceiva" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                        <span t-esc="priceiva" t-options='{"widget": "float", "precision": 2}'/>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span class="text-nowrap" t-field="line.discount"/>
                                     </td>
                                     <td class="text-right o_price_total">
-                                        <span class="text-nowrap" t-field="line.price_total"/>
+                                        <span class="text-nowrap" t-field="line.price_total" />
                                     </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_section'">
@@ -341,8 +337,6 @@
                    <p class="text-justify"><strong>Total en letras: </strong> <span t-if="o.currency_id" t-esc="total_letras"/></p>
                     <br/>
                     <p class="text-justify" style="font-family: sans-serif; font-size:7px;"><span t-esc="o.company_id.tributary_information"/></p>
-                    
-                    <p t-if="o.move_type == 'out_refund' and o.refund_type=='credit'">  Reversion de Factura : <span t-field="o.reversed_entry_id"> </span></p>
                 </div>
 
 <!--                <div id="tletras">-->
