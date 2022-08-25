@@ -79,11 +79,13 @@
 		</cac:DocumentReference>
 		<cac:IssuerParty>
 			<cac:Person>
-				<cbc:ID schemeID="4" schemeName="13" >2589846132</cbc:ID>
-				<cbc:FirstName>{{person_name}}</cbc:FirstName>
-				<cbc:FamilyName>{{person_last_name}} </cbc:FamilyName>
-				<cbc:JobTitle>{{person_fiscal}}</cbc:JobTitle>
-				<cbc:OrganizationDepartment>{{person_fiscal_type}}</cbc:OrganizationDepartment>
+				<cbc:ID schemeID="4" schemeName="13" >{{AccountingCustomerParty.CompanyID}}</cbc:ID>
+				<cbc:FirstName>{{AccountingCustomerParty.FirstName}}</cbc:FirstName>
+                <cbc:FamilyName>{{AccountingCustomerParty.FamilyName}}</cbc:FamilyName>
+				{% if AccountingCustomerParty.MiddleName %}
+				<cbc:MiddleName>{{AccountingCustomerParty.MiddleName}}</cbc:MiddleName>
+				{% endif %}
+				<cbc:JobTitle>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:JobTitle>
 			</cac:Person>
 		</cac:IssuerParty>
 	</cac:DocumentResponse>

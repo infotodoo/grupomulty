@@ -19,7 +19,7 @@
                     attrs="{'invisible': [('country_enforce_cities', '=', False)]}"/>
             </field>
             <field name="city" position="attributes">
-                <attribute name="invisible">[('country_enforce_cities', '=', True)]</attribute>s
+                <attribute name="attrs">{'required': [('country_enforce_cities', '=', True)]}</attribute>
             </field>
         </field>
     </record>

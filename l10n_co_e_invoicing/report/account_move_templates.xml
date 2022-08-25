@@ -181,6 +181,10 @@
                             <p class="m-0" t-field="o.payment_mean_code_id.name"/>
                         </div>
                     </div>
+                    <div class="col-auto mw-100 mb-4">
+                        <strong>Metodo de Pago:</strong>
+                        <p class="m-0" t-field="o.payment_mean_id.name"/>
+                    </div>
                   <t t-if="o.company_id.einvoicing_enabled == True">
                       <t t-foreach="o.dian_document_lines" t-as="dd">
                           <t t-if="dd.state == 'done'">

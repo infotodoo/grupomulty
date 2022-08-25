@@ -106,7 +106,8 @@ class ResPartner(models.Model):
                 del vals["name"]
             if "default_name" in context:
                 del context["default_name"]
-
+            if "parent_id" in vals:
+                vals["person_type"] = '2'
         return super(ResPartner, self.with_context(context)).create(vals)
 
     def copy(self, default=None):

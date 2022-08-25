@@ -18,8 +18,8 @@
                                     'invisible': [('refund_type', '=', False)]}"
                             options="{'no_create_edit': True}"/>
                 </xpath>
-                <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
 
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
                     <button name="%(account_invoice_debit_note_action)d"
                             id="account_invoice_debit_note_action"
                             type='action'
@@ -30,6 +30,7 @@
                                                 ('state', 'in', ['proforma2', 'proforma', 'cancel', 'draft'])]}"
                             icon='fa-file'/>
                 </xpath>
+
                 <div class="oe_button_box" position="inside">
                     <button type="object" class="oe_stat_button" name="action_view_debit_notes" icon="fa-plus" attrs="{'invisible': [('debit_note_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
@@ -64,7 +65,7 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="refund_type"/>
+                    <field name="refund_type" optional="hide"/>
                 </xpath>
             </field>
         </record>
@@ -74,7 +75,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="account.view_out_invoice_tree"/>
+            <field name="view_id" ref="account.view_invoice_tree"/>
             <field name="search_view_id" ref="account.view_account_invoice_filter"/>
             <field name="domain">[('type', '=', 'out_invoice'),('refund_type','=',False)]</field>
             <field name="context">{'default_type': 'out_invoice', 'default_refund_type': False}</field>

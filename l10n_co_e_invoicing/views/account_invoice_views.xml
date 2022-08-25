@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.view.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="invoice_rating" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_invoice_form">
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
@@ -10,7 +21,7 @@
                 <field name="invoice_rating" readonly="1"/>
                 <field name="refuse_text" attrs="{'invisible': [('invoice_rating', '!=', 'refuse')], 'readonly': True}"/>
                 <field name="type"/>
-                <field name="send_invoice_to_dian" invisible="1"/>
+                <field name="send_invoice_to_dian" invisible="1"/><field name="cufe_cude" attrs="{'invisible': [('type', 'not in', ('in_invoice','in_refund'))]}"/>
                 <field name="operation_type"
                     attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],
                             '!required': [('type', '!=', 'out_invoice')],
@@ -49,7 +60,7 @@
             </xpath>
 
             <xpath expr="//notebook" position="inside">
-                <page name="einvoicing" string="E-Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))]}">
+                <page name="einvoicing" string="E-Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund','in_invoice'))]}">
                     <field name="dian_document_lines" mode="tree">
                         <tree string="DIAN Documents" create="0" edit="0">
                             <field name="cufe_cude"/>
@@ -107,7 +118,7 @@
         <field name="model_id" ref="account.model_account_move"/>
         <field name="email_from">${object.company_id.einvoicing_email}</field>
         <field name="reply_to">${object.company_id.einvoicing_email}</field>
-        <field name="subject">${object.company_id.name} generó la Factura electrónica ${object.name}</field>
+        <field name="subject">${object.company_id.partner_id.identification_document} ; ${object.company_id.name} ; ${object.name} ; 01 ; ${object.company_id.name}</field>
         <field name="email_to">${(object.partner_id.email) or (object.company_id.einvoicing_partner_no_email)}</field>
         <field name="auto_delete" eval="True"/>
         <field name="lang">${object.partner_id.lang}</field>
@@ -134,16 +145,15 @@
                 <tbody>
                     <tr>
                         <td>
-                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/mail/view?model=account.move&amp;res_id=${id_doc}&amp;approve_token=${object.approve_token}" style="background-color:#7bbddb;color:#fff;border-radius:3px;font-size:12px">
+                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/mail/view?model=account.move&amp;res_id=${id_doc}&amp;approve_token=${object.approve_token}" style="background-color:#685563;color:#fff;border-radius:10px;font-size:15px">
                             Ver ${object.name}</a>
                         </td>
-
                         <td>
-                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/approve-electronic-invoice/${object.approve_token}/True" style="background-color:#58db97;color:#a8a8a8;border-radius:10px;font-size:15px">
+                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/approve-electronic-invoice/${object.approve_token}/True" style="background-color:#35979C;color:#fff;border-radius:10px;font-size:15px">
                             Aprobar</a>
                         </td>
                         <td>
-                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/approve-electronic-invoice/${object.approve_token}/False" style="background-color:#f21f35;color:#a8a8a8;border-radius:10px;font-size:15px">
+                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/approve-electronic-invoice/${object.approve_token}/False" style="background-color:#B9210F;color:#fff;border-radius:10px;font-size:15px">
                             Rechazar</a>
                         </td>
                     </tr>
@@ -153,6 +163,4 @@
         </div>
         ]]></field>
     </record>
-
-
 </odoo>

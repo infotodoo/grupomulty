@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Copyright 2021 Diego Carvajal <Github@diegoivanc>
+
 
 import hashlib
 from os import path
@@ -23,33 +25,6 @@ from qrcode import QRCode, constants
 
 import logging
 _logger = logging.getLogger(__name__)
-
-
-def get_cuds(
-        NumFac,
-        FecFac,
-        HorFac,
-        ValFac,
-        CodImp1,
-        ValImp1,
-        ValTot,
-        NitOFE,
-        NumAdq,
-        SoftwarePIN,
-        TipoAmbie):
-    uncoded_value = (NumFac + ' + ' + str(FecFac) + ' + ' + str(HorFac) + ' + ' +
-                     ValFac + ' + ' + CodImp1 + ' + ' + ValImp1 + ' + ' +
-                     ValTot + ' + ' + NitOFE + ' + ' + NumAdq + ' + ' +
-                     SoftwarePIN + ' + ' + TipoAmbie)
-    unicode = unidecode(
-        str(NumFac) + str(FecFac) + str(HorFac) + str(ValFac) + str(CodImp1) + str(ValImp1) + str(ValTot) + str(
-            NitOFE) + str(NumAdq) + str(SoftwarePIN) + str(TipoAmbie)).encode()
-
-    CUFE_CUDE = hashlib.sha384(unicode)
-
-    return {
-        'CUFE/CUDEUncoded': uncoded_value,
-        'CUFE/CUDE': CUFE_CUDE.hexdigest()}
 
 
 def get_cufe_cude(
@@ -190,6 +165,8 @@ def get_xml_with_signature(
     #Complememto para añadir atributo faltante
     for element in root.iter("{%s}SignatureValue" % ds):
         element.attrib['Id'] = signature_id + "-sigvalue"
+
+
 
     #https://www.decalage.info/en/python/lxml-c14n
     output = BytesIO()

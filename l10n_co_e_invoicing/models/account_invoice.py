@@ -108,6 +108,7 @@ class AccountInvoice(models.Model):
 											 ('111', 'Tiene más de un documento DIAN'),
 											 ('other', 'Other')], string='Estado doc. DIAN', compute="_get_status_doc_dian", default=False, tracking=True)
 	orden_compra = fields.Char(string='Orden de compra')
+	cufe_cude = fields.Char(string='CUFE/CUDE', tracking=True)
 
 	@api.depends('dian_document_lines')
 	def _get_status_doc_dian(self):
@@ -153,29 +154,30 @@ class AccountInvoice(models.Model):
 			'domain': [('reversed_entry_id', '=', self.id)],
 		}
 
-	def _post(self, soft=True):
+	def post(self, soft=True):
 		for record in self:
 			if record.state != 'draft':
 				raise ValidationError(_('Esta factura [%s] no está en borrador, por lo tanto, no se puede publicar. \n' \
 										'Por favor, recargue la página para refrescar el estado de esta factura.') % record.id)
 
-		res = super(AccountInvoice, self)._post()
+		res = super(AccountInvoice, self).post()
 
 		for record in self:
+			if record.company_id.einvoicing_enabled and record.journal_id.acknowledgement_receipt and record.type in ("in_invoice", "in_refund"):
+				dian_document_obj = self.env['account.invoice.dian.document']
+				dian_document = dian_document_obj.create({
+					'invoice_id': record.id,
+					'company_id': record.company_id.id,
+					'type_account': 'support_document'
+				})
+				dian_document.accuse_recibo()
+
 			if record.company_id.einvoicing_enabled and record.journal_id.is_einvoicing:
 				if len(self) > 1:
 					raise ValidationError(_('No está permitido publicar varias facturas electrónicas a la vez.'))
 				if record._get_warn_pfx_state():
 					raise ValidationError(_('Factura electrónica bloqueada. \n\n El Certificado .pfx de la compañia %s está vencido.') % record.company_id.name)
 	
-				if record.type in ("in_invoice", "in_refund"):
-					dian_document_obj = self.env['account.invoice.dian.document']
-					dian_document = dian_document_obj.create({
-						'invoice_id': record.id,
-						'company_id': record.company_id.id,
-						'type_account': type_account
-					})
-					dian_document.accuse_recibo()
 				if record.type in ("out_invoice", "out_refund"):
 					company_currency = record.company_id.currency_id
 					self.approve_token = self.approve_token if self.approve_token else str(uuid.uuid4())
@@ -225,11 +227,11 @@ class AccountInvoice(models.Model):
 
 	def _get_pdf_file(self):
 		template = self.env['ir.actions.report'].browse(self.dian_document_lines.company_id.report_template.id)
-		# pdf = self.env.ref('account.move')._render_qweb_pdf([self.invoice_id.id])[0]
+		# pdf = self.env.ref('account.move').render_qweb_pdf([self.invoice_id.id])[0]
 		if template:
-			pdf = template._render_qweb_pdf(self.id)[0]
+			pdf = template.render_qweb_pdf(self.id)[0]
 		else:
-			pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
+			pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.id)[0]
 		pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
 		return pdf
@@ -245,6 +247,7 @@ class AccountInvoice(models.Model):
 		# template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
 
 		xml_attachment_file = False
+		name_xlm = False
 		for item in self.dian_document_lines:
 			name_xlm = item.xml_filename.replace('.xml', '')
 		if not name_xlm:
@@ -678,7 +681,7 @@ class AccountInvoice(models.Model):
 				reference_price = invoice_line.product_id.margin_percentage
 			else:
 				reference_price = invoice_line.product_id.margin_percentage * \
-								  invoice_line.product_id.with_company(self.company_id).standard_price
+								  invoice_line.product_id.with_context(force_company=self.company_id.id).standard_price
 
 			if invoice_line.price_subtotal <= 0 and reference_price <= 0:
 				raise UserError(msg3 % invoice_line.product_id.default_code)
@@ -703,7 +706,7 @@ class AccountInvoice(models.Model):
 			invoice_lines[count]['Quantity'] = '{:.2f}'.format(invoice_line.quantity)
 			invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(reference_price)
 			invoice_lines[count]['LineExtensionAmount'] = '{:.2f}'.format(invoice_line.price_subtotal)
-			invoice_lines[count]['PricingReference'] = '{:.2f}'.format(invoice_line.product_id.with_company(self.company_id).standard_price or 0.0)
+			invoice_lines[count]['PricingReference'] = '{:.2f}'.format(invoice_line.product_id.with_context(force_company=self.company_id.id).standard_price or 0.0)
 			invoice_lines[count]['MultiplierFactorNumeric'] = '{:.2f}'.format(invoice_line.discount)
 			invoice_lines[count]['AllowanceChargeAmount'] = '{:.2f}'.format(disc_amount)
 			invoice_lines[count]['AllowanceChargeBaseAmount'] = '{:.2f}'.format(total_wo_disc)

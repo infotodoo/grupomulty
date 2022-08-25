@@ -12,5 +12,6 @@ from . import account_journal
 from . import product_scheme
 from . import product_template
 from . import einvoice_notification_group
+#from . import account_debit
 
 
