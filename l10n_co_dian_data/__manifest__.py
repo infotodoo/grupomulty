@@ -83,12 +83,6 @@
         "security/l10n_co_product_uom/ir.model.access.csv",
 		"data/l10n_co_product_uom/product.uom.code.csv",
 		"views/l10n_co_product_uom/product_uom_views.xml",
-
-        "security/partner_address_ciiu/ir.model.access.csv",
-        "data/partner_address_ciiu/address_code_data.xml",
-        "views/partner_address_ciiu/address_code_views.xml",
-        "views/partner_address_ciiu/ciiu_value_views.xml",
-        "views/partner_address_ciiu/street_code_views.xml",
-        "views/partner_address_ciiu/res_partner_views.xml",
+        "views/l10n_co_account_invoice_discount/account_invoice_discount_views.xml",
     ],
 }
