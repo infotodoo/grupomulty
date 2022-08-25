@@ -63,7 +63,7 @@ class AccountInvoice(models.Model):
 		else:
 			id_payment_mean = payment_mean_obj.get_object_reference(
 				'l10n_co_dian_data',
-				'account_payment_mean_1')[1]
+				'account_payment_mean_2')[1]
 			payment_mean_id = self.env['account.payment.mean'].browse(id_payment_mean)
 
 		self.payment_mean_id = payment_mean_id
