@@ -290,9 +290,9 @@ class AccountInvoice(models.Model):
 
 		template.attachment_ids = [(6, 0, attach_ids)]
 
-		lang = False
-		if template:
-			lang = template._render_lang(self.ids)[self.id]
+		lang = get_lang(self.env)
+		if template and template.lang:
+			lang = template._render_template(template.lang, 'account.move', self.id)
 		if not lang:
 			lang = get_lang(self.env).code
 
