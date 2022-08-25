@@ -8,12 +8,10 @@
                 <xpath expr="//page[@name='journal_entries']/group/group[1]/div[2]" position="after">
                     <field name="debit_note_sequence" attrs="{'invisible': [('type', 'not in', ['sale'])]}" groups="base.group_no_one"/>
                     <!-- <field name="debit_note_sequence_id" attrs="{'invisible': ['|', ('type', 'not in', ['sale']), ('debit_note_sequence', '!=', True)]}" groups="base.group_no_one"/> -->
-                    <label for="debit_note_sequence_number_next"
-                            attrs="{'invisible': ['|',('type', 'not in', ['sale',]), ('debit_note_sequence', '!=', True)]}"/>
+                    <label for="debit_note_sequence_number_next"  attrs="{'invisible': ['|',('type', 'not in', ['sale',]), ('debit_note_sequence', '!=', True)]}"/>
                     <div attrs="{'invisible': ['|',('type', 'not in', ['sale',]), ('debit_note_sequence', '!=', True)]}">
                         <field name="debit_note_sequence_number_next" style="padding-right: 1.0em"/>
-                        <field name="debit_note_sequence_id" required="0"
-                                attrs="{'readonly': 1}" groups="base.group_no_one"/>
+                        <field name="debit_note_sequence_id" required="0" attrs="{'readonly': 1}" groups="base.group_no_one"/>
                     </div>
                 </xpath>
             </field>

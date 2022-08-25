@@ -5,6 +5,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
+from pytz import timezone
+
 from odoo import api, fields, models
 import logging
 _logger = logging.getLogger(__name__)
@@ -15,19 +17,15 @@ class AccountInvoice(models.Model):
     def _get_warn_resolution(self):
         warn_remaining = False
         warn_inactive_resolution = False
-        _logger.info('entroooo 1')
-
-        _logger.info(self.journal_id)
-
+        days = 0
+        numbers = 0
         if self.journal_id.sequence_id.use_dian_control:
             remaining_numbers = self.journal_id.sequence_id.remaining_numbers
             remaining_days = self.journal_id.sequence_id.remaining_days
-            _logger.info('entroooo 2')
-            _logger.info('entroooo 2')
             date_range = self.env['ir.sequence.date_range'].search([
                 ('sequence_id', '=', self.journal_id.sequence_id.id),
                 ('active_resolution', '=', True)])
-            today = datetime.strptime(str(fields.Date.today(self)), '%Y-%m-%d')
+            today = datetime.strptime(str(datetime.now(timezone(self.env.user.tz)).date()), '%Y-%m-%d')
 
             if date_range:
                 date_range.ensure_one()
@@ -42,15 +40,11 @@ class AccountInvoice(models.Model):
 
         self.warn_inactive_resolution = warn_inactive_resolution
         self.warn_remaining = warn_remaining
-        _logger.info('entroooo 3')
-        _logger.info('entroooo 3')
+        self.einv_available_days = days
+        self.einv_available_numbers = numbers
 
-    warn_remaining = fields.Boolean(
-        string="Warn About Remainings?",
-        compute="_get_warn_resolution",
-        store=False)
-    
-    warn_inactive_resolution = fields.Boolean(
-        string="Warn About Inactive Resolution?",
-        compute="_get_warn_resolution",
-        store=False)
+    warn_remaining = fields.Boolean(string="Warn About Remainings?", compute="_get_warn_resolution", store=False)
+    warn_inactive_resolution = fields.Boolean(string="Warn About Inactive Resolution?", compute="_get_warn_resolution", store=False)
+    einv_available_numbers = fields.Integer(string="Números disponibles", compute="_get_warn_resolution", store=False)
+    einv_available_days = fields.Integer(string="Días disponibles", compute="_get_warn_resolution", store=False)
+

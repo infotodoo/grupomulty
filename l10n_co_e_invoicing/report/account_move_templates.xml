@@ -10,10 +10,114 @@
             </t>
         </template>
 
+        <template id="l10n_co_e_invoicing.extend_layout">
+                <t t-if="not o" t-set="o" t-value="doc"/>
+                    <t t-if="not company">
+                        <!-- Multicompany -->
+                        <t t-if="company_id">
+                            <t t-set="company" t-value="company_id"/>
+                            </t>
+                            <t t-elif="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id.sudo()"/>
+                             </t>
+                            <t t-else="else">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                    </t>
+
+                <div class="article o_report_layout_standard"
+                     t-att-data-oe-model="o and o._name"
+                     t-att-data-oe-id="o and o.id"
+                     t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <t t-call="web.address_layout"/>
+                    <t t-raw="0"/>
+                </div>
+
+                <t t-call="l10n_co_e_invoicing.report_header"/>
+                <t t-raw="0"/>
+                <t t-call="l10n_co_e_invoicing.report_footer"/>
+        </template>
+
+        <template id="l10n_co_e_invoicing.report_header">
+            <div class="header">
+                <div class="row">
+                    <!-- Logo -->
+                    <div class="col-3 mb-4">
+                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                             style="max-height: 100px; max-width: 270px;" class="img-fluid" alt="Logo"/>
+                    </div>
+                    <!-- Información de la empresa -->
+                    <div class="col-6 text-center" style="font-size:12px;" name="company_address">
+                        <b>
+                        <div t-field="o.company_id.partner_id"
+                             t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true}'
+                        />
+                        </b>
+                        <span>NIT: </span>
+                        <span t-esc="o.company_id.partner_id.vat"/>
+                        <t t-if="o.company_id.partner_id.check_digit  != False">
+                            <span> - </span>
+                            <span t-esc="o.company_id.partner_id.check_digit"/>
+                        </t>
+                        <br/>
+                        <span t-esc="o.company_id.partner_id.street"/>
+                        <br/>
+                        <span>Teléfono: </span>
+                        <span t-esc="o.company_id.partner_id.phone"/>
+                        <br/>
+                        <span t-esc="o.company_id.partner_id.city"/> - <span t-esc="o.company_id.partner_id.country_id.name"/>
+                        <br/>
+                        <span>E-mail: </span>
+                        <span t-esc="o.company_id.partner_id.email"/>
+                    </div>
+                    <!-- Código QR -->
+                    <div id="cufe" class="col-3 mb-4">
+                      <t t-if="o.company_id.einvoicing_enabled == True">
+                        <t t-foreach="o.dian_document_lines" t-as="dd">
+                          <t t-if="dd.state == 'done' or dd.state == 'sent'">
+                            <img class="image" t-attf-src="data:image/png;base64,{{dd.qr_image}}" style="width:115px;height:115px;margin-bottom:1px"/>
+                          </t>
+                        </t>
+                      </t>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="l10n_co_e_invoicing.report_footer">
+            <div class="footer">
+                <div class="row-xs" >
+                    <div class=" text-center" style="font-size:12px;" name="footer_company">
+                        <span>Software propio de factura electrónica </span>
+                        <span t-field="o.company_id.partner_id" t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true}'/>
+                        <span>NIT: </span>
+                        <span t-esc="o.company_id.partner_id.vat"/>
+                        <t t-if="o.company_id.partner_id.check_digit  != False">
+                            <span> - </span>
+                            <span t-esc="o.company_id.partner_id.check_digit"/>
+                        </t>
+                        <span> - </span>
+                        <span> Odoo </span>
+                        <span t-field="o.company_id.partner_id" t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true}'/>
+                    </div>
+                    <div class="text-center" style="border-top: 1px solid black;">
+
+                            <ul class="list-inline">
+                                <li>Pagina:</li>
+                                <li class="list-inline-item"><span class="page"/></li>
+                                <li class="list-inline-item">/</li>
+                                <li class="list-inline-item"><span class="topage"/></li>
+                            </ul>
+
+                    </div>
+                </div>
+            </div>
+        </template>
+        
         <!-- <?xml version="1.0"?> -->
         <template id="report_e_invoice_document">
             <!--<t t-call="l10n_co_e_invoicing.report_e_invoice_layout">-->
-            <t t-call="web.external_layout">
+            <t t-call="l10n_co_e_invoicing.extend_layout">
                 <t t-set="o" t-value="o.with_context(lang=lang)"/>
                 <!-- <t t-set="data" t-value="o.get_data_report_invoice_e()"/> -->
                 <div class="page">
@@ -47,37 +151,49 @@
                         <div class="col-4 float-left">
                             <strong>Pais:</strong><span class="m-0" t-field="o.partner_id.country_id"/>
                         </div>
-                        <div class="col-4 float-left">
-                            <strong>Zona:</strong><span class="m-0" t-field="o.partner_id.zone"/>
+<!--                        <div class="col-4 float-left">-->
+<!--                            <strong>Zona:</strong><span class="m-0" t-field="o.partner_id.zone"/>-->
+<!--                        </div>-->
+                    </div>
+                    <!--<h3><strong>Factura Electrónica de Venta <span t-esc="o.name"/></strong> </h3>-->
+                    <h3><t t-if="o.type == 'out_invoice'"><strong>FACTURA ELECTRONICA DE VENTA N°</strong></t>
+                            <t t-elif="o.type == 'out_refund' and o.refund_type=='credit'"><strong>NOTA CREDITO ELECTRONICA DE VENTA</strong></t>
+                            <t t-elif="o.type == 'out_refund' and o.refund_type=='debit'"><strong>NOTA DEBITO ELECTRONICA DE VENTA</strong></t>
+                        <b><t t-esc="o.name"/></b></h3>
+                    <t t-esc="o.journal_id.resolution_text" t-options="{'widget': 'html'}"/>
+                    <div id="informations" class="row mt32 mb32">
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Fecha De Facturacion:</strong>
+                            <p class="m-0" t-field="o.create_date"/>
+                        </div>
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Fecha De Vencimiento:</strong>
+                            <p class="m-0" t-field="o.invoice_date_due"/>
+                        </div>
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Plazo De Pago:</strong>
+                            <p class="m-0" t-field="o.invoice_payment_term_id.name"/>
                         </div>
                     </div>
-
-
-                        <h3><strong>Factura: <span t-esc="o.name"/></strong> </h3>
-
-                        <div id="informations" class="row mt32 mb32">
-                            <div class="col-auto mw-100 mb-4">
-                                <strong>Fecha De Facturacion:</strong>
-                                <p class="m-0" t-field="o.invoice_date"/>
-                            </div>
-                            <div class="col-auto mw-100 mb-4">
-                                <strong>Fecha De Vencimiento:</strong>
-                                <p class="m-0" t-field="o.invoice_date_due"/>
-                            </div>
-                            <div class="col-auto mw-100 mb-4">
-                                <strong>Plazo De Pago:</strong>
-                                <p class="m-0" t-field="o.invoice_payment_term_id.name"/>
-                            </div>
+                    <div>
+                        <div class="col-auto mw-100 mb-4">
+                            <strong>Medio Pago:</strong>
+                            <p class="m-0" t-field="o.payment_mean_code_id.name"/>
                         </div>
-
-
-
-
+                    </div>
+                    <div class="col-auto mw-100 mb-4">
+                        <strong>Metodo de Pago:</strong>
+                        <p class="m-0" t-field="o.payment_mean_id.name"/>
+                    </div>
                   <t t-if="o.company_id.einvoicing_enabled == True">
                       <t t-foreach="o.dian_document_lines" t-as="dd">
                           <t t-if="dd.state == 'done'">
                             <div style="width: 100%; font-size:12px;">
-                                <p><strong>CUFE: </strong><span t-field="dd.cufe_cude"/></p>
+                                <p> <t t-if="o.type == 'out_invoice'"><strong> CUFE :</strong></t>
+                            <t t-elif="o.type == 'out_refund' and o.refund_type=='credit'"><strong>CUDE :</strong></t><span t-field="dd.cufe_cude"/></p>
+                            </div>
+                            <div style="width: 100%; font-size:12px;">
+                                <p><strong>Fecha Y Hora de Emision: </strong><span t-field="dd.create_date"/></p>
                             </div>
                           </t>
                       </t>
@@ -97,7 +213,7 @@
                             <th name="th_quantity" class="text-right"><span>Quantity</span></th>
                             <th name="th_udm" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>UdM</span></th>
                             <th name="th_priceunit" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>P. sin IVA</span></th>
-                            <th name="th_iva" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>IVA</span></th>
+                            <th name="th_iva" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>% IVA</span></th>
                             <th name="th_priceiva" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>P. con IVA</span></th>
                             <th name="th_price_unit" t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                 <span>Disc.%</span>
@@ -120,7 +236,7 @@
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                             <t t-set="item" t-value="item + 1"/>
                             <t t-set="ivatotal" t-value="line.price_total - line.price_subtotal"/>
-                            <t t-set="iva" t-value="ivatotal / line.quantity "/>
+                            <t t-set="iva" t-value="ivatotal / line.quantity"/>
                             <t t-set="priceiva" t-value="iva + line.price_unit "/>
                             <t t-set="udm" t-value="line.product_uom_id.product_uom_code_id.code"/>
 
@@ -139,16 +255,16 @@
                                         <span class="text-nowrap" t-field="line.price_unit"/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="iva" t-options='{"widget": "float", "precision": 2}'/>
+                                        <span t-esc="iva/(line.price_unit/100)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="priceiva" t-options='{"widget": "float", "precision": 2}'/>
+                                        <span t-esc="priceiva" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span class="text-nowrap" t-field="line.discount"/>
                                     </td>
                                     <td class="text-right o_price_total">
-                                        <span class="text-nowrap" t-field="line.price_total" />
+                                        <span class="text-nowrap" t-field="line.price_total"/>
                                     </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_section'">
@@ -227,26 +343,19 @@
                    <t t-if="o.currency_id.name in ('USD','EUR') and 'Cents' in total_letras"><t t-set="total_letras" t-value="total_letras.replace('Cents', 'Centavos')"/></t>
                    <t t-elif="o.currency_id.name in ('USD','EUR') and 'Cent' in total_letras"><t t-set="total_letras" t-value="total_letras.replace('Cent', 'Centavo')"/></t>
                    <p class="text-justify"><strong>Total en letras: </strong> <span t-if="o.currency_id" t-esc="total_letras"/></p>
+                    <br/>
+                    <p class="text-justify" style="font-family: sans-serif; font-size:7px;"><span t-esc="o.company_id.tributary_information"/></p>
+                    
+                    <p t-if="o.type == 'out_refund' and o.refund_type=='credit'">  Reversion de Factura : <span t-field="o.reversed_entry_id"> </span></p>
                 </div>
 
-                  <div id="cufe">
-                      <t t-if="o.company_id.einvoicing_enabled == True">
-                        <t t-foreach="o.dian_document_lines" t-as="dd">
-                          <t t-if="dd.state == 'done' or dd.state == 'sent'">
-                            <img class="image" t-attf-src="data:image/png;base64,{{dd.qr_image}}" style="width:150px;height:150px;margin-bottom:5px"/>
-                            <span t-field="o.name"/>
-                          </t>
-                        </t>
-                      </t>
-                </div>
+<!--                <div id="tletras">-->
+<!--                     <p class="text-justify"><strong>Puntos de lealtad: </strong> <span t-field="o.partner_id.loyalty_points"/> </p>-->
+<!--                </div>-->
 
-                <div id="tletras">
-                     <p class="text-justify"><strong>Puntos de lealtad: </strong> <span t-field="o.partner_id.loyalty_points"/> </p>
-                </div>
-
-                <p id="p_info" t-if="o.type in ('out_invoice', 'in_refund')" style="font-family: sans-serif; font-size:12px;">
-                    Please use the following communication for your payment : <b><span t-field="o.invoice_payment_ref"/></b>
-                </p>
+<!--                <p id="p_info" t-if="o.type in ('out_invoice', 'in_refund')" style="font-family: sans-serif; font-size:12px;">-->
+<!--                    Please use the following communication for your payment : <b><span t-field="o.invoice_payment_ref"/></b>-->
+<!--                </p>-->
 
                 <p id="p_info" t-if="o.narration" name="comment" style="font-family: sans-serif; font-size:12px;">
                     <span t-field="o.narration"/>
@@ -348,9 +457,9 @@
                     </div>
                     <div id="c">
                       <!--<p>wie spät ist es?</p>-->
-                        <h6><t t-if="o.type == 'out_invoice'"><strong>FACTURA DE VENTA N°</strong></t>
-                            <t t-elif="o.type == 'out_refund' and o.refund_type=='credit'"><strong>NOTA CREDITO</strong></t>
-                            <t t-elif="o.type == 'out_refund' and o.refund_type=='debit'"><strong>NOTA DEBITO</strong></t>
+                        <h6><t t-if="o.type == 'out_invoice'"><strong>FACTURA ELECTRONICA DE VENTA N°</strong></t>
+                            <t t-elif="o.type == 'out_refund' and o.refund_type=='credit'"><strong>NOTA CREDITO ELECTRONICA DE VENTA</strong></t>
+                            <t t-elif="o.type == 'out_refund' and o.refund_type=='debit'"><strong>NOTA DEBITO ELECTRONICA DE VENTA</strong></t>
                         <b><t t-esc="o.name"/></b></h6>
                         <t t-esc="o.journal_id.resolution_text" t-options="{'widget': 'html'}"/>
                     </div>

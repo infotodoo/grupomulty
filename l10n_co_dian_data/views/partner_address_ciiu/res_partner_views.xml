@@ -24,9 +24,9 @@
                 </div>
             </xpath>
 
-            <xpath expr="//field[@name='vat']" position="before">
+            <!--<xpath expr="//field[@name='vat']" position="before">
                 <field name="ciiu" placeholder="CIIU" widget="many2many_tags"/>
-            </xpath>
+            </xpath>-->
         </field>
     </record>
 

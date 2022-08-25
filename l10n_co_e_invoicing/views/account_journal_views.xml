@@ -7,6 +7,7 @@
 
             <xpath expr="//field[@name='code']" position="before">
                 <field name="is_einvoicing"/>
+                <field name="acknowledgement_receipt"/>
             </xpath>
         </field>
     </record>

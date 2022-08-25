@@ -46,7 +46,5 @@
         action="action_tipo_documento"
         sequence="5"
         />
-
-
     </data>
 </odoo>

@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 Joan Marín <Github@joanmarin>
-# Copyright 2019 Diego Carvajal <Github@diegoivanc>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import hashlib
 from os import path
@@ -26,6 +23,33 @@ from qrcode import QRCode, constants
 
 import logging
 _logger = logging.getLogger(__name__)
+
+
+def get_cuds(
+        NumFac,
+        FecFac,
+        HorFac,
+        ValFac,
+        CodImp1,
+        ValImp1,
+        ValTot,
+        NitOFE,
+        NumAdq,
+        SoftwarePIN,
+        TipoAmbie):
+    uncoded_value = (NumFac + ' + ' + str(FecFac) + ' + ' + str(HorFac) + ' + ' +
+                     ValFac + ' + ' + CodImp1 + ' + ' + ValImp1 + ' + ' +
+                     ValTot + ' + ' + NitOFE + ' + ' + NumAdq + ' + ' +
+                     SoftwarePIN + ' + ' + TipoAmbie)
+    unicode = unidecode(
+        str(NumFac) + str(FecFac) + str(HorFac) + str(ValFac) + str(CodImp1) + str(ValImp1) + str(ValTot) + str(
+            NitOFE) + str(NumAdq) + str(SoftwarePIN) + str(TipoAmbie)).encode()
+
+    CUFE_CUDE = hashlib.sha384(unicode)
+
+    return {
+        'CUFE/CUDEUncoded': uncoded_value,
+        'CUFE/CUDE': CUFE_CUDE.hexdigest()}
 
 
 def get_cufe_cude(
@@ -167,8 +191,6 @@ def get_xml_with_signature(
     for element in root.iter("{%s}SignatureValue" % ds):
         element.attrib['Id'] = signature_id + "-sigvalue"
 
-
-
     #https://www.decalage.info/en/python/lxml-c14n
     output = BytesIO()
     root.getroottree().write_c14n(output)#, exclusive=1, with_comments=0
@@ -192,7 +214,6 @@ def get_xml_soap_values(certificate_file, certificate_password):
     Created = Created.strftime('%Y-%m-%dT%H:%M:%S.001Z')
     #https://github.com/mit-dig/idm/blob/master/idm_query_functions.py#L151
     pkcs12 = get_pkcs12(certificate_file, certificate_password)
-    _logger.info('certificado')
     cert = pkcs12.get_certificate()
     der = b64encode(crypto.dump_certificate(
         crypto.FILETYPE_ASN1,

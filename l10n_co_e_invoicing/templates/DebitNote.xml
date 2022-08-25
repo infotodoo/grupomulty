@@ -570,6 +570,7 @@
 				<cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
 				<cbc:unitCode></cbc:unitCode>
 				<cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
+
 				{% if TaxTotal.total > 0 %}
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>

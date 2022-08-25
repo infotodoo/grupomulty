@@ -46,9 +46,7 @@
         <cac:ExternalReference>
             <cbc:MimeCode>text/xml</cbc:MimeCode>
             <cbc:EncodingCode>UTF-8</cbc:EncodingCode>
-            <cbc:Description>
-                <![CDATA[{{xml_file}}]]>
-            </cbc:Description>
+            <cbc:Description><![CDATA[{{xml_file}}]]></cbc:Description>
         </cac:ExternalReference>
     </cac:Attachment>
     <cac:ParentDocumentLineReference>
@@ -62,11 +60,7 @@
                 <cac:ExternalReference>
                     <cbc:MimeCode>text/xml</cbc:MimeCode>
                     <cbc:EncodingCode>UTF-8</cbc:EncodingCode>
-                    <cbc:Description>
-                         <![CDATA[
-                         {{ApplicationResponse}}
-                         ]]>
-                    </cbc:Description>
+                    <cbc:Description><![CDATA[{{ApplicationResponse}}]]></cbc:Description>
                 </cac:ExternalReference>
             </cac:Attachment>
             <cac:ResultOfVerification>

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 Joan Marín <Github@joanmarin>
-# Copyright 2019 Diego Carvajal <Github@diegoivanc>
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2021 Diego Carvajal <Github@diegoivanc>
+
 
 from validators import url
 from . global_functions import get_pkcs12
@@ -22,7 +21,7 @@ class ResCompany(models.Model):
     out_invoice_sent = fields.Integer(string='out_invoice Sent')
     out_refund_sent = fields.Integer(string='out_refund Sent')
     in_refund_sent = fields.Integer(string='in_refund Sent')
-    profile_execution_id = fields.Selection([('1', 'Production'),
+    profile_execution_id = fields.Selection([('1', 'Production'), 
                                              ('2', 'Test')], 'Destination Environment of Document', default='2', required=True)
     test_set_id = fields.Char(string='Test Set Id')
     software_id = fields.Char(string='Software Id')
@@ -49,19 +48,22 @@ class ResCompany(models.Model):
         inverse_name='company_id',
         string='Notification Group')
     get_numbering_range_response = fields.Text(string='GetNumberingRange Response')
-    tributary_information = fields.Text(string='Tributary Information')
+    tributary_information = fields.Text(string='Información Tributaria')
 
+    remaining_days_pfx = fields.Integer(string='Días alerta vencimiento certificado', default='20')
+    date_due_pfx = fields.Date(string='Vencimiento Certificado')
 
     @api.onchange('signature_policy_url')
     def onchange_signature_policy_url(self):
-        if not url(self.signature_policy_url):
-            raise ValidationError(_('Invalid URL.'))
+        if self.signature_policy_url:
+            if not url(self.signature_policy_url):
+                raise ValidationError(_('Invalid URL.'))
 
     def write(self, vals):
         rec = super(ResCompany, self).write(vals)
-        if self.certificate_file and self.certificate_password:
-            get_pkcs12(self.certificate_file, self.certificate_password)
-
+        for item in self:
+            if item.certificate_file and item.certificate_password:
+                get_pkcs12(item.certificate_file, item.certificate_password)
         return rec
 
 

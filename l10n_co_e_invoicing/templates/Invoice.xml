@@ -77,6 +77,10 @@
 		listAgencyName="United Nations Economic Commission for Europe"
 		listID="ISO 4217 Alpha">{{DocumentCurrencyCode}}</cbc:DocumentCurrencyCode>
 	<cbc:LineCountNumeric>{{LineCountNumeric}}</cbc:LineCountNumeric>
+	<cac:OrderReference>
+      	<cbc:ID>{{OrderReference}}</cbc:ID>
+      	<cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
+   	</cac:OrderReference>
 <!--TODO, Grupo de campos relativos al Periodo de Facturación: Intervalo de fechas la las que
 referencia la factura por ejemplo en servicios públicos>
 	<cac:InvoicePeriod>

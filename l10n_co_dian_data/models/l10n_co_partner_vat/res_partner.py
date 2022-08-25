@@ -15,12 +15,12 @@ class ResPartner(models.Model):
 
     document_type_id = fields.Many2one(
         string = 'Document Type',
-        comodel_name = 'res.partner.document.type')
+        comodel_name = 'res.partner.document.type', tracking=True)
     document_type_code = fields.Char(
             related='document_type_id.code',
             store=False)
-    check_digit = fields.Char(string='Verification Digit', size=1)
-    identification_document = fields.Char('Identification Document')
+    check_digit = fields.Char(string='Verification Digit', size=1, tracking=True)
+    identification_document = fields.Char('Identification Document', tracking=True)
 
     @api.onchange('identification_document')
     def _compute_concat_nit(self):

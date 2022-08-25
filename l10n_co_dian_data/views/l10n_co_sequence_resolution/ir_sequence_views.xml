@@ -34,8 +34,7 @@
                 <xpath expr="//page/group/group[1]" position="after">
                     <group string="Warn From" attrs="{'invisible': [('use_dian_control', '!=', True)]}">
                         <field name="remaining_numbers" attrs="{'required': [('use_dian_control', '=', True)]}"/>
-                        <field name="remaining_days"
-                             attrs="{'required': [('use_dian_control', '=', True)]}"/>
+                        <field name="remaining_days" attrs="{'required': [('use_dian_control', '=', True)]}"/>
                     </group>
                 </xpath>
 
@@ -47,8 +46,7 @@
 
                 <field name="date_to" position="after">
                     <field name="number_from" attrs="{'required': [('use_dian_control', '=', True)]}"/>
-                    <field name="number_to" 
-                        attrs="{'required': [('use_dian_control', '=', True)]}"/>
+                    <field name="number_to" attrs="{'required': [('use_dian_control', '=', True)]}"/>
                     <field name="active_resolution" readonly="1"/>
                 </field>
             </field>

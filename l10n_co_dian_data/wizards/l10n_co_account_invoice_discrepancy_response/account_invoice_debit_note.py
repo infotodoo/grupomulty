@@ -7,6 +7,8 @@
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class AccountInvoiceDebitNote(models.TransientModel):
@@ -43,7 +45,7 @@ class AccountInvoiceDebitNote(models.TransientModel):
         help='Debit Note base on this type. You can not Modify and Cancel if the invoice is '
              'already reconciled')
     reason = fields.Char(string='Reason')
-    
+
 
     def reverse_moves(self):
         moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
@@ -135,7 +137,7 @@ class AccountInvoiceDebitNote(models.TransientModel):
         data_debit_note = self.read(['filter_debit_note'])[0]['filter_debit_note']
 
         return self.reverse_moves()
-    
+
     def invoice_debit_note(self):
         moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
 

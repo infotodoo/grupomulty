@@ -10,6 +10,6 @@ from . import l10n_co_partner_vat
 from . import l10n_co_sequence_resolution
 from . import partner_commercial_name
 from . import l10n_co_account_fiscal_position_listname
+from . import l10n_co_account_invoice_discount
 from . import l10n_co_product_uom
 from . import partner_address_ciiu
-from . import l10n_co_account_invoice_discount

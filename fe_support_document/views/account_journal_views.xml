@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_acount_journal_form" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="l10n_co_e_invoicing.view_acount_journal_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_einvoicing']" position="after">
+                <field name="is_support_document"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
