@@ -656,14 +656,15 @@ class AccountInvoice(models.Model):
 		invoice_lines = {}
 		count = 1
 
-		for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
+		for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type or x.price_unit >= 0):
+			validation = self.env['account_move_line'].search([('move_id','=',self.id),('product_id','=',invoice_line.product_id.id),('id','!=',invoice_line.id),('price_unit','<',0)])
+			if validation:
+				invoice_line.price_unit = 0
 			if not invoice_line.product_uom_id.product_uom_code_id:
 				raise UserError(msg1 % invoice_line.product_uom_id.name)
 
 			disc_amount = 0
 			total_wo_disc = 0
-			brand_name = False
-			model_name = False
 
 			if invoice_line.price_subtotal != 0 and invoice_line.discount != 0:
 				disc_amount = (invoice_line.price_subtotal * invoice_line.discount) / 100
@@ -686,11 +687,6 @@ class AccountInvoice(models.Model):
 			if invoice_line.price_subtotal <= 0 and reference_price <= 0:
 				raise UserError(msg3 % invoice_line.product_id.default_code)
 
-			# if self.invoice_type_code == '02':
-			# 	if invoice_line.product_id.product_brand_id:
-			# 		brand_name = invoice_line.product_id.product_brand_id.name
-
-			# 	model_name = invoice_line.product_id.manufacturer_pref
 			brand_name = invoice_line.product_id.brand_name or ''
 			model_name = invoice_line.product_id.model_name or ''
 
@@ -765,24 +761,6 @@ class AccountInvoice(models.Model):
 				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00'] = {}
 				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['base'] = invoice_line.price_subtotal
 				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['amount'] = 0
-
-			# if '03' not in invoice_lines[count]['TaxesTotal']:
-			# 	invoice_lines[count]['TaxesTotal']['03'] = {}
-			# 	invoice_lines[count]['TaxesTotal']['03']['total'] = 0
-			# 	invoice_lines[count]['TaxesTotal']['03']['name'] = 'ICA'
-			# 	invoice_lines[count]['TaxesTotal']['03']['taxes'] = {}
-			# 	invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00'] = {}
-			# 	invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-			# 	invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['amount'] = 0
-			#
-			# if '04' not in invoice_lines[count]['TaxesTotal']:
-			# 	invoice_lines[count]['TaxesTotal']['04'] = {}
-			# 	invoice_lines[count]['TaxesTotal']['04']['total'] = 0
-			# 	invoice_lines[count]['TaxesTotal']['04']['name'] = 'INC'
-			# 	invoice_lines[count]['TaxesTotal']['04']['taxes'] = {}
-			# 	invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00'] = {}
-			# 	invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-			# 	invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['amount'] = 0
 
 			invoice_lines[count]['BrandName'] = brand_name
 			invoice_lines[count]['ModelName'] = model_name
