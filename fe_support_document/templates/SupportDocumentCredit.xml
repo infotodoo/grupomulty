@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd">
+   <ext:UBLExtensions>
+      <ext:UBLExtension>
+         <ext:ExtensionContent>
+            <sts:DianExtensions>
+               <sts:InvoiceSource>
+                  <cbc:IdentificationCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1">CO</cbc:IdentificationCode>
+               </sts:InvoiceSource>
+               <sts:SoftwareProvider>
+                  <sts:ProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="{{ProviderIDschemeID}}" schemeName="{{ProviderIDschemeName}}">{{ProviderID}}</sts:ProviderID>
+                  <sts:SoftwareID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">{{SoftwareID}}</sts:SoftwareID>
+               </sts:SoftwareProvider>
+               <sts:SoftwareSecurityCode schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">{{SoftwareSecurityCode}}</sts:SoftwareSecurityCode>
+               <sts:AuthorizationProvider>
+                  <sts:AuthorizationProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">800197268</sts:AuthorizationProviderID>
+               </sts:AuthorizationProvider>
+               <sts:QRCode>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey={{UUID}}</sts:QRCode>
+            </sts:DianExtensions>
+         </ext:ExtensionContent>
+      </ext:UBLExtension>
+      <ext:UBLExtension>
+         <ext:ExtensionContent/>
+      </ext:UBLExtension>
+   </ext:UBLExtensions>
+   <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+   <cbc:CustomizationID>{{CustomizationID}}</cbc:CustomizationID>
+   <cbc:ProfileID>DIAN 2.1: Nota de ajuste al documento soporte en adquisiciones efectuadas a sujetos no obligados a expedir factura o documento equivalente </cbc:ProfileID>
+   <cbc:ProfileExecutionID>{{ProfileExecutionID}}</cbc:ProfileExecutionID>
+   <cbc:ID>{{ID}}</cbc:ID>
+   <cbc:UUID schemeID="{{ProfileExecutionID}}" schemeName="CUDS-SHA384">{{UUID}}</cbc:UUID>
+   <cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
+   <cbc:IssueTime>{{IssueTime}}</cbc:IssueTime>
+   <cbc:CreditNoteTypeCode>95</cbc:CreditNoteTypeCode>
+   <cbc:Note>{{Note}}</cbc:Note>
+   <cbc:DocumentCurrencyCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listID="ISO 4217 Alpha">{{DocumentCurrencyCode}}</cbc:DocumentCurrencyCode>
+   <cbc:LineCountNumeric>{{LineCountNumeric}}</cbc:LineCountNumeric>
+   <cac:DiscrepancyResponse>
+      <cbc:ReferenceID>{{DiscrepancyReferenceID}}</cbc:ReferenceID>
+      <cbc:ResponseCode>{{DiscrepancyResponseCode}}</cbc:ResponseCode>
+      <cbc:Description>{{DiscrepancyDescription}}</cbc:Description>
+   </cac:DiscrepancyResponse>
+   {% if BillingReference.ID %}
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>{{BillingReference.ID}}</cbc:ID>
+			<cbc:UUID schemeName="CUFE-SHA384">{{BillingReference.UUID}}</cbc:UUID>
+			<cbc:IssueDate>{{BillingReference.IssueDate}}</cbc:IssueDate>
+		</cac:InvoiceDocumentReference>
+    </cac:BillingReference>
+   {% endif %}
+   {% if OrderReference and IssueDate %}
+   <cac:OrderReference>
+      <cbc:ID>{{OrderReference}}</cbc:ID>
+      <cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
+   </cac:OrderReference>
+   {% elif OrderReference and not IssueDate %}
+   <cac:OrderReference>
+      <cbc:ID>{{order_reference}}</cbc:ID>
+   </cac:OrderReference>
+   {% else %}
+   {% endif %}
+
+   <cac:AccountingSupplierParty>
+      <cbc:AdditionalAccountID schemeAgencyID="195">{{AccountingCustomerParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
+      <cac:Party>
+         <cac:PhysicalLocation>
+            <cac:Address>
+               <cbc:ID>{{AccountingCustomerParty.AddressID}}</cbc:ID>
+               <cbc:CityName>{{AccountingCustomerParty.AddressCityName}}</cbc:CityName>
+               <cbc:PostalZone>{{AccountingCustomerParty.AddressPostalZone}}</cbc:PostalZone>
+               <cbc:CountrySubentity>{{AccountingCustomerParty.AddressCountrySubentity}}</cbc:CountrySubentity>
+               <cbc:CountrySubentityCode>{{AccountingCustomerParty.AddressCountrySubentityCode}}</cbc:CountrySubentityCode>
+               <cac:AddressLine>
+                  <cbc:Line>{{AccountingCustomerParty.AddressLine}}</cbc:Line>
+               </cac:AddressLine>
+               <cac:Country>
+                  <cbc:IdentificationCode>{{AccountingCustomerParty.CountryIdentificationCode}}</cbc:IdentificationCode>
+                  <cbc:Name languageID="es">{{AccountingCustomerParty.CountryName}}</cbc:Name>
+               </cac:Country>
+            </cac:Address>
+         </cac:PhysicalLocation>
+         <cac:PartyTaxScheme>
+            <cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
+            {% if AccountingCustomerParty.CompanyIDschemeName == '31' %}
+            <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}" schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
+            {% else %}
+            <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
+            {% endif %}
+            <cbc:TaxLevelCode>{{AccountingCustomerParty.TaxLevelCode}}</cbc:TaxLevelCode>
+            <cac:TaxScheme>
+               <cbc:ID>{{AccountingCustomerParty.TaxSchemeID}}</cbc:ID>
+               <cbc:Name>{{AccountingCustomerParty.TaxSchemeName}}</cbc:Name>
+            </cac:TaxScheme>
+         </cac:PartyTaxScheme>
+      </cac:Party>
+   </cac:AccountingSupplierParty>
+
+   <cac:AccountingCustomerParty>
+      <cbc:AdditionalAccountID>{{AccountingSupplierParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
+      <cac:Party>
+         <cac:PartyTaxScheme>
+            <cbc:RegistrationName>{{AccountingSupplierParty.Name}}</cbc:RegistrationName>
+            {% if AccountingSupplierParty.CompanyIDschemeName == '31' %}
+            <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}" schemeName="31">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
+            {% else %}
+            <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
+            {% endif %}
+            <cbc:TaxLevelCode>{{AccountingSupplierParty.TaxLevelCode}}</cbc:TaxLevelCode>
+            <cac:TaxScheme>
+               <cbc:ID>{{AccountingSupplierParty.TaxSchemeID}}</cbc:ID>
+               <cbc:Name>{{AccountingSupplierParty.TaxSchemeName}}</cbc:Name>
+            </cac:TaxScheme>
+         </cac:PartyTaxScheme>
+      </cac:Party>
+   </cac:AccountingCustomerParty>
+
+   <cac:PaymentMeans>
+      <cbc:ID>{{PaymentMeansID}}</cbc:ID>
+      <cbc:PaymentMeansCode>{{PaymentMeansCode}}</cbc:PaymentMeansCode>
+      <cbc:PaymentDueDate>{{PaymentDueDate}}</cbc:PaymentDueDate>
+      <cbc:PaymentID>{{PaymentID}}</cbc:PaymentID>
+   </cac:PaymentMeans>
+
+   {% if currency_id != 'COP'%}
+   <cac:PaymentExchangeRate>
+      <cbc:SourceCurrencyCode>{{PaymentExchangeRate.SourceCurrencyCode}}</cbc:SourceCurrencyCode>
+      <cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
+      <cbc:TargetCurrencyCode>{{PaymentExchangeRate.TargetCurrencyCode}}</cbc:TargetCurrencyCode>
+      <cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
+      <cbc:CalculationRate>{{'{:.2f}'.format(PaymentExchangeRate.CalculationRate)}}</cbc:CalculationRate>
+      <cbc:Date>{{PaymentExchangeRate.Date}}</cbc:Date>
+   </cac:PaymentExchangeRate>
+   {% endif %}
+
+   {% for TaxTotalID, TaxTotal in TaxesTotal.items() %}
+   <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
+      <cbc:RoundingAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:RoundingAmount>
+      {% set ftotal= {'total': 0.00} %}
+      {% for Percent, TaxSubtotal in TaxTotal.taxes.items() %}
+      {% set porcentaje = Percent | float %}
+      {% set taxableamount = TaxSubtotal.base | float %}
+      {% set taxamount = TaxSubtotal.amount | float %}
+      {% if ftotal.update({'total': ftotal.total + (((taxableamount * porcentaje)/100)-taxamount)}) %}{% endif %}
+      <cac:TaxSubtotal>
+         <cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
+         <cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
+         <cac:TaxCategory>
+            <cbc:Percent>{{Percent}}</cbc:Percent>
+            <cac:TaxScheme>
+               <cbc:ID>{{TaxTotalID}}</cbc:ID>
+               <cbc:Name>{{TaxTotal.name}}</cbc:Name>
+            </cac:TaxScheme>
+         </cac:TaxCategory>
+      </cac:TaxSubtotal>
+      {% endfor %}
+   </cac:TaxTotal>
+   {% endfor %}
+   <cac:LegalMonetaryTotal>
+       <cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{LineExtensionAmount}}</cbc:LineExtensionAmount>
+       <cbc:TaxExclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxExclusiveAmount}}</cbc:TaxExclusiveAmount>
+       <cbc:TaxInclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxInclusiveAmount}}</cbc:TaxInclusiveAmount>
+       <cbc:AllowanceTotalAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:AllowanceTotalAmount>
+       <cbc:ChargeTotalAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:ChargeTotalAmount>
+       <cbc:PrepaidAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PrepaidAmount>
+       <cbc:PayableAmount currencyID="{{DocumentCurrencyCode}}">{{PayableAmount}}</cbc:PayableAmount>
+   </cac:LegalMonetaryTotal>
+   {% for InvoiceLineID, InvoiceLine in InvoiceLines.items() %}
+   <cac:CreditNoteLine>
+      <cbc:ID>{{InvoiceLineID}}</cbc:ID>
+      {% if InvoiceLine.Note %}
+      <cbc:Note>{{InvoiceLine.Note}}</cbc:Note>
+      {% endif %}
+      <cbc:CreditedQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:CreditedQuantity>
+      <cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
+      {% for TaxTotalID, TaxTotal in InvoiceLine.TaxesTotal.items() %}
+      {% if TaxTotal.total > 0 %}
+         <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
+            {% for Percent, TaxSubtotal in TaxTotal.taxes.items() %}
+            <cac:TaxSubtotal>
+               <cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
+               <cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
+               {% if TaxTotal.total > 0 %}
+               <cac:TaxCategory>
+                  <cbc:Percent>{{Percent}}</cbc:Percent>
+                  {% if TaxTotalID %}
+                  <cac:TaxScheme>
+                     <cbc:ID>{{TaxTotalID}}</cbc:ID>
+                     <cbc:Name>{{TaxTotal.name}}</cbc:Name>
+                  </cac:TaxScheme>
+                  {% endif %}
+               </cac:TaxCategory>
+               {% endif %}
+               {% if TaxTotal.total == 0 %}
+               <cac:TaxCategory>
+                  <cbc:Percent>0.00</cbc:Percent>
+                  <cac:TaxScheme>
+                     <cbc:ID></cbc:ID>
+                     <cbc:Name></cbc:Name>
+                  </cac:TaxScheme>
+               </cac:TaxCategory>
+               {% endif %}
+            </cac:TaxSubtotal>
+            {% endfor %}
+         </cac:TaxTotal>
+      {% endif %}
+      <cac:AllowanceCharge>
+         <cbc:ID>1</cbc:ID>
+         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+         <cbc:AllowanceChargeReason>Descuento</cbc:AllowanceChargeReason>
+         <cbc:MultiplierFactorNumeric>{{InvoiceLine.MultiplierFactorNumeric}}</cbc:MultiplierFactorNumeric>
+         <cbc:Amount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeAmount}}</cbc:Amount>
+         <cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeBaseAmount}}</cbc:BaseAmount>
+      </cac:AllowanceCharge>
+      {% endfor %}
+      <cac:Item>
+         <cbc:Description>{{InvoiceLine.ItemDescription}}</cbc:Description>
+         <cac:StandardItemIdentification>
+            {% if InvoiceLine.StandardschemeAgencyID %}
+            <cbc:ID schemeID="{{InvoiceLine.StandardschemeID}}" schemeName="{{InvoiceLine.StandardschemeName}}" schemeAgencyID="{{InvoiceLine.StandardschemeAgencyID}}">{{InvoiceLine.StandardItemIdentification}}</cbc:ID>
+            {% else %}
+            <cbc:ID schemeID="{{InvoiceLine.StandardschemeID}}" schemeName="{{InvoiceLine.StandardschemeName}}">{{InvoiceLine.StandardItemIdentification}}</cbc:ID>
+		    {% endif %}
+         </cac:StandardItemIdentification>
+      </cac:Item>
+      <cac:Price>
+         <cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>
+         <cbc:BaseQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:BaseQuantity>
+      </cac:Price>
+   </cac:CreditNoteLine>
+   {% endfor %}
+</CreditNote>

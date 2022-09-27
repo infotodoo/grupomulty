@@ -445,9 +445,6 @@ class AccountInvoice(models.Model):
                                                                                            -1)
 
                 elif tax_type == 'withholding_tax' and tax.tax_line_id.amount > 0:
-                    # TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN
-                    # Solo las positivas que indicarian una autoretencion, Si la DIAN
-                    # pide que se envien las retenciones, seria quitar o comentar este if
                     pass
                 else:
                     if tax_code not in taxes:
@@ -704,9 +701,6 @@ class AccountInvoice(models.Model):
                                     abs(tax_id.amount),
                                     invoice_lines[count]['WithholdingTaxesTotal']))
                         elif tax_type == 'withholding_tax' and tax_id.amount > 0:
-                            # TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN.
-                            # Solo la parte positiva que indicaria una autoretencion, Si la DIAN
-                            # pide que se envie la parte negativa, seria quitar o comentar este if
                             pass
                         else:
                             invoice_lines[count]['TaxesTotal'] = (

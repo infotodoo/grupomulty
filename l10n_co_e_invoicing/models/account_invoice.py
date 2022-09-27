@@ -133,16 +133,19 @@ class AccountInvoice(models.Model):
 			inv.credit_note_count = data_map.get(inv.id, 0.0)
 
 	def tacit_acceptation(self):
-		if self.invoice_rating == 'not_rating' or not self.invoice_rating:
-			if not self.dian_document_lines:
-				dian_obj = self.env['account.invoice.dian.document']
-			else:
-				dian_obj = self.dian_document_lines
-			accepted_xml_without_signature = global_functions.get_template_xml(dian_obj._get_accepted_values(),'AceptacionTacita')
-			accepted_xml_with_signature = global_functions.get_xml_with_signature(accepted_xml_without_signature, self.company_id.signature_policy_url, self.company_id.signature_policy_description, self.company_id.certificate_file, self.company_id.certificate_password)
-			dian_obj.write({'exp_accepted_file': b64encode(dian_obj._get_acp_zipped_file(accepted_xml_with_signature)).decode("utf-8", "ignore")})
-			dian_obj.action_sent_accepted_file()
-			self.invoice_rating = 'auto_approve'
+		if self.invoice_rating == 'not_rating' and self.dian_document_lines:
+			cufe_cude_cuds = self.env['account.invoice.dian.document'].search([('invoice_id', '=', self.id)], order='invoice_id desc', limit=1)
+			hora_comparar = cufe_cude_cuds.create_date + datetime.timedelta(hours=72)
+			hora = hora_comparar - datetime.datetime.now()
+			horas = int(hora.total_seconds())
+			if horas <= 0 and cufe_cude_cuds.get_status_zip_status_code == '00':
+				dian_obj = cufe_cude_cuds
+				accepted_xml_without_signature = global_functions.get_template_xml(dian_obj._get_accepted_values(),'AceptacionTacita')
+				accepted_xml_with_signature = global_functions.get_xml_with_signature(accepted_xml_without_signature, self.company_id.signature_policy_url, self.company_id.signature_policy_description, self.company_id.certificate_file, self.company_id.certificate_password)
+				dian_obj.write({'exp_accepted_file': b64encode(dian_obj._get_acp_zipped_file(accepted_xml_with_signature)).decode("utf-8", "ignore")})
+				dian_obj.action_sent_accepted_file(dian_obj.exp_accepted_file)
+				self.invoice_rating = 'auto_approve'
+				dian_obj.bs_acceptation()
 
 	def action_view_credit_notes(self):
 		self.ensure_one()
@@ -153,6 +156,8 @@ class AccountInvoice(models.Model):
 			'view_mode': 'tree,form',
 			'domain': [('reversed_entry_id', '=', self.id)],
 		}
+
+
 
 	def post(self, soft=True):
 		for record in self:
@@ -290,9 +295,9 @@ class AccountInvoice(models.Model):
 
 		template.attachment_ids = [(6, 0, attach_ids)]
 
-		lang = get_lang(self.env)
-		if template and template.lang:
-			lang = template._render_template(template.lang, 'account.move', self.id)
+		lang = False
+		if template:
+			lang = template._render_lang(self.ids)[self.id]
 		if not lang:
 			lang = get_lang(self.env).code
 
@@ -494,9 +499,6 @@ class AccountInvoice(models.Model):
 																						   -1)
 
 				elif tax_type == 'withholding_tax' and tax.tax_line_id.amount > 0:
-					# TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN
-					# Solo las positivas que indicarian una autoretencion, Si la DIAN
-					# pide que se envien las retenciones, seria quitar o comentar este if
 					pass
 				else:
 					if tax_code not in taxes:
@@ -657,119 +659,137 @@ class AccountInvoice(models.Model):
 		count = 1
 
 		for invoice_line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
-			if invoice_line.price_unit>=0:
-				validation = self.env['account.move.line'].search([('move_id','=',self.id),('product_id','=',invoice_line.product_id.id),('id','!=',invoice_line.id),('price_unit','<',0)])
-				if validation:
-					invoice_line.price_unit = 0
-				if not invoice_line.product_uom_id.product_uom_code_id:
-					raise UserError(msg1 % invoice_line.product_uom_id.name)
+			if not invoice_line.product_uom_id.product_uom_code_id:
+				raise UserError(msg1 % invoice_line.product_uom_id.name)
 
-				disc_amount = 0
-				total_wo_disc = 0
+			disc_amount = 0
+			total_wo_disc = 0
+			brand_name = False
+			model_name = False
 
-				if invoice_line.price_subtotal != 0 and invoice_line.discount != 0:
-					disc_amount = (invoice_line.price_subtotal * invoice_line.discount) / 100
+			if invoice_line.price_subtotal != 0 and invoice_line.discount != 0:
+				disc_amount = (invoice_line.price_subtotal * invoice_line.discount) / 100
 
-				if invoice_line.price_unit != 0 and invoice_line.quantity != 0:
-					total_wo_disc = invoice_line.price_unit * invoice_line.quantity
+			if invoice_line.price_unit != 0 and invoice_line.quantity != 0:
+				total_wo_disc = invoice_line.price_unit * invoice_line.quantity
 
-				if invoice_line.price_unit == 0 or invoice_line.quantity == 0:
-					raise ValidationError(_('Para facturación electrónica no está permitido lineas de producto con precio o cantidad en 0.'))
+			if invoice_line.price_unit == 0 or invoice_line.quantity == 0:
+				raise ValidationError(_('Para facturación electrónica no está permitido lineas de producto con precio o cantidad en 0.'))
 
-				if not invoice_line.product_id or not invoice_line.product_id.default_code:
-					raise UserError(msg2 % invoice_line.name)
+			if not invoice_line.product_id or not invoice_line.product_id.default_code:
+				raise UserError(msg2 % invoice_line.name)
 
-				if invoice_line.product_id.margin_percentage > 0:
-					reference_price = invoice_line.product_id.margin_percentage
+			if invoice_line.product_id.margin_percentage > 0:
+				reference_price = invoice_line.product_id.margin_percentage
+			else:
+				reference_price = invoice_line.product_id.margin_percentage * \
+								  invoice_line.product_id.with_context(force_company=self.company_id.id).standard_price
+
+			if invoice_line.price_subtotal <= 0 and reference_price <= 0:
+				raise UserError(msg3 % invoice_line.product_id.default_code)
+
+			# if self.invoice_type_code == '02':
+			# 	if invoice_line.product_id.product_brand_id:
+			# 		brand_name = invoice_line.product_id.product_brand_id.name
+
+			# 	model_name = invoice_line.product_id.manufacturer_pref
+			brand_name = invoice_line.product_id.brand_name or ''
+			model_name = invoice_line.product_id.model_name or ''
+
+			product_scheme_id = invoice_line.product_id.product_scheme_id or self.env['product.scheme'].search([('code','=','999')])
+
+			nota_ref = ''
+			if self.operation_type == '09':
+				nota_ref = 'Contrato de servicios AIU por concepto de: ' + self.aiu
+
+			invoice_lines[count] = {}
+			invoice_lines[count]['Note'] = nota_ref or ''
+			invoice_lines[count]['unitCode'] = invoice_line.product_uom_id.product_uom_code_id.code
+			invoice_lines[count]['Quantity'] = '{:.2f}'.format(invoice_line.quantity)
+			invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(reference_price)
+			invoice_lines[count]['LineExtensionAmount'] = '{:.2f}'.format(invoice_line.price_subtotal)
+			invoice_lines[count]['PricingReference'] = '{:.2f}'.format(invoice_line.product_id.with_context(force_company=self.company_id.id).standard_price or 0.0)
+			invoice_lines[count]['MultiplierFactorNumeric'] = '{:.2f}'.format(invoice_line.discount)
+			invoice_lines[count]['AllowanceChargeAmount'] = '{:.2f}'.format(disc_amount)
+			invoice_lines[count]['AllowanceChargeBaseAmount'] = '{:.2f}'.format(total_wo_disc)
+			invoice_lines[count]['TaxesTotal'] = {}
+			invoice_lines[count]['WithholdingTaxesTotal'] = {}
+			invoice_lines[count]['SellersItemIdentification'] = invoice_line.product_id.default_code
+			invoice_lines[count]['StandardItemIdentification'] = invoice_line.product_id.product_scheme_code or ''
+			invoice_lines[count]['StandardschemeID'] = product_scheme_id.code or ''
+			invoice_lines[count]['StandardschemeName'] = product_scheme_id.name or ''
+			invoice_lines[count]['StandardschemeAgencyID'] = product_scheme_id.scheme_agency_id or ''
+
+			for tax in invoice_line.tax_ids:
+
+				if tax.amount_type == 'group':
+					tax_ids = tax.children_tax_ids
 				else:
-					reference_price = invoice_line.product_id.margin_percentage * \
-									  invoice_line.product_id.with_context(force_company=self.company_id.id).standard_price
+					tax_ids = tax
 
-				if invoice_line.price_subtotal <= 0 and reference_price <= 0:
-					raise UserError(msg3 % invoice_line.product_id.default_code)
+				for tax_id in tax_ids:
+					if tax_id.tax_group_id.is_einvoicing:
+						if not tax_id.tax_group_id.tax_group_type_id:
+							raise UserError(msg4 % tax.name)
 
-				brand_name = invoice_line.product_id.brand_name or ''
-				model_name = invoice_line.product_id.model_name or ''
+						tax_type = tax_id.tax_group_id.tax_group_type_id.type
 
-				product_scheme_id = invoice_line.product_id.product_scheme_id or self.env['product.scheme'].search([('code','=','999')])
+						if tax_type == 'withholding_tax' and tax_id.amount == 0:
+							raise UserError(msg5 % tax_id.name)
+						elif tax_type == 'tax' and tax_id.amount < 0:
+							raise UserError(msg6 % tax_id.name)
+						elif tax_type == 'tax' and tax_id.amount == 0:
+							pass
 
-				nota_ref = ''
-				if self.operation_type == '09':
-					nota_ref = 'Contrato de servicios AIU por concepto de: ' + self.aiu
+						elif tax_type == 'withholding_tax' and tax_id.amount < 0:
+							invoice_lines[count]['WithholdingTaxesTotal'] = (
+								invoice_line._get_invoice_lines_taxes(
+									tax_id,
+									abs(tax_id.amount),
+									invoice_lines[count]['WithholdingTaxesTotal']))
+						elif tax_type == 'withholding_tax' and tax_id.amount > 0:
+							pass
+						else:
+							invoice_lines[count]['TaxesTotal'] = (
+								invoice_line._get_invoice_lines_taxes(
+									tax_id,
+									tax_id.amount,
+									invoice_lines[count]['TaxesTotal']))
 
-				invoice_lines[count] = {}
-				invoice_lines[count]['Note'] = nota_ref or ''
-				invoice_lines[count]['unitCode'] = invoice_line.product_uom_id.product_uom_code_id.code
-				invoice_lines[count]['Quantity'] = '{:.2f}'.format(invoice_line.quantity)
-				invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(reference_price)
-				invoice_lines[count]['LineExtensionAmount'] = '{:.2f}'.format(invoice_line.price_subtotal)
-				invoice_lines[count]['PricingReference'] = '{:.2f}'.format(invoice_line.product_id.with_context(force_company=self.company_id.id).standard_price or 0.0)
-				invoice_lines[count]['MultiplierFactorNumeric'] = '{:.2f}'.format(invoice_line.discount)
-				invoice_lines[count]['AllowanceChargeAmount'] = '{:.2f}'.format(disc_amount)
-				invoice_lines[count]['AllowanceChargeBaseAmount'] = '{:.2f}'.format(total_wo_disc)
-				invoice_lines[count]['TaxesTotal'] = {}
-				invoice_lines[count]['WithholdingTaxesTotal'] = {}
-				invoice_lines[count]['SellersItemIdentification'] = invoice_line.product_id.default_code
-				invoice_lines[count]['StandardItemIdentification'] = invoice_line.product_id.product_scheme_code or ''
-				invoice_lines[count]['StandardschemeID'] = product_scheme_id.code or ''
-				invoice_lines[count]['StandardschemeName'] = product_scheme_id.name or ''
-				invoice_lines[count]['StandardschemeAgencyID'] = product_scheme_id.scheme_agency_id or ''
+			if '01' not in invoice_lines[count]['TaxesTotal']:
+				invoice_lines[count]['TaxesTotal']['01'] = {}
+				invoice_lines[count]['TaxesTotal']['01']['total'] = 0
+				invoice_lines[count]['TaxesTotal']['01']['name'] = 'IVA'
+				invoice_lines[count]['TaxesTotal']['01']['taxes'] = {}
+				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00'] = {}
+				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['base'] = invoice_line.price_subtotal
+				invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['amount'] = 0
 
-				for tax in invoice_line.tax_ids:
+			# if '03' not in invoice_lines[count]['TaxesTotal']:
+			# 	invoice_lines[count]['TaxesTotal']['03'] = {}
+			# 	invoice_lines[count]['TaxesTotal']['03']['total'] = 0
+			# 	invoice_lines[count]['TaxesTotal']['03']['name'] = 'ICA'
+			# 	invoice_lines[count]['TaxesTotal']['03']['taxes'] = {}
+			# 	invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00'] = {}
+			# 	invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['base'] = invoice_line.price_subtotal
+			# 	invoice_lines[count]['TaxesTotal']['03']['taxes']['0.00']['amount'] = 0
+			#
+			# if '04' not in invoice_lines[count]['TaxesTotal']:
+			# 	invoice_lines[count]['TaxesTotal']['04'] = {}
+			# 	invoice_lines[count]['TaxesTotal']['04']['total'] = 0
+			# 	invoice_lines[count]['TaxesTotal']['04']['name'] = 'INC'
+			# 	invoice_lines[count]['TaxesTotal']['04']['taxes'] = {}
+			# 	invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00'] = {}
+			# 	invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['base'] = invoice_line.price_subtotal
+			# 	invoice_lines[count]['TaxesTotal']['04']['taxes']['0.00']['amount'] = 0
 
-					if tax.amount_type == 'group':
-						tax_ids = tax.children_tax_ids
-					else:
-						tax_ids = tax
+			invoice_lines[count]['BrandName'] = brand_name
+			invoice_lines[count]['ModelName'] = model_name
+			invoice_lines[count]['ItemDescription'] = str(invoice_line.name) if invoice_line.name != invoice_line.product_id.display_name else invoice_line.product_id.name or ''
+			invoice_lines[count]['InformationContentProviderParty'] = (
+				invoice_line._get_information_content_provider_party_values())
+			invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(
+				invoice_line.price_unit)
 
-					for tax_id in tax_ids:
-						if tax_id.tax_group_id.is_einvoicing:
-							if not tax_id.tax_group_id.tax_group_type_id:
-								raise UserError(msg4 % tax.name)
-
-							tax_type = tax_id.tax_group_id.tax_group_type_id.type
-
-							if tax_type == 'withholding_tax' and tax_id.amount == 0:
-								raise UserError(msg5 % tax_id.name)
-							elif tax_type == 'tax' and tax_id.amount < 0:
-								raise UserError(msg6 % tax_id.name)
-							elif tax_type == 'tax' and tax_id.amount == 0:
-								pass
-
-							elif tax_type == 'withholding_tax' and tax_id.amount < 0:
-								invoice_lines[count]['WithholdingTaxesTotal'] = (
-									invoice_line._get_invoice_lines_taxes(
-										tax_id,
-										abs(tax_id.amount),
-										invoice_lines[count]['WithholdingTaxesTotal']))
-							elif tax_type == 'withholding_tax' and tax_id.amount > 0:
-								# TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN.
-								# Solo la parte positiva que indicaria una autoretencion, Si la DIAN
-								# pide que se envie la parte negativa, seria quitar o comentar este if
-								pass
-							else:
-								invoice_lines[count]['TaxesTotal'] = (
-									invoice_line._get_invoice_lines_taxes(
-										tax_id,
-										tax_id.amount,
-										invoice_lines[count]['TaxesTotal']))
-
-				if '01' not in invoice_lines[count]['TaxesTotal']:
-					invoice_lines[count]['TaxesTotal']['01'] = {}
-					invoice_lines[count]['TaxesTotal']['01']['total'] = 0
-					invoice_lines[count]['TaxesTotal']['01']['name'] = 'IVA'
-					invoice_lines[count]['TaxesTotal']['01']['taxes'] = {}
-					invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00'] = {}
-					invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['base'] = invoice_line.price_subtotal
-					invoice_lines[count]['TaxesTotal']['01']['taxes']['0.00']['amount'] = 0
-
-				invoice_lines[count]['BrandName'] = brand_name
-				invoice_lines[count]['ModelName'] = model_name
-				invoice_lines[count]['ItemDescription'] = str(invoice_line.name) if invoice_line.name != invoice_line.product_id.display_name else invoice_line.product_id.name or ''
-				invoice_lines[count]['InformationContentProviderParty'] = (
-					invoice_line._get_information_content_provider_party_values())
-				invoice_lines[count]['PriceAmount'] = '{:.2f}'.format(
-					invoice_line.price_unit)
-
-				count += 1
+			count += 1
 		return invoice_lines
