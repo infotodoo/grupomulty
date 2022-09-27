@@ -60,7 +60,7 @@
             </xpath>
 
             <xpath expr="//notebook" position="inside">
-                <page name="einvoicing" string="E-Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund','in_invoice'))]}">
+                <page name="einvoicing" string="E-Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund','in_invoice','in_refund'))]}">
                     <field name="dian_document_lines" mode="tree">
                         <tree string="DIAN Documents" create="0" edit="0">
                             <field name="cufe_cude"/>

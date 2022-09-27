@@ -519,7 +519,6 @@ class AccountInvoiceDianDocument(models.Model):
             'DeliveryTerms': {'LossRiskResponsibilityCode': LossRiskResponsibilityCode, 'LossRisk': LossRisk},
             'AccountingSupplierParty': supplier._get_accounting_partner_party_values(self.company_id),
             'AccountingCustomerParty': customer._get_accounting_partner_party_values(self.company_id),
-            # TODO: No esta completamente calro los datos de que tercero son
             'TaxRepresentativeParty': supplier._get_tax_representative_party_values(),
             'InformationContentProviderParty': self.invoice_id.mandante_id._get_tax_representative_party_values() if self.invoice_id.mandante_id else {},
             'PaymentMeansID': self.invoice_id.payment_mean_id.code,
@@ -614,9 +613,6 @@ class AccountInvoiceDianDocument(models.Model):
                 'IssueDate': self.invoice_id.issue_date_invoice or '',
                 'CustomizationID': self.invoice_id.customizationid_invoice}
 
-        #TODO 2.0: Exclusivo en referencias a documentos (elementos DocumentReference)
-        #Punto 14.1.3 del anexo tecnico version 1.8
-        #91 Nota Crédito
         xml_values['CreditNoteTypeCode'] = '91'
         xml_values['BillingReference'] = billing_reference
         xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
@@ -657,11 +653,6 @@ class AccountInvoiceDianDocument(models.Model):
                 'UUID': self.invoice_id.uuid_invoice,
                 'IssueDate': self.invoice_id.issue_date_invoice,
                 'CustomizationID': self.invoice_id.customizationid_invoice}
-        #Exclusivo en referencias a documentos (elementos DocumentReference)
-        #Punto 14.1.3 del anexo tecnico version 1.8
-        #92 Nota Débito
-        #TODO 2.0: DebitNoteTypeCode no existe en DebitNote
-        #xml_values['DebitNoteTypeCode'] = '92'
         xml_values['BillingReference'] = billing_reference
         xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
         xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code

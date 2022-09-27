@@ -50,7 +50,7 @@ class ResPartner(models.Model):
     field_10 = fields.Char()
     field_11 = fields.Many2one('address.code')
     field_12 = fields.Char()
-    ciiu = fields.Many2many('ciiu.value', 'ciiu_value_res_partner_rel', 'partner_id', 'ciiu_id', string='CIIU')
+    #ciiu = fields.Many2many('ciiu.value', 'ciiu_value_res_partner_rel', 'partner_id', 'ciiu_id', string='CIIU')
 
     @api.onchange('field_1', 'field_2', 'field_3', 'field_4', 'field_5',
                   'field_6', 'field_7', 'field_8', 'field_9', 'field_10',

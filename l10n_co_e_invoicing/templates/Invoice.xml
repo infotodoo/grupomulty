@@ -626,6 +626,10 @@ ajuste que se da mediante un Nota Débito>
 				</cac:PowerOfAttorney>
 			</cac:InformationContentProviderParty>
 		{% endif %}
+		<!--TODO, borrar no aparece en el anexo tecnico, pero la factura de la dian si recibe este valor-->
+			<!-- <cac:AdditionalItemIdentification>
+				<cbc:ID schemeID="999" schemeName="EAN13">6543542313534</cbc:ID>
+			</cac:AdditionalItemIdentification> -->
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>

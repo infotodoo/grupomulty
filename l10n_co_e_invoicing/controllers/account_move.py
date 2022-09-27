@@ -37,6 +37,8 @@ class ElectronicInvoiceFunctions(http.Controller):
 
         if rating == 'True':
             invoice_id.dian_document_lines.sudo().express_acceptation()
+        else:
+            invoice_id.dian_document_lines.sudo().refund_acceptation()
 
         return request.render('l10n_co_e_invoicing.approve_electronic_invoice_messages', {
             'rating': rating_system,
