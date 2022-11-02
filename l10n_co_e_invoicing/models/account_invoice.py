@@ -5,6 +5,7 @@ from pytz import timezone
 import zipfile
 from io import BytesIO
 
+import datetime as dt
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang, format_date, get_lang
@@ -108,6 +109,7 @@ class AccountInvoice(models.Model):
 											 ('111', 'Tiene más de un documento DIAN'),
 											 ('other', 'Other')], string='Estado doc. DIAN', compute="_get_status_doc_dian", default=False, tracking=True)
 	orden_compra = fields.Char(string='Orden de compra')
+	nota_recepcion = fields.Char(string='Nota recepcion')
 	cufe_cude = fields.Char(string='CUFE/CUDE', tracking=True)
 
 	@api.depends('dian_document_lines')
@@ -133,19 +135,22 @@ class AccountInvoice(models.Model):
 			inv.credit_note_count = data_map.get(inv.id, 0.0)
 
 	def tacit_acceptation(self):
-		if self.invoice_rating == 'not_rating' and self.dian_document_lines:
-			cufe_cude_cuds = self.env['account.invoice.dian.document'].search([('invoice_id', '=', self.id)], order='invoice_id desc', limit=1)
-			hora_comparar = cufe_cude_cuds.create_date + datetime.timedelta(hours=72)
-			hora = hora_comparar - datetime.datetime.now()
-			horas = int(hora.total_seconds())
-			if horas <= 0 and cufe_cude_cuds.get_status_zip_status_code == '00':
-				dian_obj = cufe_cude_cuds
-				accepted_xml_without_signature = global_functions.get_template_xml(dian_obj._get_accepted_values(),'AceptacionTacita')
-				accepted_xml_with_signature = global_functions.get_xml_with_signature(accepted_xml_without_signature, self.company_id.signature_policy_url, self.company_id.signature_policy_description, self.company_id.certificate_file, self.company_id.certificate_password)
-				dian_obj.write({'exp_accepted_file': b64encode(dian_obj._get_acp_zipped_file(accepted_xml_with_signature)).decode("utf-8", "ignore")})
-				dian_obj.action_sent_accepted_file(dian_obj.exp_accepted_file)
-				self.invoice_rating = 'auto_approve'
-				dian_obj.bs_acceptation()
+		invoice = self.search([('invoice_rating', '=', 'not_rating'), ('type', 'in', ('out_invoice', 'in_invoice'))], limit=50)
+		for record in invoice:
+			if record.invoice_rating == 'not_rating' and record.dian_document_lines:
+				cufe_cude_cuds = self.env['account.invoice.dian.document'].search([('invoice_id', '=', record.id)], order='invoice_id desc', limit=1)
+				hora_comparar = cufe_cude_cuds.create_date + dt.timedelta(hours=72)
+				hora = hora_comparar - dt.datetime.now()
+				horas = int(hora.total_seconds())
+
+				if horas <= 0 and cufe_cude_cuds.get_status_zip_status_code == '00':
+					dian_obj = cufe_cude_cuds
+					accepted_xml_without_signature = global_functions.get_template_xml(dian_obj._get_accepted_values(),'AceptacionTacita')
+					accepted_xml_with_signature = global_functions.get_xml_with_signature(accepted_xml_without_signature, record.company_id.signature_policy_url,record.company_id.signature_policy_description, record.company_id.certificate_file, record.company_id.certificate_password)
+					dian_obj.write({'exp_accepted_file': b64encode(dian_obj._get_acp_zipped_file(accepted_xml_with_signature)).decode("utf-8", "ignore")})
+					dian_obj.action_sent_accepted_file(dian_obj.exp_accepted_file)
+					record.invoice_rating = 'auto_approve'
+					dian_obj.bs_acceptation()
 
 	def action_view_credit_notes(self):
 		self.ensure_one()
@@ -295,9 +300,10 @@ class AccountInvoice(models.Model):
 
 		template.attachment_ids = [(6, 0, attach_ids)]
 
-		lang = get_lang(self.env)
-		if template and template.lang:
-			lang = template._render_template(template.lang, 'account.move', self.id)
+		lang = False
+		if template:
+			#lang = template._render_lang(self.ids)[self.id]
+			lang = get_lang(self.env).code
 		if not lang:
 			lang = get_lang(self.env).code
 
@@ -514,12 +520,12 @@ class AccountInvoice(models.Model):
 
 					# date = self._get_currency_rate_date() or fields.Date.context_today(self)
 					if self.currency_id.id != company_currency.id:
-						currency = self.currency_id
-						rate = currency._convert(rate, company_currency, self.company_id, date)
-						taxes[tax_code]['total'] += (((tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100)
-						taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount / rate
-						taxes[tax_code]['taxes'][tax_percent]['amount'] += (
-									((tax.tax_base_amount / rate) * tax.tax_line_id.amount) / 100)
+						if tax.tax_base_amount:
+							currency = self.currency_id
+							rate = currency._convert(rate, company_currency, self.company_id, date)
+							taxes[tax_code]['total'] += tax.price_total
+							taxes[tax_code]['taxes'][tax_percent]['base'] += tax.price_total / tax.tax_line_id.amount * 100
+							taxes[tax_code]['taxes'][tax_percent]['amount'] += tax.price_total
 					else:
 						taxes[tax_code]['total'] += ((tax.tax_base_amount * tax.tax_line_id.amount) / 100)
 						taxes[tax_code]['taxes'][tax_percent]['base'] += tax.tax_base_amount

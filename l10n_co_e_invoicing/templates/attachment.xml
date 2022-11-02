@@ -8,20 +8,19 @@
     xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#">
     <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
     <cbc:CustomizationID>Documentos adjuntos</cbc:CustomizationID>
-    <cbc:ProfileID>Factura ELectrónica de Venta</cbc:ProfileID> <!--de aqui para arriba dejar todo como está-->
-    <cbc:ProfileExecutionID>{{ProfileExecutionID}}</cbc:ProfileExecutionID> <!-- usar 1 para producción y 2 para pruebas-->
-    <cbc:ID>{{ID}}</cbc:ID> <!-- este ID debe generarlo usted porque es consecutivo propio del contenedor-->
+    <cbc:ProfileID>Factura ELectrónica de Venta</cbc:ProfileID>
+    <cbc:ProfileExecutionID>{{ProfileExecutionID}}</cbc:ProfileExecutionID>
+    <cbc:ID>{{ID}}</cbc:ID>
     <cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
 	<cbc:IssueTime>{{IssueTime}}</cbc:IssueTime>
-    <cbc:DocumentType>Contenedor de Factura Electrónica</cbc:DocumentType> <!--dejar como está-->
-    <cbc:ParentDocumentID>{{ID}}</cbc:ParentDocumentID> <!-- Usar el mismo campo que usa el xml de invoice en la línea 131 o usar el BillingReference de la NC o ND-->
+    <cbc:DocumentType>Contenedor de Factura Electrónica</cbc:DocumentType>
+    <cbc:ParentDocumentID>{{ID}}</cbc:ParentDocumentID>
     <cac:SenderParty>
-        <cac:PartyTaxScheme> <!--datos del proveedor (el que vende)-->
+        <cac:PartyTaxScheme>
             <cbc:RegistrationName>{{AccountingSupplierParty.Name}}</cbc:RegistrationName>
             <cbc:CompanyID schemeAgencyID="195"
 					schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}"
 					schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
-         <!-- dejar el schemeAgencyID como está-->
             <cbc:TaxLevelCode listName="{{AccountingSupplierParty.ListName}}">{{AccountingSupplierParty.TaxLevelCode}}</cbc:TaxLevelCode>
             <cac:TaxScheme>
 					<cbc:ID>{{AccountingSupplierParty.TaxSchemeID}}</cbc:ID>

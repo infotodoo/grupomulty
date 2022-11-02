@@ -11,6 +11,8 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
 	_inherit = "res.partner"
 
+	email_electronic = fields.Char('Correo FE')
+
 	def _get_accounting_partner_party_values(self, company_id):
 		msg1 = _("'%s' does not have a person type established.")
 		msg2 = _("'%s' does not have a city established.")
@@ -132,7 +134,7 @@ class ResPartner(models.Model):
 			'MiddleName': middle_name,
 			'Telephone': telephone,
 			'Telefax': '',
-			'ElectronicMail': self.email,
+			'ElectronicMail': self.email_electronic or self.email,
 		}
 
 

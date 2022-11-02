@@ -45,19 +45,21 @@ class AccountInvoiceDianDocument(models.Model):
 
     def _get_support_values(self):
         xml_values = self._get_xml_suppplier_values(False)
-        billing_reference = self.invoice_id._get_billing_reference()
-        if billing_reference:
-            xml_values['CustomizationID'] = '20'
-            self.invoice_id.operation_type = '20'
         xml_values['CustomizationID'] = self.invoice_id.operation_type_supplier
         active_dian_resolution = self.invoice_id._get_active_dian_resolution()
         xml_values['InvoiceControl'] = active_dian_resolution
         xml_values['InvoiceTypeCode'] = self.invoice_id.invoice_type_code
         xml_values['InvoiceLines'] = self.invoice_id._get_invoice_lines()
-        xml_values['BillingReference'] = billing_reference
-        xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
-        xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
-        xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
+        if self.invoice_id.move_type == 'in_refund':
+            billing_reference = self.invoice_id._get_billing_reference()
+            if billing_reference:
+                xml_values['CustomizationID'] = '20'
+                self.invoice_id.operation_type = '20'
+            xml_values['UUID'] = self.invoice_id.reversed_entry_id.dian_document_lines.cufe_cude
+            xml_values['BillingReference'] = billing_reference
+            xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
+            xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
+            xml_values['DiscrepancyDescription'] = self.invoice_id.discrepancy_response_code_id.name
 
         return xml_values
 

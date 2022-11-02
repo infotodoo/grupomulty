@@ -119,7 +119,7 @@
         <field name="email_from">${object.company_id.einvoicing_email}</field>
         <field name="reply_to">${object.company_id.einvoicing_email}</field>
         <field name="subject">${object.company_id.partner_id.identification_document} ; ${object.company_id.name} ; ${object.name} ; 01 ; ${object.company_id.name}</field>
-        <field name="email_to">${(object.partner_id.email) or (object.company_id.einvoicing_partner_no_email)}</field>
+        <field name="email_to">${(object.partner_id.email_electronic if object.partner_id.email_electronic else object.partner_id.email) | safe}</field>
         <field name="auto_delete" eval="True"/>
         <field name="lang">${object.partner_id.lang}</field>
         <field name="body_html"><![CDATA[

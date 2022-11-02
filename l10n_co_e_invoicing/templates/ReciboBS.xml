@@ -48,7 +48,7 @@
 	<cbc:IssueTime>{{IssueTime}}</cbc:IssueTime>
 	<cbc:Note>{{AccountingSupplierParty.TaxSchemeName}} OBRANDO EN NOMBRE Y REPRESENTACION DE {{AccountingCustomerParty.TaxSchemeName}}</cbc:Note>
 	<cac:SenderParty>
-        <cac:PartyTaxScheme> <!--datos del proveedor (el que vende)-->
+        <cac:PartyTaxScheme>
             <cbc:RegistrationName>{{AccountingSupplierParty.Name}}</cbc:RegistrationName>
             <cbc:CompanyID schemeAgencyID="195" schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}" schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
 			<cac:TaxScheme>
