@@ -62,7 +62,6 @@
 	</ext:UBLExtensions>
 	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>{{CustomizationID}}</cbc:CustomizationID>
-<!--TODO: anexo tecnico dice que va ": Factura Electrónica de Venta"-->
 	<cbc:ProfileID>DIAN 2.1: Factura Electrónica de Venta</cbc:ProfileID>
 	<cbc:ProfileExecutionID>{{ProfileExecutionID}}</cbc:ProfileExecutionID>
 	<cbc:ID>{{ID}}</cbc:ID>
@@ -70,9 +69,7 @@
 	<cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
 	<cbc:IssueTime>{{IssueTime}}</cbc:IssueTime>
 	<cbc:InvoiceTypeCode>{{InvoiceTypeCode}}</cbc:InvoiceTypeCode>
-<!--TODO: Que nota colocar?-->
 	<cbc:Note>{{Note}}</cbc:Note>
-<!--TODO, moneda podria ser otra?-->
 	<cbc:DocumentCurrencyCode listAgencyID="6"
 		listAgencyName="United Nations Economic Commission for Europe"
 		listID="ISO 4217 Alpha">{{DocumentCurrencyCode}}</cbc:DocumentCurrencyCode>
@@ -81,46 +78,6 @@
       	<cbc:ID>{{OrderReference}}</cbc:ID>
       	<cbc:IssueDate>{{IssueDate}}</cbc:IssueDate>
    	</cac:OrderReference>
-<!--TODO, Grupo de campos relativos al Periodo de Facturación: Intervalo de fechas la las que
-referencia la factura por ejemplo en servicios públicos>
-	<cac:InvoicePeriod>
-		<cbc:StartDate>{{InvoicePeriodStartDate}}</cbc:StartDate>
-		<cbc:EndDate>{{InvoicePeriodEndDate}}</cbc:EndDate>
-	</cac:InvoicePeriod-->
-<!--TODO: Creo que esto para colocar el numero de la orden, en nuestro caso, seria la cotizacion>
-   	<cac:OrderReference>
-      	<cbc:ID>{{invoiceReferences}}</cbc:ID>
-      	<cbc:IssueDate>{{invoiceReferences}}</cbc:IssueDate>
-   	</cac:OrderReference-->
-<!--TODO: Se debe diligenciar únicamente cuando la FE se origina a partir de la corrección o
-ajuste que se da mediante un Nota Crédito>
-	<cac:BillingReference>
-		<cac:CreditNoteDocumentReference>
-			<cbc:ID>SFR3123856</cbc:ID>
-			<cbc:UUID schemeName="CUFE-SHA1">a675432fecc1d537361dcdbdfbd08d6e5283f2bc</cbc:UUID>
-			<cbc:IssueDate>2018-09-29</cbc:IssueDate>
-		</cac:InvoiceDocumentReference>
-	</cac:BillingReference-->
-<!--TODO: Se debe diligenciar únicamente cuando la FE se origina a partir de la corrección o
-ajuste que se da mediante un Nota Débito>
-	<cac:BillingReference>
-		<cac:DebitNoteDocumentReference>
-			<cbc:ID>SETP990000101</cbc:ID>
-			<cbc:UUID schemeName="CUFE-SHA384">1dc661228f152332d876e1f1cd2042ecdea1804ed0da78f84dc9ee0938d69f17037dc53f97778ed2721d65c1fc3c73ac</cbc:UUID>
-			<cbc:IssueDate>2018-09-29</cbc:IssueDate>
-		</cac:InvoiceDocumentReference>
-	</cac:BillingReference-->
-<!--TODO: opcional, solo interés mercantil, para referenciar uno o más documentos de despacho asociado>
-	<cac:DespatchDocumentReference>
-		<cbc:ID>8124167214 DA</cbc:ID>
-        <cbc:IssueDate>2019-12-12</cbc:IssueDate>
-	</cac:DespatchDocumentReference-->
-<!--TODO: opcional, solo interés mercantil, para referenciar uno o más documentos de recepción asociado>
-	<cac:ReceiptDocumentReference>
-		<cbc:ID>12314129 GR</cbc:ID>
-        <cbc:IssueDate>2019-12-12</cbc:IssueDate>
-	</cac:ReceiptDocumentReference-->
-	<!--TODO: Obligatorio para InvoiceTypeCode = 03 (Contingencia)>-->
 	{% if InvoiceTypeCode == '03' %}
 	<cac:AdditionalDocumentReference>
 		<cbc:ID>{{ID}}</cbc:ID>
@@ -128,22 +85,12 @@ ajuste que se da mediante un Nota Débito>
         <cbc:DocumentTypeCode>FTC</cbc:DocumentTypeCode>
 	</cac:AdditionalDocumentReference>
 	{% endif %}
-	<!--EL EMISOR-->
 	<cac:AccountingSupplierParty>
 		<cbc:AdditionalAccountID>{{AccountingSupplierParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
-		<!--TODO: esto se complementaria con el modulo de partner isic>
-            <cbc:IndustryClasificationCode>{{IndustryClasificationCode}}</cbc:IndustryClasificationCode-->
 			<cac:PartyName>
 				<cbc:Name>{{AccountingSupplierParty.Name}}</cbc:Name>
 			</cac:PartyName>
-		<!--TODO, parece informacion adicional, borrar si no es necesario>
-			<cac:PartyName>
-				<cbc:Name>Establecimiento Principal</cbc:Name>
-			</cac:PartyName>
-			<cac:PartyName>
-				<cbc:Name>DIAN</cbc:Name>
-			</cac:PartyName-->
 			<cac:PhysicalLocation>
 				<cac:Address>
 					<cbc:ID>{{AccountingSupplierParty.AddressID}}</cbc:ID>
@@ -154,10 +101,8 @@ ajuste que se da mediante un Nota Débito>
 					<cac:AddressLine>
 						<cbc:Line>{{AccountingSupplierParty.AddressLine}}</cbc:Line>
 					</cac:AddressLine>
-				<!--TODO, normalmente es colombia, habria laposibilidad que fuera otro pais?-->
 					<cac:Country>
 						<cbc:IdentificationCode>{{AccountingSupplierParty.CountryIdentificationCode}}</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
 						<cbc:Name languageID="es">{{AccountingSupplierParty.CountryName}}</cbc:Name>
 					</cac:Country>
 				</cac:Address>
@@ -168,7 +113,6 @@ ajuste que se da mediante un Nota Débito>
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
 					schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}"
 					schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
-			<!--TODO, listName el anexo dice que eliminar o valor No aplica-->
 				<cbc:TaxLevelCode listName="{{AccountingSupplierParty.listName}}">{{AccountingSupplierParty.TaxLevelCode}}</cbc:TaxLevelCode>
 				<cac:RegistrationAddress>
 					<cbc:ID>{{AccountingSupplierParty.AddressID}}</cbc:ID>
@@ -179,10 +123,8 @@ ajuste que se da mediante un Nota Débito>
 					<cac:AddressLine>
 						<cbc:Line>{{AccountingSupplierParty.AddressLine}}</cbc:Line>
 					</cac:AddressLine>
-				<!--TODO, normalmente es colombia, habria laposibilidad que fuera otro pais?-->
 					<cac:Country>
 						<cbc:IdentificationCode>{{AccountingSupplierParty.CountryIdentificationCode}}</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
 						<cbc:Name languageID="es">{{AccountingSupplierParty.CountryName}}</cbc:Name>
 					</cac:Country>
 				</cac:RegistrationAddress>
@@ -197,38 +139,13 @@ ajuste que se da mediante un Nota Débito>
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
 					schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}"
 					schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
-			<!--TODO, de momento seria el campo ref, pero seria bueno tener el modulo-->
 				<cac:CorporateRegistrationScheme>
 					<cbc:ID>{{Prefix}}</cbc:ID>
-				<!--TODO: ideal desarrollar un modulo solo para esto registry partner-->
 					<cbc:Name>{{AccountingSupplierParty.CorporateRegistrationSchemeName}}</cbc:Name>
 				</cac:CorporateRegistrationScheme>
-			 <!--Si se va a opera bajo modalidad de Consorcio, entonces este grupo de información debe ser informada.
-            De debe completar un grupo de elementos por cada participante del consorcio.>
-                <cac:ShareholderParty>
-					<cbc:PartecipationPercent>10.00</cbc:PartecipationPercent>
-                    <cac:Party>
-                        <cac:PartyTaxScheme>
-                            <cbc:RegistrationName></cbc:RegistrationName>
-                            <cbc:CompanyID schemeAgencyID="195"
-                                schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-                                schemeID=""
-                                schemeName=""></cbc:CompanyID>
-                        <TODO, listName el anexo dice que eliminar o valor No aplica>
-                            <cbc:TaxLevelCode listName="48"></cbc:TaxLevelCode>
-                            <cac:TaxScheme>
-                                <cbc:ID></cbc:ID>
-                                <cbc:Name></cbc:Name>
-                            </cac:TaxScheme>
-                        </cac:PartyTaxScheme>
-                    </cac:Party>
-				</cac:ShareholderParty-->
 			</cac:PartyLegalEntity>
-		<!--TODO: opcional, Grupo de detalles con información de contacto del consorcio-->
 			{% if AccountingSupplierParty.Telephone or AccountingSupplierParty.Telefax or AccountingSupplierParty.ElectronicMail %}
 			<cac:Contact>
-			<!--TODO 3.0: opcional, de momento se manda  info de la empresa sin nombre de contacto>
-				<cbc:Name>Diana Cruz</cbc:Name-->
 				{% if AccountingSupplierParty.Telephone %}
 				<cbc:Telephone>{{AccountingSupplierParty.Telephone}}</cbc:Telephone>
 				{% endif %}
@@ -238,13 +155,10 @@ ajuste que se da mediante un Nota Débito>
 				{% if AccountingSupplierParty.ElectronicMail %}
 				<cbc:ElectronicMail>{{AccountingSupplierParty.ElectronicMail}}</cbc:ElectronicMail>
 				{% endif %}
-			<!--TODO 2.0: opcional, de momento se manda info de la empresa no se sabe que mandar aca de momento>
-                <cbc:Note></cbc:Note-->
 			</cac:Contact>
 			{% endif %}
 		</cac:Party>
 	</cac:AccountingSupplierParty>
-	<!--EL RECEPTOR-->
 	<cac:AccountingCustomerParty>
 		<cbc:AdditionalAccountID>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:AdditionalAccountID>
 		<cac:Party>
@@ -267,7 +181,6 @@ ajuste que se da mediante un Nota Débito>
 					</cac:AddressLine>
 					<cac:Country>
 						<cbc:IdentificationCode>{{AccountingCustomerParty.CountryIdentificationCode}}</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
 						<cbc:Name languageID="es">{{AccountingCustomerParty.CountryName}}</cbc:Name>
 					</cac:Country>
 				</cac:Address>
@@ -278,7 +191,6 @@ ajuste que se da mediante un Nota Débito>
 					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
 					{% if AccountingCustomerParty.CompanyIDschemeName == '31' %}schemeID="{{AccountingCustomerParty.CompanyIDschemeID}}"{% endif %}
 					schemeName="{{AccountingCustomerParty.CompanyIDschemeName}}">{{AccountingCustomerParty.CompanyID}}</cbc:CompanyID>
-			<!--TODO, listName el anexo dice que eliminar o valor No aplica-->
 				<cbc:TaxLevelCode listName="{{AccountingCustomerParty.listName}}">{{AccountingCustomerParty.TaxLevelCode}}</cbc:TaxLevelCode>
 				<cac:RegistrationAddress>
 					<cbc:ID>{{AccountingCustomerParty.AddressID}}</cbc:ID>
@@ -291,7 +203,6 @@ ajuste que se da mediante un Nota Débito>
 					</cac:AddressLine>
 					<cac:Country>
 						<cbc:IdentificationCode>{{AccountingCustomerParty.CountryIdentificationCode}}</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
 						<cbc:Name languageID="es">{{AccountingCustomerParty.CountryName}}</cbc:Name>
 					</cac:Country>
 				</cac:RegistrationAddress>
@@ -310,10 +221,8 @@ ajuste que se da mediante un Nota Débito>
 					<cbc:Name>{{AccountingCustomerParty.CorporateRegistrationSchemeName}}</cbc:Name>
 				</cac:CorporateRegistrationScheme>
 			</cac:PartyLegalEntity>
-		<!--TODO: opcional, Grupo de detalles con información de contacto del receptor>-->
 			{% if AccountingCustomerParty.CompanyID != '2222222222' and (AccountingCustomerParty.Telephone or AccountingCustomerParty.Telefax or AccountingCustomerParty.ElectronicMail) %}
 			<cac:Contact>
-			<!--TODO 2.0: opcional, de momento se manda  info de la empresa sin nombre de contacto>-->
 				{% if AccountingCustomerParty.Telephone %}
 				<cbc:Telephone>{{AccountingCustomerParty.Telephone}}</cbc:Telephone>
 				{% endif %}
@@ -323,32 +232,11 @@ ajuste que se da mediante un Nota Débito>
 				{% if AccountingCustomerParty.ElectronicMail %}
 				<cbc:ElectronicMail>{{AccountingCustomerParty.ElectronicMail}}</cbc:ElectronicMail>
 				{% endif %}
-			<!--TODO 2.0: opcional, de momento se manda info de la empresa no se sabe que mandar aca de momento>
-				<cbc:Note></cbc:Note-->
 			</cac:Contact>
 			{% endif %}
 
-		<!--TODO: Para informarse si AdditionalAccountID = 2 >
-			<cac:Person>
-				<cbc:ID>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:ID>
-				<cbc:FirstName>“consumidor” o “usuario”</cbc:FirstName>
-                <cbc:FamilyName>“final”</cbc:FamilyName>
-				<cbc:MiddleName>dcruz@empresa.org</cbc:MiddleName>
-			<TODO: solo informar informacion de la residencia>
-                <cac:ResidenceAddress>
-					<cbc:ID>{{AccountingCustomerParty.AddressID}}</cbc:ID>
-					<cbc:CityName>{{AccountingCustomerParty.AddressCityName}}</cbc:CityName>
-					<cbc:PostalZone>{{AccountingCustomerParty.AddressPostalZone}}</cbc:PostalZone>
-					<cbc:CountrySubentity>{{AccountingCustomerParty.AddressCountrySubentity}}</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>{{AccountingCustomerParty.AddressCountrySubentityCode}}</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>{{AccountingCustomerParty.AddressLine}}</cbc:Line>
-					</cac:AddressLine>
-				</cac:ResidenceAddress>
-			</cac:Person-->
 		</cac:Party>
 	</cac:AccountingCustomerParty>
-<!--TODO-->
 	<cac:TaxRepresentativeParty>
 		<cac:PartyIdentification>
 			<cbc:ID schemeAgencyID="195"
@@ -358,9 +246,6 @@ ajuste que se da mediante un Nota Débito>
 		</cac:PartyIdentification>
 	</cac:TaxRepresentativeParty>
 	<cac:Delivery>
-		<!--cbc:ActualDeliveryDate>11001</cbc:ActualDeliveryDate>
-		<cbc:ActualDeliveryTime>Bogotá, D.c. </cbc:ActualDeliveryTime-->
-	<!--TODO, direccion de entrega-->
 		{% if AccountingCustomerParty.CompanyID != '2222222222' %}
 		<cac:DeliveryAddress>
 			<cbc:ID>{{Delivery.AddressID}}</cbc:ID>
@@ -375,50 +260,21 @@ ajuste que se da mediante un Nota Débito>
 			</cac:AddressLine>
 			<cac:Country>
 				<cbc:IdentificationCode>{{Delivery.CountryIdentificationCode}}</cbc:IdentificationCode>
-			<!--TODO 2.0: languageID podria variar, siguiente version revisar esto-->
 				<cbc:Name languageID="es">{{Delivery.CountryName}}</cbc:Name>
 			</cac:Country>
 		</cac:DeliveryAddress>
 		{% endif %}
-
-	<!--TODO, podria ser un fragmento no necesario siempre-->
-
 	</cac:Delivery>
-<!--TODO, falta definir que modulo del icoterms se elige-->
 	<cac:DeliveryTerms>
 		<cbc:SpecialTerms>Portes Pagados</cbc:SpecialTerms>
 		<cbc:LossRiskResponsibilityCode>{{DeliveryTerms.LossRiskResponsibilityCode}}</cbc:LossRiskResponsibilityCode>
 		<cbc:LossRisk>{{DeliveryTerms.LossRisk}}</cbc:LossRisk>
 	</cac:DeliveryTerms>
-<!--TODO, modulo payment means incompleto-->
-	<!--VENCIMIENTO-->
 	<cac:PaymentMeans>
 		<cbc:ID>{{PaymentMeansID}}</cbc:ID>
 		<cbc:PaymentMeansCode>{{PaymentMeansCode}}</cbc:PaymentMeansCode>
 		<cbc:PaymentDueDate>{{PaymentDueDate}}</cbc:PaymentDueDate>
-		<!--<cbc:PaymentID>{{PaymentID}}</cbc:PaymentID>-->
 	</cac:PaymentMeans>
-	<!--CONDICIONES DE PAGO -->
-<!--TODO: Grupo de campos para informaciónrelacionadas con un anticipo -->
-	<!--cac:PrepaidPayment>
-		<cbc:ID>SFR3123856</cbc:ID>
-		<cbc:PaidAmount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:PaidAmount>
-		<cbc:ReceivedDate>2018-09-29</cbc:ReceivedDate>
-		<cbc:PaidDate>2018-09-29</cbc:PaidDate>
-		<cbc:PaidTime>2018-09-29</cbc:PaidDate>
-		<cbc:InstructionID>Prepago recibido</cbc:InstructionID>
-	</cac:PrepaidPayment-->
-<!--TODO: Grupo de campos para información relacionadas con un cargo o un descuento-->
-	<!--cac:AllowanceCharge>
-		<cbc:ID>SFR3123856</cbc:ID>
-		<cbc:ChargeIndicator></cbc:ChargeIndicator>
-		<cbc:AllowanceChargeReasonCode></cbc:AllowanceChargeReasonCode>
-		<cbc:AllowanceChargeReason></cbc:AllowanceChargeReason>
-		<cbc:MultiplierFactorNumeric>Prepago recibido</cbc:MultiplierFactorNumeric>
-		<cbc:Amount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:Amount>
-		<cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:BaseAmount>
-	</cac:AllowanceCharge-->
-
 		{% if DocumentCurrencyCode != 'COP' %}
     <cac:PaymentExchangeRate>
 		<cbc:SourceCurrencyCode>{{PaymentExchangeRate.SourceCurrencyCode}}</cbc:SourceCurrencyCode>
@@ -429,29 +285,6 @@ ajuste que se da mediante un Nota Débito>
 		<cbc:Date>{{PaymentExchangeRate.Date}}</cbc:Date>
 	</cac:PaymentExchangeRate>
     {% endif %}
-<!--TODO, obligatorio si diferente a COP>
-
-
-
-	<cac:PaymentExchangeRate>
-		<cbc:SourceCurrencyCode>COP</cbc:SourceCurrencyCode>
-		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
-		<cbc:TargetCurrencyCode>COP</cbc:TargetCurrencyCode>
-		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
-		<cbc:CalculationRate>3100</cbc:CalculationRate>
-		<cbc:Date>2019-06-21</cbc:Date>
-	</cac:PaymentExchangeRate-->
-<!--TODO, Utilizado como metodo alternativo para infomar conversiones a otras divisas.>
-	<cac:PaymentAlternativeExchangeRate>
-		<cbc:SourceCurrencyCode>COP</cbc:SourceCurrencyCode>
-		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
-		<cbc:TargetCurrencyCode>COP</cbc:TargetCurrencyCode>
-		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
-		<cbc:CalculationRate>3100</cbc:CalculationRate>
-		<cbc:Date>2019-06-21</cbc:Date>
-	</cac:PaymentAlternativeExchangeRate-->
-
-	<!--IMPUESTOS Y/O RETENCIONES-->
 	{% for TaxTotalID, TaxTotal in TaxesTotal.items() -%}
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -462,11 +295,9 @@ ajuste que se da mediante un Nota Débito>
 		      {% set taxableamount = TaxSubtotal.base | float %}
 		      {% set taxamount = TaxSubtotal.amount | float %}
 		      {% if ftotal.update({'total': ftotal.total + (((taxableamount * porcentaje)/100)-taxamount)}) %}{% endif %}
-
 		<cac:TaxSubtotal>
 			<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
-
 			<cac:TaxCategory>
 				<cbc:Percent>{{Percent}}</cbc:Percent>
 				<cac:TaxScheme>
@@ -476,7 +307,6 @@ ajuste que se da mediante un Nota Débito>
 			</cac:TaxCategory>
 		</cac:TaxSubtotal>
 		{% endfor -%}
-
 	</cac:TaxTotal>
 	{% endfor -%}
 	{% for WithholdingTaxTotalID, WithholdingTaxTotal in WithholdingTaxesTotal.items() -%}
@@ -497,9 +327,6 @@ ajuste que se da mediante un Nota Débito>
 		{% endfor -%}
 	</cac:WithholdingTaxTotal>
 	{% endfor -%}
-<!--TODO, hay que resolver el tema de los prepagos-->
-<!--TaxInclusiveAmount == PayableAmount y PrepaidAmount == 0 mientras tanto-->
-<!--TODOcac PrepaidAmount = suma de PrepaidPayment-->
 	<cac:LegalMonetaryTotal>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{LineExtensionAmount}}</cbc:LineExtensionAmount>
 		<cbc:TaxExclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxExclusiveAmount}}</cbc:TaxExclusiveAmount>
@@ -509,7 +336,6 @@ ajuste que se da mediante un Nota Débito>
 		<cbc:PrepaidAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PrepaidAmount>
 		<cbc:PayableAmount currencyID="{{DocumentCurrencyCode}}">{{PayableAmount}}</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
-<!--TODO-->
 	{% for InvoiceLineID, InvoiceLine in InvoiceLines.items() -%}
 	<cac:InvoiceLine>
 		<cbc:ID>{{InvoiceLineID}}</cbc:ID>
@@ -540,10 +366,6 @@ ajuste que se da mediante un Nota Débito>
 			<cac:TaxSubtotal>
 				<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
 				<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
-			<!--TODO: Usado en el caso de que el tributo es un valor fijo>
-				<cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
-				<cbc:unitCode></cbc:unitCode>
-				<cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
 				{% if TaxTotal.total > 0 %}
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>
@@ -562,7 +384,6 @@ ajuste que se da mediante un Nota Débito>
 					</cac:TaxScheme>
 				</cac:TaxCategory>
 				{% endif -%}
-
 			</cac:TaxSubtotal>
 			{% endfor -%}
 		</cac:TaxTotal>
@@ -587,31 +408,17 @@ ajuste que se da mediante un Nota Débito>
 		{% endfor -%}
 		<cac:Item>
 			<cbc:Description>{{InvoiceLine.ItemDescription}}</cbc:Description>
-		<!--TODO, Cantidad de unidad de este artículo por empaque>
-			<cbc:PackSizeNumeric>{{InvoiceLine.PackSizeNumeric}}</cbc:PackSizeNumeric-->
-		<!--TODO, Marca: Marca del artículo-->
 			<cbc:BrandName>{{InvoiceLine.BrandName}}</cbc:BrandName>
-		<!--TODO, Modelo: Modelo del artículo-->
 			<cbc:ModelName>{{InvoiceLine.ModelName}}</cbc:ModelName>
-		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con el vendedor-->
 			<cac:SellersItemIdentification>
 				<cbc:ID>{{InvoiceLine.SellersItemIdentification}}</cbc:ID>
 				<cbc:ExtendedID></cbc:ExtendedID>
 			</cac:SellersItemIdentification>
-		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con un estándar-->
 			<cac:StandardItemIdentification>
 				<cbc:ID schemeID="{{InvoiceLine.StandardschemeID}}"
 					schemeName="{{InvoiceLine.StandardschemeName}}"
 					{% if InvoiceLine.StandardschemeAgencyID %}schemeAgencyID="{{InvoiceLine.StandardschemeAgencyID}}"{% endif %}>{{InvoiceLine.StandardItemIdentification}}</cbc:ID>
 			</cac:StandardItemIdentification>
-		<!--TODO, opcional, Grupo de información para adicionar información específica del ítem que puede
-		ser solicitada por autoridades o entidades diferentes a la DIAN>
-			<cac:AdditionalItemProperty>
-				<cbc:Name></cbc:Name>
-				<cbc:Value></cbc:Value>
-			</cac:AdditionalItemProperty-->
-		<!--TODO, Grupo de información que describen el Mandante de la operación de venta. Aplica
-		solo para mandatos, y se debe informar a nivel de ítem-->
 		{% if CustomizationID == '11' %}
 			<cac:InformationContentProviderParty>
 				<cac:PowerOfAttorney>
@@ -626,10 +433,6 @@ ajuste que se da mediante un Nota Débito>
 				</cac:PowerOfAttorney>
 			</cac:InformationContentProviderParty>
 		{% endif %}
-		<!--TODO, borrar no aparece en el anexo tecnico, pero la factura de la dian si recibe este valor-->
-			<!-- <cac:AdditionalItemIdentification>
-				<cbc:ID schemeID="999" schemeName="EAN13">6543542313534</cbc:ID>
-			</cac:AdditionalItemIdentification> -->
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>

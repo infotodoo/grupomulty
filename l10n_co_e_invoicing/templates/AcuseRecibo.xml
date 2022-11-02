@@ -46,7 +46,7 @@
 	<cbc:InvoiceTypeCode>{{InvoiceTypeCode}}</cbc:InvoiceTypeCode>
 	<cbc:Note>{{Note}}</cbc:Note>
 	<cac:SenderParty>
-		<cac:PartyTaxScheme> <!--datos del proveedor (el que vende)-->
+		<cac:PartyTaxScheme>
 			<cbc:RegistrationName>{{AccountingSupplierParty.Name}}</cbc:RegistrationName>
 			<cbc:CompanyID schemeAgencyID="195" schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}" schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
 			<cbc:TaxLevelCode listName="{{AccountingSupplierParty.ListName}}">{{AccountingSupplierParty.TaxLevelCode}}</cbc:TaxLevelCode>

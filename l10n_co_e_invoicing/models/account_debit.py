@@ -29,7 +29,7 @@ class AccountDebitNote(models.TransientModel):
                 'invoice_payment_term_id': None,
                 'debit_origin_id': move.id,
                 'type': type,
-                'refund_type': 'debit',
+                'refund_type': 'debit' if move.type in ('in_refund', 'out_refund') else 'credit',
             }
         if not self.copy_lines or move.type in [('in_refund', 'out_refund')]:
             default_values['line_ids'] = [(5, 0, 0)]

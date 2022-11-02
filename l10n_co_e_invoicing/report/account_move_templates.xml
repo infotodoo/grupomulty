@@ -175,6 +175,16 @@
                             <p class="m-0" t-field="o.invoice_payment_term_id.name"/>
                         </div>
                     </div>
+                    <t t-if="o.invoice_origin">
+                        <div class="row">
+                            <div class="col-5">
+                                <strong>Orden de referencia:</strong>
+                            </div>
+                            <div class="col-7">
+                                <span t-field="o.order_reference"/>
+                            </div>
+                        </div>
+                    </t>
                     <div>
                         <div class="col-auto mw-100 mb-4">
                             <strong>Medio Pago:</strong>

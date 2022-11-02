@@ -48,7 +48,7 @@
 	<cbc:IssueTime>{{IssueTime}}</cbc:IssueTime>
 	<cbc:Note>Manifiesto bajo la gravedad de juramento que transcurridos 3 días hábiles siguientes a la fecha de recepción de la mercancía o del servicio en la referida factura de este evento, el adquirente {{AccountingCustomerParty.TaxSchemeName}} identificado con NIT {{AccountingCustomerParty.TaxSchemeID}} no manifestó expresamente la aceptación o rechazo de la referida factura, ni reclamó en contra de su contenido.</cbc:Note>
 	<cac:SenderParty>
-        <cac:PartyTaxScheme> <!--datos del proveedor (el que vende)-->
+        <cac:PartyTaxScheme>
             <cbc:RegistrationName>{{AccountingSupplierParty.Name}}</cbc:RegistrationName>
             <cbc:CompanyID schemeAgencyID="195" schemeID="{{AccountingSupplierParty.CompanyIDschemeID}}" schemeName="{{AccountingSupplierParty.CompanyIDschemeName}}">{{AccountingSupplierParty.CompanyID}}</cbc:CompanyID>
 			<cac:TaxScheme>

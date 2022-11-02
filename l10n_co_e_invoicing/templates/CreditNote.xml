@@ -67,8 +67,6 @@
 		<cbc:ResponseCode>{{DiscrepancyResponseCode}}</cbc:ResponseCode>
 		<cbc:Description>{{DiscrepancyDescription}}</cbc:Description>
 	</cac:DiscrepancyResponse>
-<!--TODAS LAS FACTURAS DEBEN SER DEL MISMO ADQUIRIENTE-->
-<!--Si CreditNoteTypeCode igual a 20 es obligatorio-->
 {% if BillingReference.ID %}
 	<cac:BillingReference>
 		<cac:InvoiceDocumentReference>
@@ -198,8 +196,7 @@
 					</cac:AddressLine>
 					<cac:Country>
 						<cbc:IdentificationCode>{{AccountingCustomerParty.CountryIdentificationCode}}</cbc:IdentificationCode>
-					<!--TODO: languageID podria variar-->
-                        <cbc:Name languageID="es">{{AccountingCustomerParty.CountryName}}</cbc:Name>
+					    <cbc:Name languageID="es">{{AccountingCustomerParty.CountryName}}</cbc:Name>
 					</cac:Country>
 				</cac:RegistrationAddress>
 				<cac:TaxScheme>
@@ -207,7 +204,6 @@
 					<cbc:Name>{{AccountingCustomerParty.TaxSchemeName}}</cbc:Name>
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
-			<!-- MULTIPLES ADQUIRIENTES -->
 			<cac:PartyLegalEntity>
 				<cbc:RegistrationName>{{AccountingCustomerParty.Name}}</cbc:RegistrationName>
 				<cbc:CompanyID schemeAgencyID="195"
@@ -220,7 +216,6 @@
 			</cac:PartyLegalEntity>
 			{% if AccountingCustomerParty.CompanyID != '2222222222' and (AccountingCustomerParty.Telephone or AccountingCustomerParty.Telefax or AccountingCustomerParty.ElectronicMail) %}
 			<cac:Contact>
-				<!-- <cbc:Name>{{ReceiverName}}</cbc:Name> -->
 				{% if AccountingCustomerParty.Telephone %}
 				<cbc:Telephone>{{AccountingCustomerParty.Telephone}}</cbc:Telephone>
 				{% endif %}
@@ -230,15 +225,10 @@
 				{% if AccountingCustomerParty.ElectronicMail %}
 				<cbc:ElectronicMail>{{AccountingCustomerParty.ElectronicMail}}</cbc:ElectronicMail>
 				{% endif %}
-				<!--<cbc:Note></cbc:Note-->
 			</cac:Contact>
 			{% endif %}
         	<cac:Person>
-				<!-- <cbc:ID>{{AccountingCustomerParty.AdditionalAccountID}}</cbc:ID>
-				<cbc:FirstName>“consumidor” o “usuario”</cbc:FirstName>
-                <cbc:FamilyName>“final”</cbc:FamilyName>
-				<cbc:MiddleName>dcruz@empresa.org</cbc:MiddleName> -->
-		        <cac:ResidenceAddress>
+				<cac:ResidenceAddress>
 					<cbc:ID>{{AccountingCustomerParty.AddressID}}</cbc:ID>
 					<cbc:CityName>{{AccountingCustomerParty.AddressCityName}}</cbc:CityName>
 					<cbc:PostalZone>{{AccountingCustomerParty.AddressPostalZone}}</cbc:PostalZone>
@@ -263,9 +253,6 @@
 		</cac:PartyName>
 	</cac:TaxRepresentativeParty>
 	<cac:Delivery>
-		<!--cbc:ActualDeliveryDate>11001</cbc:ActualDeliveryDate>
-		<cbc:ActualDeliveryTime>Bogotá, D.c. </cbc:ActualDeliveryTime-->
-	<!--TODO, direccion de entrega-->
 		{% if AccountingCustomerParty.CompanyID != '2222222222' %}
 		<cac:DeliveryAddress>
 			<cbc:ID>{{Delivery.AddressID}}</cbc:ID>
@@ -280,97 +267,21 @@
 			</cac:AddressLine>
 			<cac:Country>
 				<cbc:IdentificationCode>{{Delivery.CountryIdentificationCode}}</cbc:IdentificationCode>
-			<!--TODO: languageID podria variar-->
 				<cbc:Name languageID="es">{{Delivery.CountryName}}</cbc:Name>
 			</cac:Country>
 		</cac:DeliveryAddress>
 		{% endif %}
-	<!--TODO, podria ser un fragmento no necesario siempre-->
-		<!--<cac:DeliveryParty>
-			<cac:PartyName>
-				<cbc:Name>Empresa de transporte</cbc:Name>
-			</cac:PartyName>
-			<cac:PhysicalLocation>
-				<cac:Address>
-					<cbc:ID>11001</cbc:ID>
-					<cbc:CityName>Bogotá, D.c. </cbc:CityName>
-					<cbc:PostalZone>Bogotá, D.c. </cbc:PostalZone>
-					<cbc:CountrySubentity>Bogotá</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>Av.  #17 - 193</cbc:Line>
-					</cac:AddressLine>
-					<cac:Country>
-						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-					TODO: languageID podria variar
-						<cbc:Name languageID="es">Colombia</cbc:Name>
-					</cac:Country>
-				</cac:Address>
-			</cac:PhysicalLocation>
-			<cac:PartyTaxScheme>
-				<cbc:RegistrationName>Empresa de transporte</cbc:RegistrationName>
-				<cbc:CompanyID schemeAgencyID="195"
-					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="1"
-					schemeName="31">981223983</cbc:CompanyID>
-				<cbc:TaxLevelCode listName="04">O-99</cbc:TaxLevelCode>
-				<cac:RegistrationAddress>
-					<cbc:ID>11001</cbc:ID>
-					<cbc:CityName>Bogotá, D.c. </cbc:CityName>
-					<cbc:PostalZone>Bogotá, D.c. </cbc:PostalZone>
-					<cbc:CountrySubentity>Bogotá</cbc:CountrySubentity>
-					<cbc:CountrySubentityCode>11</cbc:CountrySubentityCode>
-					<cac:AddressLine>
-						<cbc:Line>Av.  #17 - 193</cbc:Line>
-					</cac:AddressLine>
-					<cac:Country>
-						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
-					TODO: languageID podria variar
-						<cbc:Name languageID="es">Colombia</cbc:Name>
-					</cac:Country>
-				</cac:RegistrationAddress>
-				<cac:TaxScheme>
-					<cbc:ID>01</cbc:ID>
-					<cbc:Name>IVA</cbc:Name>
-				</cac:TaxScheme>
-			</cac:PartyTaxScheme>
-			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>Empresa de transporte</cbc:RegistrationName>
-				<cbc:CompanyID schemeAgencyID="195"
-					schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)"
-					schemeID="1"
-					schemeName="31">981223983</cbc:CompanyID>
-				<cac:CorporateRegistrationScheme>
-					<cbc:Name>75433</cbc:Name>
-				</cac:CorporateRegistrationScheme>
-			</cac:PartyLegalEntity>
-			<cac:Contact>
-				<cbc:Name>Eric Van Boxsom</cbc:Name>
-				<cbc:Telephone>9712311</cbc:Telephone>
-				<cbc:Telefax>12431241</cbc:Telefax>
-				<cbc:ElectronicMail>eric.vanboxsom@gosocket.net</cbc:ElectronicMail>
-				<cbc:Note>Test descripcion contacto</cbc:Note>
-			</cac:Contact>
-		</cac:DeliveryParty>-->
 	</cac:Delivery>
-<!--TODO, falta definir que modulo del icoterms se elige-->
 	<cac:DeliveryTerms>
 		<cbc:SpecialTerms>Portes Pagados</cbc:SpecialTerms>
 		<cbc:LossRiskResponsibilityCode>{{DeliveryTerms.LossRiskResponsibilityCode}}</cbc:LossRiskResponsibilityCode>
 		<cbc:LossRisk>{{DeliveryTerms.LossRisk}}</cbc:LossRisk>
 	</cac:DeliveryTerms>
-<!--TODO, modulo payment means incompleto-->
-	<!--VENCIMIENTO-->
 	<cac:PaymentMeans>
 		<cbc:ID>{{PaymentMeansID}}</cbc:ID>
 		<cbc:PaymentMeansCode>{{PaymentMeansCode}}</cbc:PaymentMeansCode>
 		<cbc:PaymentDueDate>{{PaymentDueDate}}</cbc:PaymentDueDate>
-	<!--TODO 2.0: Identificador del pago, pueden ir de cero a varios PaymentID-->
-		<!--cbc:PaymentID>{{PaymentID}}</cbc:PaymentID-->
 	</cac:PaymentMeans>
-
-
-
 	{% if DocumentCurrencyCode != 'COP' %}
     <cac:PaymentExchangeRate>
 		<cbc:SourceCurrencyCode>{{PaymentExchangeRate.SourceCurrencyCode}}</cbc:SourceCurrencyCode>
@@ -381,27 +292,6 @@
 		<cbc:Date>{{PaymentExchangeRate.Date}}</cbc:Date>
 	</cac:PaymentExchangeRate>
     {% endif %}
-
-<!--TODO, obligatorio si diferente a COP>
-	<cac:PaymentExchangeRate>
-		<cbc:SourceCurrencyCode>COP</cbc:SourceCurrencyCode>
-		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
-		<cbc:TargetCurrencyCode>COP</cbc:TargetCurrencyCode>
-		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
-		<cbc:CalculationRate>3100</cbc:CalculationRate>
-		<cbc:Date>2019-06-21</cbc:Date>
-	</cac:PaymentExchangeRate-->
-<!--TODO: Grupo de campos para información relacionadas con un cargo o un descuento>
-	<cac:AllowanceCharge>
-		<cbc:ID>SFR3123856</cbc:ID>
-		<cbc:ChargeIndicator></cbc:ChargeIndicator>
-		<cbc:AllowanceChargeReasonCode></cbc:AllowanceChargeReasonCode>
-		<cbc:AllowanceChargeReason></cbc:AllowanceChargeReason>
-		<cbc:MultiplierFactorNumeric>Prepago recibido</cbc:MultiplierFactorNumeric>
-		<cbc:Amount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:Amount>
-		<cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">1000.00</cbc:BaseAmount>
-	</cac:AllowanceCharge-->
-	<!--IMPUESTOS Y/O RETENCIONES-->
 	{% for TaxTotalID, TaxTotal in TaxesTotal.items() -%}
 	<cac:TaxTotal>
 		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -409,10 +299,6 @@
 		<cac:TaxSubtotal>
 			<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
-        <!--TODO: Usado en el caso de que el tributo es un valor fijo>
-            <cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
-			<cbc:unitCode></cbc:unitCode>
-            <cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
 			<cac:TaxCategory>
 				<cbc:Percent>{{Percent}}</cbc:Percent>
 				<cac:TaxScheme>
@@ -424,7 +310,6 @@
 		{% endfor -%}
 	</cac:TaxTotal>
 	{% endfor -%}
-	<!-- Retenciones no van en Nota Credito -->
 	<cac:LegalMonetaryTotal>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{LineExtensionAmount}}</cbc:LineExtensionAmount>
 		<cbc:TaxExclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxExclusiveAmount}}</cbc:TaxExclusiveAmount>
@@ -437,14 +322,9 @@
 	{% for CreditNoteLineID, CreditNoteLine in CreditNoteLines.items() -%}
 	<cac:CreditNoteLine>
 		<cbc:ID>{{CreditNoteLineID}}</cbc:ID>
-    <!--TODO: Obligatorio de informar para el caso de facturas por contratos de servicio tipo AIU.
-	Para el ítem Adminsitración. En este caso la cbc:Note debe empezar por el texto: “Contrato de
-	servicios AIU por concepto de:” El contribuyente debe incluir el objeto del contrato facturado-->
         <cbc:Note>{{CreditNoteLine.Note}}</cbc:Note>
-    <!--TODO: unitCode debe ser dinamico-->
 		<cbc:CreditedQuantity unitCode="{{CreditNoteLine.unitCode}}">{{CreditNoteLine.Quantity}}</cbc:CreditedQuantity>
 		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
-    <!-- TODO, Obligatorio de informar si se trata de muestras comerciales. -->
 	{% if CreditNoteLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
@@ -453,7 +333,6 @@
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
 	{% endif %}
-		<!--IMPUESTOS Y/O RETENCIONES-->
         {% for TaxTotalID, TaxTotal in CreditNoteLine.TaxesTotal.items() -%}
 		<cac:TaxTotal>
 			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
@@ -461,11 +340,6 @@
 			<cac:TaxSubtotal>
 				<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
 				<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
-			<!--TODO: Usado en el caso de que el tributo es un valor fijo>
-				<cbc:BaseUnitMeasure></cbc:BaseUnitMeasure>
-				<cbc:unitCode></cbc:unitCode>
-				<cbc:PerUnitAmount currencyID="{{DocumentCurrencyCode}}"></cbc:TaxAmount-->
-
 				{% if TaxTotal.total > 0 %}
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>
@@ -488,8 +362,6 @@
 			{% endfor -%}
 		</cac:TaxTotal>
 		{% endfor -%}
-	<!--TODO, pueden ser mas descuentos? es obligatorio?, informacion completa?
-	puede iterar en el campo ID aumenta segun la cantidad de descuentos o cargos por lineas-->
 		<cac:AllowanceCharge>
 			<cbc:ID>1</cbc:ID>
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
@@ -500,31 +372,17 @@
 		</cac:AllowanceCharge>
         <cac:Item>
 		    <cbc:Description>{{CreditNoteLine.ItemDescription}}</cbc:Description>
-		<!--TODO, Cantidad de unidad de este artículo por empaque>
-			<cbc:PackSizeNumeric>{{CreditNoteLine.PackSizeNumeric}}</cbc:PackSizeNumeric-->
-		<!--TODO, Marca: Marca del artículo-->
 			<cbc:BrandName>{{CreditNoteLine.BrandName}}</cbc:BrandName>
-		<!--TODO, Modelo: Modelo del artículo-->
 			<cbc:ModelName>{{CreditNoteLine.ModelName}}</cbc:ModelName>
-		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con el vendedor-->
 			<cac:SellersItemIdentification>
 				<cbc:ID>{{CreditNoteLine.SellersItemIdentification}}</cbc:ID>
 				<cbc:ExtendedID></cbc:ExtendedID>
 			</cac:SellersItemIdentification>
-		<!--TODO, Grupo de datos de identificación del artículo o servicio de acuerdo con un estándar-->
 			<cac:StandardItemIdentification>
 				<cbc:ID schemeID="{{CreditNoteLine.StandardschemeID}}"
 					schemeName="{{CreditNoteLine.StandardschemeName}}"
 					{% if CreditNoteLine.StandardschemeAgencyID %}schemeAgencyID="{{CreditNoteLine.StandardschemeAgencyID}}"{% endif %}>{{CreditNoteLine.StandardItemIdentification}}</cbc:ID>
 			</cac:StandardItemIdentification>
-		<!--TODO, opcional, Grupo de información para adicionar información específica del ítem que puede
-		ser solicitada por autoridades o entidades diferentes a la DIAN>
-			<cac:AdditionalItemProperty>
-				<cbc:Name></cbc:Name>
-				<cbc:Value></cbc:Value>
-			</cac:AdditionalItemProperty-->
-		<!--TODO, Grupo de información que describen el Mandante de la operación de venta. Aplica
-		solo para mandatos, y se debe informar a nivel de ítem>-->
 		{% if BillingReference.CustomizationID == '11' %}
 			<cac:InformationContentProviderParty>
 				<cac:PowerOfAttorney>
@@ -539,10 +397,6 @@
 				</cac:PowerOfAttorney>
 			</cac:InformationContentProviderParty>
 		{% endif %}
-		<!--TODO, borrar no aparece en el anexo tecnico, pero la factura de la dian si recibe este valor-->
-			<!-- <cac:AdditionalItemIdentification>
-				<cbc:ID schemeID="999" schemeName="EAN13">6543542313534</cbc:ID>
-			</cac:AdditionalItemIdentification> -->
 		</cac:Item>
 		<cac:Price>
 			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{CreditNoteLine.PriceAmount}}</cbc:PriceAmount>
