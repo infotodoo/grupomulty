@@ -17,10 +17,10 @@ class AccountDebitNote(models.TransientModel):
 
 
     def _prepare_default_values(self, move):
-        if move.type in ('in_refund', 'out_refund'):
-            type = 'in_invoice' if move.type == 'in_refund' else 'out_invoice'
+        if move.move_type in ('in_refund', 'out_refund'):
+            type = 'in_invoice' if move.move_type == 'in_refund' else 'out_invoice'
         else:
-            type = move.type
+            type = move.move_type
         default_values = {
                 'ref': '%s, %s' % (move.name, self.reason) if self.reason else move.name,
                 'date': self.date or move.date,
@@ -28,10 +28,10 @@ class AccountDebitNote(models.TransientModel):
                 'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
                 'invoice_payment_term_id': None,
                 'debit_origin_id': move.id,
-                'type': type,
+                'move_type': type,
                 'refund_type': 'debit',
             }
-        if not self.copy_lines or move.type in [('in_refund', 'out_refund')]:
+        if not self.copy_lines or move.move_type in [('in_refund', 'out_refund')]:
             default_values['line_ids'] = [(5, 0, 0)]
 
         _logger.info('entro a debit')

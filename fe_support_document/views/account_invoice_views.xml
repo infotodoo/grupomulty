@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="l10n_co_e_invoicing.view_invoice_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_date']" position="after">
-                <field name="operation_type_supplier" attrs="{'invisible': [('type', 'not in', ('in_invoice','in_refund'))]}"/>
+                <field name="operation_type_supplier" attrs="{'invisible': [('move_type', 'not in', ('in_invoice','in_refund'))]}"/>
             </xpath>
         </field>
     </record>

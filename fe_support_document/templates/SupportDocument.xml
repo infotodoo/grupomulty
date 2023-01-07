@@ -303,7 +303,6 @@
          <cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeBaseAmount}}</cbc:BaseAmount>
       </cac:AllowanceCharge>
       {% for TaxTotalID, TaxTotal in InvoiceLine.TaxesTotal.items() %}
-      {% if TaxTotal.total > 0 %}
          <cac:TaxTotal>
             <cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
             {% for Percent, TaxSubtotal in TaxTotal.taxes.items() %}
@@ -325,18 +324,17 @@
                <cac:TaxCategory>
                   <cbc:Percent>0.00</cbc:Percent>
                   <cac:TaxScheme>
-                     <cbc:ID></cbc:ID>
-                     <cbc:Name></cbc:Name>
+                     <cbc:ID>{{TaxTotalID}}</cbc:ID>
+                     <cbc:Name>{{TaxTotal.name}}</cbc:Name>
                   </cac:TaxScheme>
                </cac:TaxCategory>
                {% endif %}
             </cac:TaxSubtotal>
             {% endfor %}
          </cac:TaxTotal>
-      {% endif %}
       {% endfor %}
       {% for WithholdingTaxTotalID, WithholdingTaxTotal in InvoiceLine.WithholdingTaxesTotal.items() %}
-      <cac:WithholdingTaxTotal>
+      <cac:TaxTotal>
          <cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(WithholdingTaxTotal.total)}}</cbc:TaxAmount>
          {% for Percent, TaxSubtotal in WithholdingTaxTotal.taxes.items() %}
          <cac:TaxSubtotal>
@@ -351,7 +349,7 @@
             </cac:TaxCategory>
          </cac:TaxSubtotal>
          {% endfor %}
-      </cac:WithholdingTaxTotal>
+      </cac:TaxTotal>
       {% endfor %}
       <cac:Item>
          <cbc:Description>{{InvoiceLine.ItemDescription}}</cbc:Description>

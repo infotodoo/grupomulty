@@ -31,12 +31,8 @@ class ResPartner(models.Model):
         """
         # Executing only for Document Type 31 (NIT)
         for partner in self:
-
-            _logger.info('document')
-            _logger.info(partner.document_type_id.code)
             if partner.document_type_id.code == '31':
                 # First check if entered value is valid
-                _logger.info('if')
                 self._check_ident()
                 self._check_ident_num()
 
@@ -44,7 +40,6 @@ class ResPartner(models.Model):
                 if partner.identification_document == False:
                     partner.identification_document = ''
                 else:
-                    _logger.info('else')
                     partner.check_digit = ''
 
                     # Formatting the NIT: xx.xxx.xxx-x
@@ -68,8 +63,6 @@ class ResPartner(models.Model):
 
                     # Saving Verification digit in a proper field
                     for pnitem in self:
-                        _logger.info(nitList[1])
-                        _logger.info('nitlist')
                         pnitem.check_digit = nitList[1]
 
     def _check_dv(self, nit):
@@ -108,10 +101,10 @@ class ResPartner(models.Model):
         for item in self:
             if item.document_type_id.code != 1:
                 msg = _('Error! Number of digits in Identification number must be'
-                        'between 2 and 12')
+                        'between 2 and 20')
                 if len(str(item.identification_document)) < 2:
                     raise exceptions.ValidationError(msg)
-                elif len(str(item.identification_document)) > 12:
+                elif len(str(item.identification_document)) > 20:
                     raise exceptions.ValidationError(msg)
 
     @api.constrains('identification_document')
@@ -128,10 +121,12 @@ class ResPartner(models.Model):
                 if item.identification_document is not False and \
                                 item.document_type_id.code != 21 and \
                                 item.document_type_id.code != 41:
-                    if re.match("^[0-9]+$", item.identification_document) is None:
+                    _logger.info('Validation Number')
+                    """if re.match("^[0-9]+$", item.identification_document) is None:
                         msg = _('Error! Identification number can only '
                                 'have numbers')
-                        raise exceptions.ValidationError(msg)
+                        raise exceptions.ValidationError(msg)"""
+
 
 
 

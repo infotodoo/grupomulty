@@ -60,7 +60,7 @@ class AccountInvoiceDebitNote(models.TransientModel):
                 #'journal_id': self.journal_id and self.journal_id.id or move.journal_id.id,
                 'invoice_payment_term_id': None,
                 #'auto_post': True if self.date > fields.Date.context_today(self) else False,
-                'refund_type': 'debit',
+                #'refund_type': 'debit',
                 'discrepancy_response_code_id': self.discrepancy_response_code_id.id,
                 'payment_mean_id': move.payment_mean_id.id or False,
             })

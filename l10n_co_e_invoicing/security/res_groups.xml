@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="res.groups" id="report_dian_users">
+        <field name="name">Envio a La DIAN</field>
+    </record>
+</odoo>

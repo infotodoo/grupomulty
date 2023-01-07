@@ -17,6 +17,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    einvoicing_automatic = fields.Boolean(string='FE Automatica', default=True)
     einvoicing_enabled = fields.Boolean(string='E-Invoicing Enabled')
     out_invoice_sent = fields.Integer(string='out_invoice Sent')
     out_refund_sent = fields.Integer(string='out_refund Sent')

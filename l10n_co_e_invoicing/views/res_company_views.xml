@@ -9,6 +9,7 @@
                     <page name="einvoicing" string="E-Invoicing">
                         <group>
                             <field name="einvoicing_enabled"/>
+                            <field name="einvoicing_automatic"/>
                             <field name="out_invoice_sent"/>
                             <field name="out_refund_sent"/>
                             <field name="in_refund_sent"/>
