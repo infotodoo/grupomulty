@@ -40,6 +40,7 @@ class ResPartner(models.Model):
                 if partner.identification_document == False:
                     partner.identification_document = ''
                 else:
+                    _logger.info('else')
                     partner.check_digit = ''
 
                     # Formatting the NIT: xx.xxx.xxx-x
@@ -126,7 +127,6 @@ class ResPartner(models.Model):
                         msg = _('Error! Identification number can only '
                                 'have numbers')
                         raise exceptions.ValidationError(msg)"""
-
 
 
 

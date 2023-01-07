@@ -11,6 +11,8 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
 	_inherit = "res.partner"
 
+	email_electronic = fields.Char('Correo FE')
+
 	def _get_accounting_partner_party_values(self, company_id):
 		msg1 = _("'%s' does not have a person type established.")
 		msg2 = _("'%s' does not have a city established.")
@@ -66,20 +68,20 @@ class ResPartner(models.Model):
 		if not self.email:
 			raise UserError(msg11 % self.name)
 
-		if self.with_company(self.company_id.id or company_id).property_account_position_id:
-			if (not self.with_company(self.company_id.id or company_id).property_account_position_id.tax_level_code_id
-					or not self.with_company(self.company_id.id or company_id).property_account_position_id.tax_scheme_id
-					or not self.with_company(self.company_id.id or company_id).property_account_position_id.listname):
+		if self.with_context(force_company=company_id.id).property_account_position_id:
+			if (not self.with_context(force_company=company_id.id).property_account_position_id.tax_level_code_id
+					or not self.with_context(force_company=company_id.id).property_account_position_id.tax_scheme_id
+					or not self.with_context(force_company=company_id.id).property_account_position_id.listname):
 				raise UserError(msg8 % self.name)
 
 			tax_level_codes = ''
-			tax_scheme_code = self.with_company(self.company_id.id or company_id).property_account_position_id.tax_scheme_id.code
-			tax_scheme_name = self.with_company(self.company_id.id or company_id).property_account_position_id.tax_scheme_id.name
+			tax_scheme_code = self.with_context(force_company=company_id.id).property_account_position_id.tax_scheme_id.code
+			tax_scheme_name = self.with_context(force_company=company_id.id).property_account_position_id.tax_scheme_id.name
 		else:
 			raise UserError(msg9 % self.name)
 
 
-		for tax_level_code_id in self.with_company(self.company_id.id or company_id).property_account_position_id.tax_level_code_id:
+		for tax_level_code_id in self.with_context(force_company=company_id.id).property_account_position_id.tax_level_code_id:
 			if tax_level_codes == '':
 				tax_level_codes = tax_level_code_id.code
 			else:
@@ -119,11 +121,11 @@ class ResPartner(models.Model):
 			'CompanyIDschemeID': self.check_digit,
 			'CompanyIDschemeName': self.document_type_id.code,
 			'CompanyID': self.identification_document,
-			'listName': self.with_company(self.company_id.id or company_id).property_account_position_id.listname,
+			'listName': self.with_context(force_company=company_id.id).property_account_position_id.listname,
 			'TaxLevelCode': tax_level_codes,
-			# self.with_company(self.company_id.id or company_id).property_account_position_id.tax_level_code_id.code,
-			'TaxSchemeID': self.with_company(self.company_id.id or company_id).property_account_position_id.tax_scheme_id.code,
-			'TaxSchemeName': self.with_company(self.company_id.id or company_id).property_account_position_id.tax_scheme_id.name,
+			# self.with_context(force_company=company_id.id).property_account_position_id.tax_level_code_id.code,
+			'TaxSchemeID': self.with_context(force_company=company_id.id).property_account_position_id.tax_scheme_id.code,
+			'TaxSchemeName': self.with_context(force_company=company_id.id).property_account_position_id.tax_scheme_id.name,
 			'CorporateRegistrationSchemeName': self.ref,
 			'CountryIdentificationCode': self.country_id.code,
 			'CountryName': self.country_id.name,
@@ -132,7 +134,7 @@ class ResPartner(models.Model):
 			'MiddleName': middle_name,
 			'Telephone': telephone,
 			'Telefax': '',
-			'ElectronicMail': self.email,
+			'ElectronicMail': self.email_electronic or self.email,
 		}
 
 

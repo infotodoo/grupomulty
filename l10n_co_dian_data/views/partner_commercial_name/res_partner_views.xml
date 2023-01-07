@@ -5,7 +5,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_simple_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@id='individual']" position="after">
+                <xpath expr="//field[@name='name']" position="after">
                     <t class="oe_read_only" t-if="record.commercial_name"> - </t>
                     <field name="commercial_name" placeholder="Commercial Name"/>
                 </xpath>
@@ -16,7 +16,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@id='individual']" position="after">
+                <xpath expr="//field[@name='name']" position="after">
                     <t class="oe_read_only" t-if="record.commercial_name"> - </t>
                     <field name="commercial_name" placeholder="Nombre Comercial"/>
                 </xpath>

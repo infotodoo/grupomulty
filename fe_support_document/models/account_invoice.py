@@ -27,7 +27,7 @@ class AccountInvoice(models.Model):
 		super(AccountInvoice, self).compute_electronic_invoice()
 		for record in self:
 			if record.company_id.einvoicing_enabled:
-				if record.move_type == "in_invoice" and record.journal_id.is_support_document:
+				if record.type == "in_invoice" and record.journal_id.is_support_document:
 					dian_document_obj = self.env['account.invoice.dian.document']
 					dian_document = dian_document_obj.create({
 						'invoice_id': record.id,
@@ -36,7 +36,7 @@ class AccountInvoice(models.Model):
 					})
 					dian_document.support_document()
 					self.approve_token = self.approve_token if self.approve_token else str(uuid.uuid4())
-				if record.move_type == "in_refund" and record.journal_id.is_support_document:
+				if record.type == "in_refund" and record.journal_id.is_support_document:
 					dian_document_obj = self.env['account.invoice.dian.document']
 					dian_document = dian_document_obj.create({
 						'invoice_id': record.id,

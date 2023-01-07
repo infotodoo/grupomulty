@@ -111,14 +111,15 @@ class AccountInvoice(models.Model):
             'domain': [('reversed_entry_id', '=', self.id)],
         }
 
-    def _post(self, soft=True):
+    def post(self, soft=True):
 
+        _logger.info('entro a post')
         for record in self:
             if record.state != 'draft':
                 raise ValidationError(_('Esta factura [%s] no está en borrador, por lo tanto, no se puede publicar. \n' \
                                         'Por favor, recargue la página para refrescar el estado de esta factura.') % record.id)
 
-        res = super(AccountInvoice, self)._post()
+        res = super(AccountInvoice, self).post()
 
         for record in self:
             _logger.info('entro a post2')
@@ -132,7 +133,7 @@ class AccountInvoice(models.Model):
                     raise ValidationError(
                         _('Factura electrónica bloqueada. \n\n El Certificado .pfx de la compañia %s está vencido.') % record.company_id.name)
 
-                if record.move_type in ("out_invoice", "out_refund"):
+                if record.type in ("out_invoice", "out_refund"):
                     company_currency = record.company_id.currency_id
                     rate = 1
                     # date = self._get_currency_rate_date() or fields.Date.context_today(self)
@@ -142,9 +143,9 @@ class AccountInvoice(models.Model):
                         rate = currency._convert(rate, company_currency, record.company_id, date)
                         record.trm = rate
 
-                    if record.move_type == 'out_invoice' and record.refund_type == 'debit':
+                    if record.type == 'out_invoice' and record.refund_type == 'debit':
                         type_account = 'debit'
-                    elif record.move_type == 'out_refund' and record.refund_type != 'debit':
+                    elif record.type == 'out_refund' and record.refund_type != 'debit':
                         type_account = 'credit'
                     else:
                         type_account = 'invoice'
@@ -444,9 +445,6 @@ class AccountInvoice(models.Model):
                                                                                            -1)
 
                 elif tax_type == 'withholding_tax' and tax.tax_line_id.amount > 0:
-                    # TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN
-                    # Solo las positivas que indicarian una autoretencion, Si la DIAN
-                    # pide que se envien las retenciones, seria quitar o comentar este if
                     pass
                 else:
                     if tax_code not in taxes:
@@ -703,9 +701,6 @@ class AccountInvoice(models.Model):
                                     abs(tax_id.amount),
                                     invoice_lines[count]['WithholdingTaxesTotal']))
                         elif tax_type == 'withholding_tax' and tax_id.amount > 0:
-                            # TODO 3.0 Las retenciones se recomienda no enviarlas a la DIAN.
-                            # Solo la parte positiva que indicaria una autoretencion, Si la DIAN
-                            # pide que se envie la parte negativa, seria quitar o comentar este if
                             pass
                         else:
                             invoice_lines[count]['TaxesTotal'] = (

@@ -50,7 +50,7 @@ class AccountInvoiceDianDocument(models.Model):
         xml_values['InvoiceControl'] = active_dian_resolution
         xml_values['InvoiceTypeCode'] = self.invoice_id.invoice_type_code
         xml_values['InvoiceLines'] = self.invoice_id._get_invoice_lines()
-        if self.invoice_id.move_type == 'in_refund':
+        if self.invoice_id.type == 'in_refund':
             billing_reference = self.invoice_id._get_billing_reference()
             xml_values['UUID'] = self.invoice_id.reversed_entry_id.dian_document_lines.cufe_cude
             xml_values['BillingReference'] = billing_reference

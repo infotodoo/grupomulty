@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="view_invoice_tree" model="ir.ui.view">
-        <field  name = "name" > account.move.view.tree.inherit</field>
+        <field name="name">account.move.view.tree.inherit</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='payment_state']" position="after">
-                <field name="invoice_rating" optional="hide"  widget="badge" decoration-danger="invoice_rating == 'refuse'" decoration-warning="invoice_rating == 'not_rating'" decoration-success="invoice_rating in ('approve', 'auto_approve')"/>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="invoice_rating" optional="hide"/>
             </xpath>
         </field>
     </record>
@@ -25,47 +25,47 @@
                 <field name="approve_token" invisible="1"/>
                 <field name="invoice_rating" readonly="1"/>
                 <field name="refuse_text" attrs="{'invisible': [('invoice_rating', '!=', 'refuse')], 'readonly': True}"/>
-                <field name="move_type"/>
-                <field name="send_invoice_to_dian" invisible="1"/><field name="cufe_cude" attrs="{'invisible': [('move_type', 'not in', ('in_invoice','in_refund'))]}"/>
+                <field name="type"/>
+                <field name="send_invoice_to_dian" invisible="1"/><field name="cufe_cude" attrs="{'invisible': [('type', 'not in', ('in_invoice','in_refund'))]}"/>
                 <field name="operation_type"
-                    attrs="{'invisible': [('move_type', 'not in', ('out_invoice','out_refund'))],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
                 <field name="invoice_type_code"
-                    attrs="{'invisible': [('move_type', 'not in', ('out_invoice','out_refund'))],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund'))],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
                 <field name="is_invoice_out_odoo"
-                    attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice','out_refund')),('operation_type', 'not in', ('20','30'))],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': ['|',('type', 'not in', ('out_invoice','out_refund')),('operation_type', 'not in', ('20','30'))],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
                 <field name="id_invoice_refound"
-                    attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': ['|',('type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
                 <field name="uuid_invoice"
-                    attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': ['|',('type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
                 <field name="issue_date_invoice"
-                    attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': ['|',('type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
                 <field name="customizationid_invoice"
-                    attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
-                            '!required': [('move_type', '!=', 'out_invoice')],
+                    attrs="{'invisible': ['|',('type', 'not in', ('out_invoice','out_refund')),('is_invoice_out_odoo', '==', False)],
+                            '!required': [('type', '!=', 'out_invoice')],
                             'readonly': [('state', '!=', 'draft')]}"
                     />
             </xpath>
 
             <xpath expr="//notebook" position="inside">
-                <page name="einvoicing" string="E-Invoicing" attrs="{'invisible': [('move_type', 'not in', ('out_invoice','out_refund','in_invoice','in_refund'))]}">
+                <page name="einvoicing" string="E-Invoicing" attrs="{'invisible': [('type', 'not in', ('out_invoice','out_refund','in_invoice','in_refund'))]}">
                     <field name="dian_document_lines" mode="tree">
                         <tree string="DIAN Documents" create="0" edit="0">
                             <field name="cufe_cude"/>
@@ -82,9 +82,9 @@
             </xpath>
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="aiu" attrs="{'required': [('operation_type','=','09')],
-                                          'invisible': ['|',('move_type','not in',('out_invoice','out_refund')),('operation_type','!=','09')]}"/>
+                                          'invisible': ['|',('type','not in',('out_invoice','out_refund')),('operation_type','!=','09')]}"/>
                 <field name="mandante_id" attrs="{'required': ['|',('operation_type','=','11'),('customizationid_invoice','=','11')],
-                                                  'invisible': ['|',('move_type','not in',('out_invoice','out_refund')),('operation_type','!=','11'),('customizationid_invoice','!=','11')]}"/>
+                                                  'invisible': ['|',('type','not in',('out_invoice','out_refund')),('operation_type','!=','11'),('customizationid_invoice','!=','11')]}"/>
                 <field name="orden_compra"></field>
             </xpath>
             <div class="oe_button_box" position="inside">
@@ -121,51 +121,51 @@
     <record id="email_template_for_einvoice" model="mail.template">
         <field name="name">Electronic Invoice - Send by Email</field>
         <field name="model_id" ref="account.model_account_move"/>
-        <field name="email_from">{{object.company_id.einvoicing_email}}</field>
-        <field name="reply_to">{{object.company_id.einvoicing_email}}</field>
-        <field name="subject">{{object.company_id.partner_id.identification_document}} ; {{object.company_id.name}} ; {{object.name}} ; 01 ; {{object.company_id.name}}</field>
-        <field name="email_to">{{(object.partner_id.email) or (object.company_id.einvoicing_partner_no_email)}}</field>
-        <field name="auto_delete" eval="False"/>
-        <field name="lang">{{object.partner_id.lang}}</field>
-        <field name="body_html" type="html">
-            <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: #222222; background-color: #FFF; ">
-                <p style="margin:0px 0 12px 0;box-sizing:border-box;">Señor(es),</p>
-                <p style="margin:0px 0 12px 0;box-sizing:border-box;"> <t t-out="object.partner_id.name or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""/></p><br/><br/>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Le informamos que ha recibido una factura/nota electrónica de  <t t-out="object.company_id.name or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable="">:</t></p><br/><br/>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Número de factura: <strong style="box-sizing:border-box;font-weight:500;">  <t t-out="object.name or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""> </t></strong></p>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Token de factura: <strong style="box-sizing:border-box;font-weight:500;">  <t t-out="object.approve_token or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""> </t></strong></p>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">A nombre de: <strong style="box-sizing:border-box;font-weight:500;">  <t t-out="object.partner_id.name or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""> </t></strong></p>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Valor Total: <strong style="box-sizing:border-box;font-weight:500;">  <t t-out="object.amount_total or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""/> <t t-out="object.currency_id.name or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""/> </strong></p><br/><br/>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Si tiene inquietud respecto a la información contenida en la factura/nota electrónica, responda este correo electrónico.</p><br/>
+        <field name="email_from">${object.company_id.einvoicing_email}</field>
+        <field name="reply_to">${object.company_id.einvoicing_email}</field>
+        <field name="subject">${object.company_id.partner_id.identification_document} ; ${object.company_id.name} ; ${object.name} ; 01 ; ${object.company_id.name}</field>
+        <field name="email_to">${(object.partner_id.email_electronic if object.partner_id.email_electronic else object.partner_id.email) | safe}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="body_html"><![CDATA[
+        <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+            % set approve_token = object.approve_token
+            % set id_doc = object.id
+            <p>Señor(es),</p>
+            <p>${object.partner_id.name}</p><br><br>
+        <p>Le informamos que ha recibido una factura/nota electrónica de ${object.company_id.name}:</p><br><br>
+        <p>Número de factura: <strong> ${object.name} </strong></p>
+        <p>Token de factura: <strong> ${object.approve_token} </strong></p>
+        <p>A nombre de: <strong> ${object.partner_id.name} </strong></p>
+        <p>Valor Total: <strong> ${object.amount_total} ${object.currency_id.name} </strong></p><br><br>
+        <p>Si tiene inquietud respecto a la información contenida en la factura/nota electrónica, responda este correo electrónico.</p><br>
 
+        <p>Si pasados tres (3) días hábiles siguientes a la recepción de la factura/nota electrónica, no se ha recibido un correo indicando rechazo de la factura/nota electrónica, el sistema la dará por aceptada.</p><br>
+        <p>Escriba a ${object.company_id.partner_id.einvoicing_email} si desea modificar sus datos para el envío de la factura/nota electrónica.</p><br>
 
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Si pasados tres (3) días hábiles siguientes a la recepción de la factura/nota electrónica, no se ha recibido un correo indicando rechazo de la factura/nota electrónica, el sistema la dará por aceptada.</p><br/>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Escriba a <t t-out="object.company_id.einvoicing_email or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""/> si desea modificar sus datos para el envío de la factura/nota electrónica.</p><br/>
-
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;">Cordialmente,</p><br/>
-            <p style="margin:0px 0 12px 0;box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:500;"><t t-out="object.company_id.name or ''" data-oe-t-inline="true" contenteditable="false" oe-keep-contenteditable=""/></strong></p>
-            <table summary="o_mail_notification" style="width:100%;border-top:1px solid #e1e1e1;">
-                <table style="width:100%;text-align:center;">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <a role="button" class="dropdown-toggle o-no-caret btn" t-attf-href="{{ object.get_base_url() }}/mail/view?model=account.move&amp;res_id={{ object.id }}&amp;approve_token={{ object.approve_token }}" style="background-color:#685563;color:#fff;border-radius:10px;font-size:15px">
-                                Ver <t t-out="object.name"/></a>
-                            </td>
-
-                            <td>
-                                <a role="button" class="dropdown-toggle o-no-caret btn" t-attf-href="{{ object.get_base_url() }}/approve-electronic-invoice/{{ object.approve_token }}/True" style="background-color:#35979C;color:#fff;border-radius:10px;font-size:15px">
-                                Aprobar</a>
-                            </td>
-                            <td>
-                                <a role="button" class="dropdown-toggle o-no-caret btn" t-attf-href="{{ object.get_base_url() }}/approve-electronic-invoice/{{ object.approve_token }}/False" style="background-color:#B9210F;color:#fff;border-radius:10px;font-size:15px">
-                                Rechazar</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <p>Cordialmente,</p><br>
+        <p><strong>${object.company_id.name}</strong></p>
+        <table summary="o_mail_notification" style="width:100%;border-top:1px solid #e1e1e1;">
+            <table style="width:100%;text-align:center;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/mail/view?model=account.move&amp;res_id=${id_doc}&amp;approve_token=${object.approve_token}" style="background-color:#685563;color:#fff;border-radius:10px;font-size:15px">
+                            Ver ${object.name}</a>
+                        </td>
+                        <td>
+                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/approve-electronic-invoice/${object.approve_token}/True" style="background-color:#35979C;color:#fff;border-radius:10px;font-size:15px">
+                            Aprobar</a>
+                        </td>
+                        <td>
+                            <a role="button" class="dropdown-toggle o-no-caret btn" href="${object.get_base_url()}/approve-electronic-invoice/${object.approve_token}/False" style="background-color:#B9210F;color:#fff;border-radius:10px;font-size:15px">
+                            Rechazar</a>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
+        </table>
         </div>
-        </field>
+        ]]></field>
     </record>
 </odoo>

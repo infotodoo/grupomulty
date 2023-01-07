@@ -9,7 +9,7 @@
     "website": "http://www.dracosoft.com.co",
     'license': 'OPL-1',
     "summary": "Colombian E-Invoicing",
-    "depends": ['account_debit_note',"l10n_co_dian_data",],
+    "depends": ["l10n_co_dian_data",],
     'external_dependencies': {
         'python': [
             'validators',
@@ -29,6 +29,8 @@
         "views/product_template_views.xml",
         "views/account_move_approve.xml",
         "report/account_invoice_report_template.xml",
+        "views/sale_view.xml",
+        "views/partner.xml",
         "report/account_move_reports.xml",
         "report/account_move_templates.xml",
         "data/product_scheme_data.xml",
