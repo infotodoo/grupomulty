@@ -85,7 +85,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).create(vals)
         return res
 
-
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
