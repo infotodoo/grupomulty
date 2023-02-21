@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import fields, models, api,_
+from odoo import fields, models, api, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
-    
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
-    
-    total_weigth = fields.Float('Total Weigth',compute="_compute_total_weigth",store=True)
-    partner_deal_id = fields.Many2one('res.partner.deal',"Deal Name",related="partner_id.partner_deal_id")
-    partner_payment_mean_code_id = fields.Many2one('account.payment.mean.code',"Deal Name",related="partner_id.payment_mean_code_id")
-    bool_manager = fields.Boolean('bool',compute='_validate_user_group1')
-    
+
+    total_weigth = fields.Float('Total Weigth', compute="_compute_total_weigth", store=True)
+    partner_deal_id = fields.Many2one('res.partner.deal', "Deal Name", related="partner_id.partner_deal_id")
+    partner_payment_mean_code_id = fields.Many2one('account.payment.mean.code', "Deal Name", related="partner_id.payment_mean_code_id")
+    bool_manager = fields.Boolean('bool', compute='_validate_user_group1')
+
     def _validate_user_group1(self):
         if self.env.user.has_group('sales_team.group_sale_manager'):
             self.bool_manager = True
@@ -27,21 +27,20 @@ class SaleOrder(models.Model):
             if record.product_id:
                 if record.weigth != 0:
                     weigth += record.weigth
-                    self.write({'total_weigth':weigth})
+                    self.write({'total_weigth': weigth})
                 else:
                     self.total_weigth = 0
             else:
                 self.total_weigth = 0
         return weigth
-                
+
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals.update({'total_weigth': self.total_weigth,
-                             'pricelist':self.pricelist_id.name,
-                             'partner_deal_id':self.partner_deal_id.id})
+                             'pricelist': self.pricelist_id.name,
+                             'partner_deal_id': self.partner_deal_id.id})
         return invoice_vals
 
-    
     @api.model
     def create(self, vals):
         for line in vals.get('order_line'):
@@ -69,37 +68,41 @@ class SaleOrder(models.Model):
                     fiscal_position=self.env.context.get('fiscal_position')
                 )
                 product_context = dict(self.env.context, partner_id=partner_obj.id, date=date_order, uom=product_uom.id)
-                price, rule_id = pricelist_id.with_context(product_context).get_product_price_rule(product_obj, product_uom_qty or 1.0, partner_obj)
+                price, rule_id = pricelist_id.with_context(product_context).get_product_price_rule(product_obj,
+                                                                                                   product_uom_qty or 1.0,
+                                                                                                   partner_obj)
                 new_sale_order = self.env['sale.order.line']
-                new_list_price, currency = new_sale_order.with_context(product_context)._get_real_price_currency(product, rule_id, product_uom_qty, product_uom, pricelist_id.id)
-                """if rule_id:
-                    discount = self.env['product.pricelist.item'].browse(rule_id)
-                    line[2].update({
-                        'discount': float(discount.price_discount if discount else 0.0),
-                    })"""
-
+                new_list_price, currency = new_sale_order.with_context(product_context)._get_real_price_currency(
+                    product, rule_id, product_uom_qty, product_uom, pricelist_id.id)
+                if rule_id:
+                    rules_id = self.env['product.pricelist'].search([('id', '=', rule_id)])
+                    if rules_id.discount_policy == 'without_discount':
+                        discount = self.env['product.pricelist.item'].browse(rule_id)
+                        line[2].update({
+                            'discount': float(discount.price_discount if discount else 0.0),
+                            'price_unit': line[2]['price_unit'],
+                        })
         res = super(SaleOrder, self).create(vals)
         return res
-
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    weigth = fields.Float('Weigth',store=True)
-    bool_manager = fields.Boolean('bool',compute='_validate_user_group')
-    
-    @api.onchange('product_id','product_uom_qty')
+    weigth = fields.Float('Weigth', store=True)
+    bool_manager = fields.Boolean('bool', compute='_validate_user_group')
+
+    @api.onchange('product_id', 'product_uom_qty')
     def _onchange_partner_id(self):
         for record in self:
             record.weigth = 0
             if record.product_id:
                 record.weigth = record.product_id.weight * record.product_uom_qty
-    
+
     def _prepare_invoice_line(self):
         res = super(SaleOrderLine, self)._prepare_invoice_line()
         res.update({'weigth': self.weigth})
         return res
-    
+
     def _validate_user_group(self):
         if self.env.user.has_group('sales_team.group_sale_manager'):
             self.bool_manager = True
