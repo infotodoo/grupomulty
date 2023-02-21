@@ -80,7 +80,7 @@ class SaleOrder(models.Model):
                         discount = self.env['product.pricelist.item'].browse(rule_id)
                         line[2].update({
                             'discount': float(discount.price_discount if discount else 0.0),
-                            'price_unit': line[2]['price_unit'] * (1 - (float(discount.price_discount if discount else 0.0) / 100)),
+                            'price_unit': line[2]['price_unit'],
                         })
         res = super(SaleOrder, self).create(vals)
         return res

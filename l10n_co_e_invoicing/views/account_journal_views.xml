@@ -21,7 +21,7 @@
             <xpath expr="//notebook" position="inside">
                 <page string="E-invoicing" name="einvoicing" attrs="{'invisible': [('type', 'not in', ['sale']),]}">
                     <group>
-                        <field name="resolution_text" attrs="{'invisible': [('type', 'not in', ['sale']),]}"/>
+                        <field name="resolution_text"/>
                     </group>
                 </page>
             </xpath>
