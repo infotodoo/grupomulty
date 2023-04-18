@@ -169,19 +169,6 @@
             </xpath>
         </field>
     </record>
-
-    <record id="inherit_view_res_partner_form_group_dev_customer_credit_limit" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.point.of.dev.customer.credit.limit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="dev_customer_credit_limit.view_credit_editable_partner_form"/>
-        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='check_credit']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="inherit_view_res_partner_form_group_purchase" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.puchase</field>
         <field name="model">res.partner</field>
