@@ -137,18 +137,6 @@
         </field>
     </record>
 
-    <record id="inherit_view_res_partner_form_group_accountant_third_edit_delivery" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.accountant.third.edit.delivery</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="delivery.view_partner_property_form"/>
-        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='property_delivery_carrier_id']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="inherit_view_res_partner_form_group_accountant_third_edit_latam" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.accountant.third.edit.latam</field>
         <field name="model">res.partner</field>
@@ -217,21 +205,6 @@
         <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='check_credit']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="inherit_view_res_partner_form_group_point_of_sale" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.point.of.sale</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="pos_loyalty.view_partner_property_form"/>
-        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='barcode']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='loyalty_points']" position="attributes">
                 <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
             </xpath>
         </field>
