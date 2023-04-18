@@ -13,8 +13,7 @@ Colombia Point of Sale:
 ======================
   """,
     'depends': [
-        'point_of_sale','l10n_co_dian_data','stock','base','website','delivery'
-    ],
+        'point_of_sale'],
     'data': [
         'security/res_groups.xml',
         'views/template.xml',
