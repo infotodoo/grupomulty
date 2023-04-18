@@ -187,18 +187,6 @@
         </field>
     </record>
 
-    <record id="inherit_view_res_partner_form_group_sales_team" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.sales.team</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="sales_team.res_partner_view_team"/>
-        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='team_id']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="inherit_view_res_partner_form_group_product" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.product</field>
         <field name="model">res.partner</field>
