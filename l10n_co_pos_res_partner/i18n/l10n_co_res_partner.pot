@@ -478,3 +478,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:l10n_co_res_partner.view_partner_form
 msgid "e.g. 900301230"
 msgstr ""
+
+#. module: l10n_co_res_partner
+#: model:ir.model.fields,field_description:l10n_co_res_partner.field_res_partner_person_type
+msgid "Type of Person"
+msgstr ""
+
+#. module: l10n_co_pos_res_partner
+msgid "Contact"
+msgstr "Contacto"

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_view_res_partner_form_coondev" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form[1]/div[1]" position="before">
+                <header>
+                    <field name="partner_state" options="{'clickable': '1'}" widget="statusbar"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_coondev_hr" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.hr</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="hr_coondev.inherti_view_res_partner_comfer"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_eps']" position="after">
+                <field name="partner_state" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='is_eps']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_afp']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_afc']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_arl']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_compensation_box']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_base" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit_inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_co_pos_res_partner.inherit_view_res_partner_form_coondev"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='title']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='ref']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='company_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_purchases']//field[@name='industry_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_accountant" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit.accountant</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_co_dian_data.view_partner_form_partner_vat"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_account_position_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='document_type_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='identification_document']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='document_type_code']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='check_digit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_delivery" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit.delivery</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="delivery.view_partner_property_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_delivery_carrier_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_latam" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit.latam</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_latam_identification_type_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="replace"/>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_account" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit.city</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']//field[@name='bank_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']//field[@name='currency_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']//field[@name='property_account_receivable_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='accounting']//field[@name='property_account_payable_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='fiscal_information']//field[@name='property_account_position_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='sale']//field[@name='property_payment_term_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='purchase']//field[@name='property_supplier_payment_term_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_stock" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.stock</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="stock.view_partner_stock_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_stock_customer']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_stock_supplier']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_dev_customer_credit_limit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.point.of.dev.customer.credit.limit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="dev_customer_credit_limit.view_credit_editable_partner_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_credit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_point_of_sale" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.point.of.sale</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="pos_loyalty.view_partner_property_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='loyalty_points']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_purchase" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.puchase</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="purchase.view_partner_property_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='receipt_reminder_email']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reminder_date_before_receipt']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='property_purchase_currency_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_sales_team" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.sales.team</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sales_team.res_partner_view_team"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_product" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.product</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="product.view_partner_property_form"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_product_pricelist']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_website" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.website</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="website.view_partner_form_inherit_website"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_2" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit_city</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_co_dian_data.view_partner_form_base_location"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='zip_id']" position="after">
+                <field name="partner_state" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='zip_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_co_dian_data.view_partner_form_names"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='person_type']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='firstname']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='othernames']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lastname']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lastname2']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_res_partner_form_group_accountant_third_edit_street" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.accountant.third.edit.street</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_co_dian_data.view_res_partner_form_inherit_address_config"/>
+        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='field_1']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_2']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_3']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_4']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_5']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_6']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_7']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_8']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_9']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_10']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_11']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='field_12']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ciiu']" position="attributes">
+                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>     

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="res.groups" id="accountant_third_edit">
+        <field name="name">Bloquear edicion de Tercero Contable</field>
+    </record>
+</odoo>

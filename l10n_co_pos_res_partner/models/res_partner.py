@@ -33,10 +33,14 @@ import json
 
 class res_partner(models.Model):
     _inherit = 'res.partner'
+    partner_state = fields.Selection([
+        ('contact', 'Contact'),
+        ('verification', 'Verification'),
+        ('third_accountant', 'Third accountant')], string="State", default="contact")
 
     @api.model
     def create_from_ui(self, partner):
-
+        partner['company_id'] = 1
         if('document_type_id' in partner):
             document_type_id = int(partner['document_type_id'])
             del partner['document_type_id']
@@ -46,6 +50,11 @@ class res_partner(models.Model):
             person_type = partner['person_type']
             del partner['person_type']
             partner['person_type'] = person_type
+
+        if('property_account_position_id' in partner):
+            property_account_position_id = int(partner['property_account_position_id'])
+            del partner['property_account_position_id']
+            partner['property_account_position_id'] = property_account_position_id
 
         partner_id = partner.pop('id', False)
         if partner_id:  # Modifying existing partner
@@ -75,8 +84,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_payment_mean(self):
-        _logger.info('entro a default')
-        id_model = self.env['account.payment.mean'].search([], limit=1)
+        id_model = self.env['account.payment.mean'].search([],order='id asc', limit=1)
         return id_model
 
     payment_mean_id = fields.Many2one(

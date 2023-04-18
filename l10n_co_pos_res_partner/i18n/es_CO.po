@@ -599,3 +599,40 @@ msgstr "Tipo de persona"
 msgid "e.g. 900301230"
 msgstr "No. ej. 900301230"
 
+#. module: l10n_co_pos_res_partner
+#: model:ir.model.fields.selection,name:l10n_co_pos_res_partner.selection__res_partner__partner_state__third_accountant
+msgid "Third accountant"
+msgstr "Tercero contable"
+
+#. module: l10n_co_pos_res_partner
+#: model:ir.model.fields,field_description:l10n_co_pos_res_partner.field_res_partner__partner_state
+#: model:ir.model.fields,field_description:l10n_co_pos_res_partner.field_res_users__partner_state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_co_pos_res_partner
+#: model:ir.model.fields,field_description:l10n_co_pos_res_partner.field_res_partner__financial_statements
+#: model:ir.model.fields,field_description:l10n_co_pos_res_partner.field_res_users__financial_statements
+msgid "Financial statements"
+msgstr "Estados financieros"
+
+#. module: l10n_co_pos_res_partner
+#: model:ir.model,name:l10n_co_pos_res_partner.model_res_partner
+#: model:ir.model.fields.selection,name:l10n_co_pos_res_partner.selection__res_partner__partner_state__contact
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_co_pos_res_partner
+#. openerp-web
+#: code:addons/l10n_co_pos_res_partner/static/src/xml/pos.xml:343
+#: code:addons/l10n_co_pos_res_partner/static/src/xml/pos.xml:378
+#: model:ir.model.fields,field_description:l10n_co_pos_res_partner.selection__res_partner__partner_state__contact
+#, python-format
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_co_pos_res_partner
+#: selection:res.partner,partner_state:0
+msgid "Contact"
+msgstr "Contacto"
+
