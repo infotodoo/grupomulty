@@ -187,11 +187,11 @@
 
     </t>
 
-    <t t-name="ClientListScreen" t-inherit="point_of_sale.ClientListScreen" t-inherit-mode="extension" owl="1">
+    <!--<t t-name="ClientListScreen" t-inherit="point_of_sale.ClientListScreen" t-inherit-mode="extension" owl="1">
         <xpath expr="//tr" position="inside">
             <th>Estado</th>
         </xpath>
-    </t>
+    </t> -->
 
 <!--    <t t-name="ClientListScreenEditindent"  t-inherit="point_of_sale.ClientListScreen" t-inherit-mode="extension" owl="1">-->
 <!--      <t t-jquery=".client-list tr th:eq(-1)" t-operation="replace">-->
