@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_payslip_comfer" model="ir.ui.view">
+      <field name="name">hr.payslip.inherit</field>
+      <field name="model">hr.payslip</field>
+      <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='number']" position="after">
+              <field name="is_close_document"/>
+          </xpath>
+      </field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherti_view_res_partner_comfer" model="ir.ui.view">
+      <field name="name">res.partner.inherit</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//page[@name='internal_notes']" position="after">
+            <page name="hr_page_comfer" string="Nomina">
+                <group>
+                  <group>
+                     <field name="is_eps"/>
+                     <field name="is_afp"/>
+                     <field name="is_afc"/>
+                     <field name="is_arl"/>
+                     <field name="is_compensation_box"/>
+                  </group>
+                </group>
+            </page>
+          </xpath>
+      </field>
+    </record>
+</odoo>

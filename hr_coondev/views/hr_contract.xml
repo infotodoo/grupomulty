@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_contract_extended" model="ir.ui.view">
+      <field name="name">hr.contract.inherit</field>
+      <field name="model">hr.contract</field>
+      <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+      <field name="arch" type="xml">
+
+        <xpath expr="//group[@name='yearly_advantages']" position="inside">
+          <field name="insurance_contract"/>
+          <field name="funeral_contract"/>
+          <field name="loan_contract"/>
+          <field name="bearing_contract"/>
+          <field name="discount_contract"/>
+          <field name="interest_contract"/>
+          <field name="embargos_contract"/>
+          
+        </xpath>
+  
+          
+      </field>
+    </record>
+</odoo>
