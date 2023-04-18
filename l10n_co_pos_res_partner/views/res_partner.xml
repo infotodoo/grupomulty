@@ -12,34 +12,6 @@
             </xpath>
         </field>
     </record>
-
-    <record id="inherit_view_res_partner_form_coondev_hr" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit.hr</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="hr_coondev.inherti_view_res_partner_comfer"/>
-        <field name="groups_id" eval="[(4,ref('l10n_co_pos_res_partner.accountant_third_edit'))]"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_eps']" position="after">
-                <field name="partner_state" invisible="1"/>
-            </xpath>
-            <xpath expr="//field[@name='is_eps']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='is_afp']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='is_afc']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='is_arl']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='is_compensation_box']" position="attributes">
-                <attribute name="attrs">{'readonly': [('partner_state', '=', 'third_accountant')]}</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="inherit_view_res_partner_form_group_accountant_third_edit_base" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.accountant.third.edit_inherit</field>
         <field name="model">res.partner</field>
