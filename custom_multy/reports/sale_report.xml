@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//tbody/t[@t-set='current_subtotal']" position="after">
+                <t t-set="weight_total" t-value="0"/>
+            </xpath>
+            <xpath expr="//th[@name='th_quantity']" position="after">
+                <th name="th_warehouse" class="text-right">Bodega</th>
+                <th name="th_weight" class="text-right">Peso</th>
+            </xpath>
+            <xpath expr="//td[@name='td_quantity']" position="after">
+                <td name="td_warehouse" class="text-right"><span t-if="line.route_id" t-esc="line.route_id.location_qty_id.name"/><span t-if="not line.route_id" t-esc="doc.warehouse_id.name"/></td>
+                <td name="td_weight" class="text-right"><span t-esc="line.product_id.weight"/><t t-set="weight_total" t-value="weight_total+(line.product_id.weight*line.product_uom_qty)"/></td>
+            </xpath>
+            <xpath expr="//p[@id='fiscal_position_remark']" position="after">
+                <p><strong>Peso Total del Pedido:</strong><span t-esc="'%.2f'% float(weight_total)"/></p>
+            </xpath>
+            <xpath expr="//div[@t-if='doc.user_id.name']" position="after">
+                <div t-if="doc.user_id.name" class="col-auto col-3 mw-100 mb-2">
+                    <strong>Bodega:</strong>
+                    <p class="m-0" t-field="doc.warehouse_id.name"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@class='page']" position="before">
+                <div t-if="doc.state=='cancel'"><Strong style="font-size:24px;">ORDEN CANCELADA</Strong></div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
