@@ -5,7 +5,7 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='invoice_has_outstanding']" position="after">
+                <xpath expr="//sheet" position="before">
                     <field name="warn_remaining" invisible="1"/>
                     <field name="warn_inactive_resolution" invisible="1"/>
                     <field name="einv_available_days" invisible="1"/>

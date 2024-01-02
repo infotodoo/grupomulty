@@ -21,7 +21,7 @@ class ResPartner(models.Model):
 
             if partner_id.commercial_name:
                 name = '[%s] %s' % (partner_id.commercial_name, name)
-            
+
             res.append((partner_id.id, name))
 
         return res

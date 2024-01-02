@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record model="account.tax.group.type" id="account_tax_group_type_co_01">
             <field name="code">01</field>
             <field name="name">IVA</field>

@@ -45,9 +45,6 @@ class IrSequence(models.Model):
         return rec
 
     def write(self, vals):
-        #_logger.info('entroooo write')
-        #_logger.info('entroooo 2')
-        #_logger.info('entroooo 2')
         res = super(IrSequence, self).write(vals)
 
         for sequence_id in self:

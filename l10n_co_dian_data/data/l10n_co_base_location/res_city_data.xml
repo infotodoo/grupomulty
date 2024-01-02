@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Cities -->
-    <data>
+    <data noupdate="1">
         <record model="res.city" id="res_city_co_05001">
             <field name="state_id" ref="l10n_co_dian_data.res_country_state_co_05"/>
             <field name="name">MEDELLIN</field>

@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Version #1.0.1-->
+<NominaIndividual xmlns="dian:gov:co:facturaelectronica:NominaIndividual"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                  xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                  xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  SchemaLocation=""
+                  xsi:schemaLocation="dian:gov:co:facturaelectronica:NominaIndividual NominaIndividualElectronicaXSD.xsd">
+	<ext:UBLExtensions>
+		
+	</ext:UBLExtensions>
+	<Novedad CUNENov="A">false</Novedad>
+	<Periodo FechaIngreso="9999-12-31"
+	         FechaRetiro="9999-12-31"
+	         FechaLiquidacionInicio="9999-12-31"
+	         FechaLiquidacionFin="9999-12-31"
+	         TiempoLaborado="0"
+	         FechaGen="9999-12-31"/>
+	<NumeroSecuenciaXML CodigoTrabajador="0"
+	                    Prefijo="A"
+	                    Consecutivo="0"
+	                    Numero="A"/>
+	<LugarGeneracionXML Pais="A"
+	                    DepartamentoEstado="0"
+	                    MunicipioCiudad="0"
+	                    Idioma="A"/>
+	<ProveedorXML RazonSocial="A"
+	              PrimerApellido="A"
+	              SegundoApellido="A"
+	              PrimerNombre="A"
+	              OtrosNombres="A"
+	              NIT="0"
+	              DV="0"
+	              SoftwareID="A"
+	              SoftwareSC="A"/>
+	<CodigoQR>A</CodigoQR>
+	<InformacionGeneral Version="A"
+	                    Ambiente="0"
+	                    TipoXML="0"
+	                    CUNE="A"
+	                    EncripCUNE="A"
+	                    FechaGen="9999-12-31"
+	                    HoraGen="00:00:00"
+	                    PeriodoNomina="0"
+	                    TipoMoneda="A"
+	                    TRM="0"/>
+	<Notas>A</Notas>
+	<Empleador RazonSocial="A"
+	           PrimerApellido="A"
+	           SegundoApellido="A"
+	           PrimerNombre="A"
+	           OtrosNombres="A"
+	           NIT="0"
+	           DV="0"
+	           Pais="A"
+	           DepartamentoEstado="0"
+	           MunicipioCiudad="0"
+	           Direccion="A"/>
+	<Trabajador TipoTrabajador="0"
+	            SubTipoTrabajador="0"
+	            AltoRiesgoPension="false"
+	            TipoDocumento="0"
+	            NumeroDocumento="0"
+	            PrimerApellido="A"
+	            SegundoApellido="A"
+	            PrimerNombre="A"
+	            OtrosNombres="A"
+	            LugarTrabajoPais="0"
+	            LugarTrabajoDepartamentoEstado="0"
+	            LugarTrabajoMunicipioCiudad="0"
+	            LugarTrabajoDireccion="A"
+	            SalarioIntegral="false"
+	            TipoContrato="0"
+	            Sueldo="0"
+	            CodigoTrabajador="0"/>
+	<Pago Forma="0"
+	      Metodo="0"
+	      Banco="A"
+	      TipoCuenta="A"
+	      NumeroCuenta="A"/>
+	<FechasPagos>
+		<FechaPago>9999-12-31</FechaPago>
+	</FechasPagos>
+	<Devengados>
+		<Basico DiasTrabajados="0"
+		        SueldoTrabajado="0.0"/>
+		<Transporte AuxilioTransporte="0.0"
+		            ViaticoManutAlojS="0.0"
+		            ViaticoManutAlojNS="0.0"/>
+		<HEDs>
+			<HED HoraInicio="9999-12-31T00:00:00"
+			     HoraFin="9999-12-31T00:00:00"
+			     Cantidad="0"
+			     Porcentaje="0.00"
+			     Pago="0.00"/>
+		</HEDs>
+		<HENs>
+			<HEN HoraInicio="9999-12-31T00:00:00"
+			     HoraFin="9999-12-31T00:00:00"
+			     Cantidad="0"
+			     Porcentaje="0.00"
+			     Pago="0.00"/>
+		</HENs>
+		<HRNs>
+			<HRN HoraInicio="9999-12-31T00:00:00"
+			     HoraFin="9999-12-31T00:00:00"
+			     Cantidad="0"
+			     Porcentaje="0.00"
+			     Pago="0.00"/>
+		</HRNs>
+		<HEDDFs>
+			<HEDDF HoraInicio="9999-12-31T00:00:00"
+			       HoraFin="9999-12-31T00:00:00"
+			       Cantidad="0"
+			       Porcentaje="0.00"
+			       Pago="0.00"/>
+		</HEDDFs>
+		<HRDDFs>
+			<HRDDF HoraInicio="9999-12-31T00:00:00"
+			       HoraFin="9999-12-31T00:00:00"
+			       Cantidad="0"
+			       Porcentaje="0.00"
+			       Pago="0.00"/>
+		</HRDDFs>
+		<HENDFs>
+			<HENDF HoraInicio="9999-12-31T00:00:00"
+			       HoraFin="9999-12-31T00:00:00"
+			       Cantidad="0"
+			       Porcentaje="0.00"
+			       Pago="0.00"/>
+		</HENDFs>
+		<HRNDFs>
+			<HRNDF HoraInicio="9999-12-31T00:00:00"
+			       HoraFin="9999-12-31T00:00:00"
+			       Cantidad="0"
+			       Porcentaje="0.00"
+			       Pago="0.00"/>
+		</HRNDFs>
+		<Vacaciones>
+			<VacacionesComunes FechaInicio="9999-12-31"
+			                   FechaFin="9999-12-31"
+			                   Cantidad="0"
+			                   Pago="0.00"/>
+			<VacacionesCompensadas Cantidad="0"
+			                       Pago="0.00"/>
+		</Vacaciones>
+		<Primas Cantidad="0"
+		        Pago="0.00"
+		        PagoNS="0.00"/>
+		<Cesantias Pago="0"
+		           Porcentaje="0.00"
+		           PagoIntereses="0.00"/>
+		<Incapacidades>
+			<Incapacidad FechaInicio="9999-12-31"
+			             FechaFin="9999-12-31"
+			             Cantidad="0"
+			             Tipo="0"
+			             Pago="0.00"/>
+		</Incapacidades>
+		<Licencias>
+			<LicenciaMP FechaInicio="9999-12-31"
+			            FechaFin="9999-12-31"
+			            Cantidad="0"
+			            Pago="0.00"/>
+			<LicenciaR FechaInicio="9999-12-31"
+			           FechaFin="9999-12-31"
+			           Cantidad="0"
+			           Pago="0.00"/>
+			<LicenciaNR FechaInicio="9999-12-31"
+			            FechaFin="9999-12-31"
+			            Cantidad="0"/>
+		</Licencias>
+		<Bonificaciones>
+			<Bonificacion BonificacionS="0.00"
+			              BonificacionNS="0.00"/>
+		</Bonificaciones>
+		<Auxilios>
+			<Auxilio AuxilioS="0.00"
+			         AuxilioNS="0.00"/>
+		</Auxilios>
+		<HuelgasLegales>
+			<HuelgaLegal FechaInicio="9999-12-31"
+			             FechaFin="9999-12-31"
+			             Cantidad="0"/>
+		</HuelgasLegales>
+		<OtrosConceptos>
+			<OtroConcepto DescripcionConcepto="A"
+			              ConceptoS="0.00"
+			              ConceptoNS="0.00"/>
+		</OtrosConceptos>
+		<Compensaciones>
+			<Compensacion CompensacionO="0.00"
+			              CompensacionE="0.00"/>
+		</Compensaciones>
+		<BonoEPCTVs>
+			<BonoEPCTV PagoS="0.00"
+			           PagoNS="0.00"
+			           PagoAlimentacionS="0.00"
+			           PagoAlimentacionNS="0.00"/>
+		</BonoEPCTVs>
+		<Comisiones>
+			<Comision>0.00</Comision>
+		</Comisiones>
+		<PagosTerceros>
+			<PagoTercero>0.00</PagoTercero>
+		</PagosTerceros>
+		<Anticipos>
+			<Anticipo>0.00</Anticipo>
+		</Anticipos>
+		<Dotacion>0.00</Dotacion>
+		<ApoyoSost>0.00</ApoyoSost>
+		<Teletrabajo>0.00</Teletrabajo>
+		<BonifRetiro>0.00</BonifRetiro>
+		<Indemnizacion>0.00</Indemnizacion>
+		<Reintegro>0.00</Reintegro>
+	</Devengados>
+	<Deducciones>
+		<Salud Porcentaje="0.00"
+		       Deduccion="0.00"/>
+		<FondoPension Porcentaje="0.00"
+		              Deduccion="0.00"/>
+		<FondoSP Porcentaje="0.00"
+		         Deduccion="0.00"
+		         PorcentajeSub="0.00"
+		         DeduccionSub="0.00"/>
+		<Sindicatos>
+			<Sindicato Porcentaje="0.00"
+			           Deduccion="0.00"/>
+		</Sindicatos>
+		<Sanciones>
+			<Sancion SancionPublic="0.00"
+			         SancionPriv="0.00"/>
+		</Sanciones>
+		<Libranzas>
+			<Libranza Descripcion=""
+			          Deduccion="0.00"/>
+		</Libranzas>
+		<PagosTerceros>
+			<PagoTercero>0.00</PagoTercero>
+		</PagosTerceros>
+		<Anticipos>
+			<Anticipo>0.00</Anticipo>
+		</Anticipos>
+		<OtrasDeducciones>
+			<OtraDeduccion>0.00</OtraDeduccion>
+		</OtrasDeducciones>
+		<PensionVoluntaria>0.00</PensionVoluntaria>
+		<RetencionFuente>0.00</RetencionFuente>
+		<AFC>0.00</AFC>
+		<Cooperativa>0.00</Cooperativa>
+		<EmbargoFiscal>0.00</EmbargoFiscal>
+		<PlanComplementarios>0.00</PlanComplementarios>
+		<Educacion>0.00</Educacion>
+		<Reintegro>0.00</Reintegro>
+		<Deuda>0.00</Deuda>
+	</Deducciones>
+	<Redondeo>0.00</Redondeo>
+	<DevengadosTotal>0.00</DevengadosTotal>
+	<DeduccionesTotal>0.00</DeduccionesTotal>
+	<ComprobanteTotal>0.00</ComprobanteTotal>
+</NominaIndividual>
+
+
+
+
+
+

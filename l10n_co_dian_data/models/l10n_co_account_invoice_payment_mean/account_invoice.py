@@ -42,7 +42,7 @@ class AccountInvoice(models.Model):
 	@api.model
 	def create(self, vals):
 		res = super(AccountInvoice, self).create(vals)
-		res._onchange_recompute_dynamic_lines()
+		#res._recompute_dynamic_lines()
 		res._onchange_invoice_dates()
 		return res
 
@@ -56,14 +56,14 @@ class AccountInvoice(models.Model):
 		
 		if (invoice_date == self.invoice_date_due and not self.invoice_payment_term_id) \
 			or (self.invoice_payment_term_id and time == 0):
-			id_payment_mean = payment_mean_obj.get_object_reference(
+			id_payment_mean = payment_mean_obj._xmlid_lookup("%s.%s" % (
 				'l10n_co_dian_data',
-				'account_payment_mean_1')[1]
+				'account_payment_mean_1'))[1:3][1]
 			payment_mean_id = self.env['account.payment.mean'].browse(id_payment_mean)
 		else:
-			id_payment_mean = payment_mean_obj.get_object_reference(
+			id_payment_mean = payment_mean_obj._xmlid_lookup("%s.%s" % (
 				'l10n_co_dian_data',
-				'account_payment_mean_2')[1]
+				'account_payment_mean_2'))[1:3][1]
 			payment_mean_id = self.env['account.payment.mean'].browse(id_payment_mean)
 
 		self.payment_mean_id = payment_mean_id

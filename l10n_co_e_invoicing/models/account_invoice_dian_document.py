@@ -94,7 +94,7 @@ class AccountInvoiceDianDocument(models.Model):
             'target': 'current'}
 
     def _generate_qr_code(self):
-        if self.invoice_id.type in ('out_invoice', 'out_refund'):
+        if self.invoice_id.move_type in ('out_invoice', 'out_refund'):
             einvoicing_taxes = self.invoice_id._get_einvoicing_taxes()
             try:
                 ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
@@ -202,9 +202,9 @@ class AccountInvoiceDianDocument(models.Model):
         template = self.env['ir.actions.report'].browse(self.company_id.report_template.id)
         #pdf = self.env.ref('account.move').render_qweb_pdf([self.invoice_id.id])[0]
         if template:
-            pdf = template.render_qweb_pdf(self.invoice_id.id)
+            pdf = template._render_qweb_pdf(template,self.invoice_id.id)
         else:
-            pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.invoice_id.id)
+            pdf = self.env.ref('account.account_invoices')._render_qweb_pdf('account.account_invoices',self.invoice_id.id)
         pdf = pdf[0]
         pdf_name = re.sub(r'\W+', '', self.invoice_id.name) + '.pdf'
 
@@ -283,11 +283,11 @@ class AccountInvoiceDianDocument(models.Model):
                     self.write({'state': 'done'})
 
                     if self.get_status_zip_status_code != '00':
-                        if (self.invoice_id.type == "out_invoice" and not self.invoice_id.refund_type):
+                        if (self.invoice_id.move_type == "out_invoice" and not self.invoice_id.refund_type):
                             self.company_id.out_invoice_sent += 1
-                        elif (self.invoice_id.type == "out_refund" and self.invoice_id.refund_type != "debit"):
+                        elif (self.invoice_id.move_type == "out_refund" and self.invoice_id.refund_type != "debit"):
                             self.company_id.out_refund_sent += 1
-                        elif (self.invoice_id.type == "out_invoice" and self.invoice_id.refund_type == "debit"):
+                        elif (self.invoice_id.move_type == "out_invoice" and self.invoice_id.refund_type == "debit"):
                             self.company_id.out_refund_sent += 1
 
                 status_code = element.text
@@ -388,22 +388,21 @@ class AccountInvoiceDianDocument(models.Model):
         in_refund_sent = self.company_id.in_refund_sent
         zip_sent = out_invoice_sent + out_refund_sent + in_refund_sent
 
-        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
+        if self.invoice_id.move_type == 'out_invoice' and not self.invoice_id.refund_type:
             xml_filename_prefix = 'fv'
             dddddddd = str(out_invoice_sent + 1).zfill(8)
-        elif self.invoice_id.type == 'out_refund' and self.invoice_id.refund_type != 'debit':
+        elif self.invoice_id.move_type == 'out_refund' and self.invoice_id.refund_type != 'debit':
             xml_filename_prefix = 'nc'
             dddddddd = str(out_refund_sent + 1).zfill(8)
-        elif self.invoice_id.type == 'out_invoice' and self.invoice_id.refund_type == 'debit':
+        elif self.invoice_id.move_type == 'out_invoice' and self.invoice_id.refund_type == 'debit':
             xml_filename_prefix = 'nd'
             dddddddd = str(out_refund_sent + 1).zfill(8)
-        elif self.invoice_id.type == 'in_invoice':
+        elif self.invoice_id.move_type == 'in_invoice':
             xml_filename_prefix = 'ds'
             dddddddd = str(out_invoice_sent + 1).zfill(8)
-        elif self.invoice_id.type == 'in_refund':
+        elif self.invoice_id.move_type == 'in_refund':
             xml_filename_prefix = 'rds'
             dddddddd = str(out_invoice_sent + 1).zfill(8)
-
 
         # elif self.invoice_id.type == 'out_refund':
         #     xml_filename_prefix = 'nc'
@@ -458,7 +457,7 @@ class AccountInvoiceDianDocument(models.Model):
         SoftwarePIN = False
         IdSoftware = self.company_id.software_id
 
-        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
+        if self.invoice_id.move_type == 'out_invoice' and not self.invoice_id.refund_type:
             ClTec = active_dian_resolution['technical_key']
         else:
             SoftwarePIN = self.company_id.software_pin
@@ -541,6 +540,7 @@ class AccountInvoiceDianDocument(models.Model):
             'DeliveryTerms': {'LossRiskResponsibilityCode': LossRiskResponsibilityCode, 'LossRisk': LossRisk},
             'AccountingSupplierParty': supplier._get_accounting_partner_party_values(self.company_id),
             'AccountingCustomerParty': customer._get_accounting_partner_party_values(self.company_id),
+            # TODO: No esta completamente calro los datos de que tercero son
             'TaxRepresentativeParty': supplier._get_tax_representative_party_values(),
             'InformationContentProviderParty': self.invoice_id.mandante_id._get_tax_representative_party_values() if self.invoice_id.mandante_id else {},
             'PaymentMeansID': self.invoice_id.payment_mean_id.code,
@@ -592,7 +592,7 @@ class AccountInvoiceDianDocument(models.Model):
         SoftwarePIN = False
         IdSoftware = self.company_id.software_id
 
-        if self.invoice_id.type == 'out_invoice' and not self.invoice_id.refund_type:
+        if self.invoice_id.move_type == 'out_invoice' and not self.invoice_id.refund_type:
             ClTec = active_dian_resolution['technical_key']
         else:
             SoftwarePIN = self.company_id.software_pin
@@ -679,6 +679,7 @@ class AccountInvoiceDianDocument(models.Model):
             'DeliveryTerms': {'LossRiskResponsibilityCode': LossRiskResponsibilityCode, 'LossRisk': LossRisk},
             'AccountingSupplierParty': supplier._get_accounting_partner_party_values(self.company_id),
             'AccountingCustomerParty': customer._get_accounting_partner_party_values(self.company_id),
+            # TODO: No esta completamente calro los datos de que tercero son
             'TaxRepresentativeParty': supplier._get_tax_representative_party_values(),
             'InformationContentProviderParty': self.invoice_id.mandante_id._get_tax_representative_party_values() if self.invoice_id.mandante_id else {},
             'PaymentMeansID': self.invoice_id.payment_mean_id.code,
@@ -793,6 +794,9 @@ class AccountInvoiceDianDocument(models.Model):
                 'IssueDate': self.invoice_id.issue_date_invoice or '',
                 'CustomizationID': self.invoice_id.customizationid_invoice}
 
+        #TODO 2.0: Exclusivo en referencias a documentos (elementos DocumentReference)
+        #Punto 14.1.3 del anexo tecnico version 1.8
+        #91 Nota Crédito
         xml_values['CreditNoteTypeCode'] = '91'
         xml_values['BillingReference'] = billing_reference
         xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
@@ -832,6 +836,11 @@ class AccountInvoiceDianDocument(models.Model):
                 'UUID': self.invoice_id.uuid_invoice,
                 'IssueDate': self.invoice_id.issue_date_invoice,
                 'CustomizationID': self.invoice_id.customizationid_invoice}
+        #Exclusivo en referencias a documentos (elementos DocumentReference)
+        #Punto 14.1.3 del anexo tecnico version 1.8
+        #92 Nota Débito
+        #TODO 2.0: DebitNoteTypeCode no existe en DebitNote
+        #xml_values['DebitNoteTypeCode'] = '92'
         xml_values['BillingReference'] = billing_reference
         xml_values['DiscrepancyReferenceID'] = billing_reference['ID']
         xml_values['DiscrepancyResponseCode'] = self.invoice_id.discrepancy_response_code_id.code
@@ -850,7 +859,8 @@ class AccountInvoiceDianDocument(models.Model):
     def bs_acceptation(self):
         accepted_xml_without_signature = global_functions.get_template_xml(self._get_accepted_values(), 'ReciboBS')
         accepted_xml_with_signature = global_functions.get_xml_with_signature(accepted_xml_without_signature, self.company_id.signature_policy_url, self.company_id.signature_policy_description, self.company_id.certificate_file, self.company_id.certificate_password)
-        self.write({'exp_accepted_file': b64encode(self._get_acp_zipped_file(accepted_xml_with_signature)).decode("utf-8", "ignore")})
+        self.write({'exp_accepted_file': b64encode(self._get_acp_zipped_file(accepted_xml_with_signature)).decode(
+            "utf-8", "ignore")})
         self.action_sent_accepted_file(self.exp_accepted_file)
 
     def express_acceptation(self):
@@ -861,7 +871,7 @@ class AccountInvoiceDianDocument(models.Model):
         self.bs_acceptation()
 
     def refund_acceptation(self):
-        accepted_xml_without_signature = global_functions.get_template_xml(self._get_accepted_values(),'ReclamoEI')
+        accepted_xml_without_signature = global_functions.get_template_xml(self._get_accepted_values(), 'ReclamoEI')
         accepted_xml_with_signature = global_functions.get_xml_with_signature(accepted_xml_without_signature, self.company_id.signature_policy_url, self.company_id.signature_policy_description, self.company_id.certificate_file, self.company_id.certificate_password)
         self.write({'exp_accepted_file': b64encode(self._get_acp_zipped_file(accepted_xml_with_signature)).decode("utf-8", "ignore")})
         self.action_sent_accepted_file(self.exp_accepted_file)
@@ -880,21 +890,21 @@ class AccountInvoiceDianDocument(models.Model):
         #         self._get_debit_note_values(),
         #         'DebitNote')
 
-        if self.invoice_id.type == "out_invoice" and not self.invoice_id.refund_type:
+        if self.invoice_id.move_type == "out_invoice" and not self.invoice_id.refund_type:
             xml_without_signature = global_functions.get_template_xml(
                 self._get_invoice_values(),
                 'Invoice')
-        elif self.invoice_id.type == "out_refund" and self.invoice_id.refund_type != "debit":
+        elif self.invoice_id.move_type == "out_refund" and self.invoice_id.refund_type != "debit":
             xml_without_signature = global_functions.get_template_xml(
                 self._get_credit_note_values(),
                 'CreditNote')
-        elif self.invoice_id.type == "out_invoice" and self.invoice_id.refund_type == "debit":
+        elif self.invoice_id.move_type == "out_invoice" and self.invoice_id.refund_type == "debit":
             xml_without_signature = global_functions.get_template_xml(
                 self._get_debit_note_values(),
                 'DebitNote')
-        elif self.invoice_id.type == "in_invoice":
+        elif self.invoice_id.move_type == "in_invoice":
             xml_without_signature = global_functions.get_template_xml(self._get_support_values(), 'SupportDocument')
-        elif self.invoice_id.type == "in_refund":
+        elif self.invoice_id.move_type == "in_refund":
             xml_without_signature = global_functions.get_template_xml(self._get_support_values(), 'SupportDocumentCredit')
 
         xml_with_signature = global_functions.get_xml_with_signature(
@@ -1189,11 +1199,11 @@ class AccountInvoiceDianDocument(models.Model):
                     if element.text == '00':
                         self.write({'state': 'done'})
 
-                        if self.invoice_id.type == 'out_invoice':
+                        if self.invoice_id.move_type == 'out_invoice':
                             self.company_id.out_invoice_sent += 1
-                        elif self.invoice_id.type == 'out_refund':
+                        elif self.invoice_id.move_type == 'out_refund':
                             self.company_id.out_refund_sent += 1
-                        elif self.invoice_id.type == 'in_refund':
+                        elif self.invoice_id.move_type == 'in_refund':
                             self.company_id.in_refund_sent += 1
 
                     status_code = element.text

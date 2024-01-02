@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manager_model_sale_order_aditional_costs,user_model_sale_order_aditional_costs,model_sale_order_aditional_costs,sale_order_sannic.aditional_costo_manager_group,1,1,1,1
+manager_model_sale_order_aditional_freight,user_model_sale_order_aditional_freight,model_sale_order_aditional_freight,sale_order_sannic.aditional_costo_manager_group,1,1,1,1
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="E-invoicing" name="einvoicing" attrs="{'invisible': [('type', 'not in', ['sale']),]}">
+                <page string="E-invoicing" name="einvoicing">
                     <group>
                         <field name="resolution_text"/>
                     </group>

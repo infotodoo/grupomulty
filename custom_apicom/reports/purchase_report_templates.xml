@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//p[@t-field='o.notes']" position="after">
+            <br/>
+            <p t-field="o.observation_ref_intro"/>
+        </xpath>
+         <xpath expr="//span[@t-field='line.name']" position="after">
+              <td name="num">
+                  <span t-field="line.num_part"/>
+              </td>
+        </xpath>
+    </template>
+    <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//p[@t-field='o.notes']" position="after">
+            <br/>
+            <p t-field="o.observation_ref_intro"/>
+        </xpath>
+    </template>
+</odoo>

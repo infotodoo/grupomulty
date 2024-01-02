@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="sale_order_sannic.aditional_costo_manager_group" model="res.groups">
+            <field name="name">Costos adicionales en ventas</field>
+            <field name="comment">Permisos del grupo de costos adicionales en ventas</field>
+        </record>
+    </data>
+</odoo>

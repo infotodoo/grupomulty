@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_sale_order_inherit_sannic" model="ir.ui.view">
+        <field name="name">sale.orderform.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="purchaseorder" force_save="1" readonly="True"/>
+            	<field name="partner_esp_id"/>
+                <field name="approval_margin" invisible="1" widget="percentage"/>
+                <field name="check_margin" invisible="1"/>
+                <field name="total_percentage_margin" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                <page string="Costos adicionales" name="adional_costs_page">
+                    <group name="principal">
+                        <field name="adional_costs_ids" attrs="{'readonly': [('state', '=', 'done')]}">
+                            <tree editable="botttom">
+                                <field name="freigth_id" required="1" options="{'no_create': True, 'no_create_edit':True}"/>
+                                <field name="cost" required="1"/>
+                                <field name="sale_order_id" invisible="1"/>
+                                <field name="cost_total" invisible="1"/>
+                            </tree>
+                        </field>
+                        <field name="cost_total" readonly="True" force_save="1"/>
+                        <field name="state" invisible="True"/>
+                    </group> 
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="cost_total" force_save="1" readonly="1"/>
+                <field name="margin_real"/>
+                <field name="margin_percent_real" widget="percentage"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button 
+                    name="write_state"
+                    string="APROBAR"
+                    class="oe_highlight" 
+                    type="object"
+                    attrs="{'invisible': ['|',['state','not in',('draft','sent')],['check_margin','=',False]]}"
+                    groups="sales_team.group_sale_manager"/>
+                <button 
+                    name="action_confirm" 
+                    id="action_confirm" 
+                    string="Confirm" 
+                    class="btn-primary" 
+                    type="object"
+                    attrs="{'invisible': [('state', '!=', 'draft_ok')]}"/>
+                    <field name="check_margin" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button 
+                    name="action_confirm" 
+                    id="action_confirm" 
+                    string="Confirm" 
+                    class="btn-primary" 
+                    type="object"
+                    attrs="{'invisible': ['|',['state','not in',('draft','sent')],['check_margin','!=',False]]}"
+                    />
+            </xpath>
+
+            <xpath expr="//button[@name='action_confirm'][2]" position="replace">
+                 <button name="action_confirm" string="Confirm" type="object" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='price_unit']" position="after">
+                <field name="real_purchase_price"/>
+                <field name="cost_total" invisible="1"/>
+                <field name="margin_real"/>
+                <field name="margin_real_total"/>
+                <field name="margin_percent_real" widget="percentage"/>
+            </xpath>
+
+             <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='purchase_price']" position="attributes">
+                <attribute name="string">Costo sugerido</attribute>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='margin']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='margin_percent']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/group[@name='note_group']/group[@name='sale_total']/div[2]/field[@name='margin']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/group[@name='note_group']/group[@name='sale_total']/div[2]/span[1]/field[@name='margin_percent']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            
+        </field> 
+    </record>
+</odoo>

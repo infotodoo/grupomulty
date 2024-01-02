@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="activity_history_group" model="res.groups">
+            <field name="name">Historial actividades</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_form_inherit_product_component" model="ir.ui.view">
+        <field name="name">product.product.inherit.component</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page string="Componentes" name="component" attrs="{'invisible':[('type', '=', 'service')]}">
+                    <group name="component">
+                        <field name="component_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="product_component_id" force_save="1"/>
+                                <field name="product_qty" required="1"/>
+                                <field name="product_uom" required="1"/>
+                                <field name="currency_id" required="1"/>
+                                <field name="cost" required="1"/>
+                                <field name="total" sum="Total" decoration-bf="1"/>
+                                <field name="partner_id" required="1"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='barcode']" position="after">
+                <field name="num_part"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

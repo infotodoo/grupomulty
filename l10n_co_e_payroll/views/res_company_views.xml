@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="epayroll" string="E-Payroll">
+                        <group>
+                            <field name="epayroll_enabled"/>
+                            <field name="out_nomina_sent"/>
+                            <field name="profile_execution_payroll_id" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_test_set_id" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_software_id" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_software_pin" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <separator string="Datos Certificado"/>
+                            <field name="payroll_certificate_filename" invisible="1"/>
+                            <field name="payroll_certificate_file" widget="binary" filename="certificate_filename" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_certificate_password" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_files_path"/>
+                            <field name="epayroll_email"/>
+                            <field name="payroll_signature_policy_url" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_signature_policy_description" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+                            <field name="payroll_signature_policy_filename" invisible="1"/>
+                            <field name="payroll_signature_policy_file" widget="binary" filename="signature_policy_filename"/>
+                            <field name="payroll_report_template" domain="[('model', '=', 'account.move')]" attrs="{'required': [('epayroll_enabled', '=', True)]}"/>
+
+                            <label for="payroll_get_numbering_range_response"/>
+                            <div>
+                                <button name="action_GetNumberingRangePayroll" string="GetNumberingRangePayroll" type="object" class="oe_stat_button" icon="fa-check"/>
+                                <field name="payroll_get_numbering_range_response"/>
+                            </div>
+                        </group>
+                    </page>
+                </xpath>
+
+                <field name="website" position="after">
+                    <field name="nit_e_payroll"/>
+                    <field name="dv_e_payroll"/>
+                    <field name="departamento"/>
+                    <field name="municipio"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="project_stage_custom_edit_project_inherit" model="ir.ui.view">
+        <field name="name">project.stage.custom.edit.project.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project_stage_custom.group_project_stages"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_stage_custom_view_project_project_filter_inherit" model="ir.ui.view">
+        <field name="name">project.stage.custom.project.project.select.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search//field[@name='user_id']" position="after">
+                <field name="stage_id" groups="project_stage_custom.group_project_stages"/>
+                <filter string="Plegados" name="open" domain="[('stage_id.fold', '=', False)]" groups="project_stage_custom.group_project_stages"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//filter[@name='Partner']" position="after">
+                <filter string="Etapas" name="groupby_stage" context="{'group_by': 'stage_id'}" groups="project_stage_custom.group_project_stages"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_stage_custom_view_project_inherit" model="ir.ui.view">
+        <field name="name">project.stage.custom.project.project.tree.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="stage_id" options="{'no_open': True}" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="open_view_project_all_group_stage" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="project.view_project_kanban"/>
+            <field name="search_view_id" ref="project.view_project_project_filter"/>
+            <field name="target">main</field>
+            <field name="context">{'search_default_groupby_stage': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No projects found. Let's create one!
+                </p><p>
+                    Projects regroup tasks on the same topic, and each has its dashboard.
+                </p>
+            </field>
+        </record>
+</odoo>
+  

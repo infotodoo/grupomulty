@@ -1,5 +1,5 @@
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="account_fiscal_position_tax_level_code_o_13" model="account.fiscal.position.tax.level.code">
             <field name="name">Gran contribuyente</field>
             <field name="code">O-13</field>

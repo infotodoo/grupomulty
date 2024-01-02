@@ -1,0 +1,77 @@
+<section class="oe_container">
+   <div class="oe_row oe_spaced">
+           <h2 class="oe_slogan" style="color:olive;"><b>Select vendor on sales order line</h2>
+           <h3 class="oe_slogan" style="color:green;"><b>Chosen vendor is set on PO when product routes are set to Buy and MTO</h3>
+           <p class="oe_mt32" style="color:olive;">
+           This module overrules Odoo's hierarchical selection of a vendor on the PO and enables you to select a particular vendor for a PO on a sales order line.<br/>
+           </p>
+           <p style="color:CRIMSON;">
+                <b>How it works:</b>
+           </p>
+           <p style="color:olive;">
+                <ul>
+                   <li style="color:olive;">Create product with the routes 'Buy' and 'MTO'.</li> 
+                   <li style="color:olive;">Add vendors to the Purchase tab.</li> 
+                   <li style="color:olive;">A new field, 'Vendor', has been added to the sales order line. Here you select the vendor you wish to purchase the product from.</li> 
+                   <li style="color:olive;">When the sales order is confirmed a RfQ is created for the selected vendor.</li>
+                </ul>
+           </p>
+
+   </div>
+</section>
+<section class="oe_container">
+   <div class="oe_row oe_spaced">
+       <h2 class="oe_slogan"><b style="color:CRIMSON;">Create product and set the routes to 'Buy' and 'MTO':</b></h2>
+       <div class="oe_demo oe_screenshot">
+           <img src="product_inventory.png">
+       </div>
+       <p>
+            <hr style="border-top:1px solid #5f656d;height:1px;margin:16px 0;"></hr>
+       </p>
+   </div>
+</section>
+<section class="oe_container">
+   <div class="oe_row oe_spaced">
+       <h2 class="oe_slogan"><b style="color:CRIMSON;">Add vendors to the Purchase tab of the product:</b></h2>
+      <div class="oe_demo oe_screenshot">
+           <img src="product_purchase.png">
+       </div>
+       <p>
+        <hr style="border-top:1px solid #5f656d;height:1px;margin:16px 0;"></hr>
+       </p>
+   </div>
+</section>
+<section class="oe_container">
+   <div class="oe_row oe_spaced">
+       <h2 class="oe_slogan"><b style="color:CRIMSON;">A new field, 'Vendor', has been added to the sales order lines. Here you can select your chosen vendor for the PO (Odoo normally chooses the first vendor from the vendor list in the product Purchase tab):</b></h2>
+       <div class="oe_demo oe_screenshot">
+           <img src="quotation_vendor.png">
+       </div>
+       <p>
+            <hr style="border-top:1px solid #5f656d;height:1px;margin:16px 0;"></hr>
+       </p>
+   </div>
+</section>
+<section class="oe_container">
+   <div class="oe_row oe_spaced">
+       <h2 class="oe_slogan"><b style="color:CRIMSON;">Confirm the sales order:</b></h2>
+      <div class="oe_demo oe_screenshot">
+           <img src="sales_order.png">
+       </div>
+       <p>
+        <hr style="border-top:1px solid #5f656d;height:1px;margin:16px 0;"></hr>
+       </p>
+   </div>
+</section>
+<section class="oe_container">
+   <div class="oe_row oe_spaced">
+       <h2 class="oe_slogan"><b style="color:CRIMSON;">The RfQ has now been created for your chosen vendor instead of the first vendor listed in the product Purchase tab:</b></h2>
+      <div class="oe_demo oe_screenshot">
+           <img src="purchase_order.png">
+       </div>
+       <p>
+        <hr style="border-top:1px solid #5f656d;height:1px;margin:16px 0;"></hr>
+       </p>
+   </div>
+</section>
+

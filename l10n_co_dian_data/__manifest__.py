@@ -21,7 +21,7 @@
     'website': "https://www.dracosoft.com.co/",
     'category': 'Localization',
     'version': '0.1',
-    'depends': ['account', 'base_setup', 'base_vat', 'product', 'base_address_city', 'contacts','l10n_latam_base'],
+    'depends': ['account', 'base_setup', 'base_vat', 'product', 'base_address_extended', 'contacts'],
     "post_init_hook": "post_init_hook",
     'data': [
         "security/l10n_co_account_fiscal_position_party_tax_scheme/ir.model.access.csv",

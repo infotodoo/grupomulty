@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="view_sale_approvals_settings_tree" model="ir.ui.view">
+            <field name="name">sale.approvals.settings.tree</field>
+            <field name="model">sale.approvals.settings</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="approvals_settings">
+                    <field name="name"/>
+                    <field name="approval_quantity"/>
+                    <field name="percentage" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sale_approvals_settings_form" model="ir.ui.view">
+            <field name="name">sale.approvals.settingsform</field>
+            <field name="model">sale.approvals.settings</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="approvals_settings">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <table>
+                                    <tr>
+                                        <td style="padding-right:10px;">
+                                            <field name="name" required="1" placeholder="Nombre"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="approval_quantity" required="1"/>
+                            </group>
+                            <group>
+                                <field name="percentage" widget="progressbar"/>
+                                <field name="letter" readonly="1" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    
+        <record model="ir.actions.act_window" id="action_view_approvals_settings">
+            <field name="name">Configuración de aprobaciones</field>
+            <field name="res_model">sale.approvals.settings</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Crear nuevo registro
+                </p>
+            </field>
+        </record>
+
+        <menuitem 
+        	id="menu_approvals_settings" 
+        	name="Configuración de aprobaciones" 
+        	parent="sale.menu_sale_config"
+            action="action_view_approvals_settings"/>
+
+	</data>
+</odoo>
+ 

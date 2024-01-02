@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<NominaIndividual xmlns="dian:gov:co:facturaelectronica:NominaIndividual"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                  xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                  xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+                  xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  SchemaLocation=""
+                  xsi:schemaLocation="dian:gov:co:facturaelectronica:NominaIndividual NominaIndividualElectronicaXSD.xsd">
+	<ext:UBLExtensions>
+		<ext:UBLExtension>
+			<ext:ExtensionContent/>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<Novedad CUNENov="A">false</Novedad>
+	<Periodo FechaIngreso="{{NominaGeneral.fecha_ingreso}}"
+	         FechaLiquidacionInicio="{{NominaGeneral.fecha_ini_pago}}"
+	         FechaLiquidacionFin="{{NominaGeneral.fecha_fin_pago}}"
+	         TiempoLaborado="{{NominaGeneral.tiempo_laborado}}"
+	         FechaGen="{{NominaGeneral.fecha_liquidacion}}"/>
+	<NumeroSecuenciaXML CodigoTrabajador="{{NominaGeneral.numero_documento}}"
+	                    Prefijo="{{NominaGeneral.prefijo}}"
+	                    Consecutivo="{{NominaGeneral.consecutivo}}"
+	                    Numero="{{NominaGeneral.name}}"/>
+	<LugarGeneracionXML Pais="CO"
+	                    DepartamentoEstado="{{empresa_departamento}}"
+	                    MunicipioCiudad="{{empresa_municipio}}"
+	                    Idioma="es"/>
+	<ProveedorXML RazonSocial="{{CompanyID}}"
+	              NIT="{{ProviderID}}"
+	              DV="{{Nitdv}}"
+	              SoftwareID="{{SoftwareID}}"
+	              SoftwareSC="{{SoftwareSecurityCode}}"/>
+<!--	<CodigoQR>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey={{CUNE}}</CodigoQR>-->
+	<CodigoQR>https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey={{CUNE}}</CodigoQR>
+
+	<InformacionGeneral Version="V1.0: Documento Soporte de Pago de Nómina Electrónica"
+	                    Ambiente="{{ProfileExecutionID}}"
+	                    TipoXML="{{NominaGeneral.tipo_nomina}}"
+	                    CUNE="{{CUNE}}"
+	                    EncripCUNE="CUNE-SHA384"
+	                    FechaGen="{{IssueDate}}"
+	                    HoraGen="{{IssueTime}}"
+	                    PeriodoNomina="{{NominaGeneral.periodo_nomina}}"
+	                    TipoMoneda="{{NominaGeneral.tipo_monedas}}"
+	                    TRM="{{NominaGeneral.trm}}"/>
+	<Notas>{{NominaGeneral.notas}}</Notas>
+	<Empleador RazonSocial="{{CompanyID}}"
+	           NIT="{{ProviderID}}"
+	           DV="{{Nitdv}}"
+	           Pais="CO"
+	           DepartamentoEstado="{{empresa_departamento}}"
+	           MunicipioCiudad="{{empresa_municipio}}"
+	           Direccion="{{empresa_direccion}}"/>
+	<Trabajador TipoTrabajador="{{NominaGeneral.tipo_trabajador}}"
+	            SubTipoTrabajador="{{NominaGeneral.subtipo_trabajador}}"
+	            AltoRiesgoPension="{{NominaGeneral.alto_riesgo_pension}}"
+	            TipoDocumento="{{NominaGeneral.tipo_documento}}"
+	            NumeroDocumento="{{NitAdquiriente}}"
+	            PrimerApellido="{{NominaGeneral.primer_apellido or ' '}}"
+	            SegundoApellido="{{NominaGeneral.segundo_apellido or ' '}}"
+	            PrimerNombre="{{NominaGeneral.primer_nombre or ' '}}"
+	            OtrosNombres="{{NominaGeneral.segundo_nombre or ' '}}"
+	            LugarTrabajoPais="{{NominaGeneral.codigo_pais}}"
+	            LugarTrabajoDepartamentoEstado="{{NominaGeneral.codigo_dep_nomina}}"
+	            LugarTrabajoMunicipioCiudad="{{NominaGeneral.codigo_ciu_nomina}}"
+	            LugarTrabajoDireccion="A"
+	            SalarioIntegral="{{NominaGeneral.salario_integral}}"
+	            TipoContrato="{{NominaGeneral.tipo_contrato_trabajador}}"
+	            Sueldo="{{NominaGeneral.sueldo_trabajado}}"
+	            CodigoTrabajador="{{NitAdquiriente}}"/>
+	<Pago Forma="1"
+	      Metodo="{{NominaGeneral.metodo_pago.code}}"
+	      Banco="{{NominaGeneral.banco}}"
+	      TipoCuenta="{{NominaGeneral.tipo_cuenta}}"
+	      NumeroCuenta="{{NominaGeneral.numero_cuenta}}"/>
+	<FechasPagos>
+		<FechaPago>{{NominaGeneral.fecha_pago}}</FechaPago>
+	</FechasPagos>
+	<Devengados>
+		<Basico DiasTrabajados="{{NominaGeneral.dias_trabajados}}"
+		        SueldoTrabajado="{{NominaGeneral.sueldo_trabajado}}"/>
+		{% if NominaGeneral.auxilio_transporte > 0 %}
+		<Transporte AuxilioTransporte="{{NominaGeneral.auxilio_transporte}}"
+		/>
+		{% endif %}
+		{% if NominaGeneral.cantidad_hed > 0 %}
+		<HEDs>
+			<HED HoraInicio="{{NominaGeneral.fecha_hora_inicio_hed|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_hed|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_hed}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_hed}}"
+			     Pago="{{NominaGeneral.valor_pago_hed}}"/>
+		</HEDs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_hen > 0 %}
+		<HENs>
+			<HEN HoraInicio="{{NominaGeneral.fecha_hora_inicio_hen|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_hen|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_hen}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_hen}}"
+			     Pago="{{NominaGeneral.valor_pago_hen}}"/>
+		</HENs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_hrn > 0 %}
+		<HRNs>
+			<HRN HoraInicio="{{NominaGeneral.fecha_hora_inicio_hrn|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_hrn|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_hrn}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_hrn}}"
+			     Pago="{{NominaGeneral.valor_pago_hrn}}"/>
+		</HRNs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_heddf > 0 %}
+		<HEDDFs>
+			<HEDDF HoraInicio="{{NominaGeneral.fecha_hora_inicio_heddf|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_heddf|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_heddf}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_heddf}}"
+			     Pago="{{NominaGeneral.valor_pago_heddf}}"/>
+		</HEDDFs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_hrddf > 0 %}
+		<HRDDFs>
+			<HRDDF HoraInicio="{{NominaGeneral.fecha_hora_inicio_hrddf|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_hrddf|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_hrddf}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_hrddf}}"
+			     Pago="{{NominaGeneral.valor_pago_hrddf}}"/>
+		</HRDDFs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_hendf > 0 %}
+		<HENDFs>
+			<HENDF HoraInicio="{{NominaGeneral.fecha_hora_inicio_hendf|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_hendf|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_hendf}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_hendf}}"
+			     Pago="{{NominaGeneral.valor_pago_hendf}}"/>
+		</HENDFs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_hrndf > 0 %}
+		<HRNDFs>
+			<HRNDF HoraInicio="{{NominaGeneral.fecha_hora_inicio_hrndf|replace(' ', 'T')}}"
+			     HoraFin="{{NominaGeneral.fecha_hora_fin_hrndf|replace(' ', 'T')}}"
+			     Cantidad="{{NominaGeneral.cantidad_hrndf}}"
+			     Porcentaje="{{NominaGeneral.porcentaje_hrndf}}"
+			     Pago="{{NominaGeneral.valor_pago_hrndf}}"/>
+		</HRNDFs>
+		{% endif %}
+		{% if NominaGeneral.cantidad_vacaciones > 0 %}
+		<Vacaciones>
+			<VacacionesComunes FechaInicio="{{NominaGeneral.fecha_inicio_vacaciones}}"
+			                   FechaFin="{{NominaGeneral.fecha_fin_vacaciones}}"
+			                   Cantidad="{{NominaGeneral.cantidad_vacaciones}}"
+			                   Pago="{{NominaGeneral.valor_pago_vacaciones}}"/>
+			{% if NominaGeneral.cantidad_vacaciones_compensadas > 0 %}
+			<VacacionesCompensadas Cantidad="{{NominaGeneral.cantidad_vacaciones_compensadas}}"
+			                       Pago="{{NominaGeneral.valor_pago_vac}}"/>
+			{% endif %}
+		</Vacaciones>
+		{% endif %}
+		{% if NominaGeneral.cantidad_dias_primas > 0 %}
+		<Primas Cantidad="{{NominaGeneral.cantidad_dias_primas}}"
+		        Pago="{{NominaGeneral.pago_salarial_prima}}"
+		        PagoNS="{{NominaGeneral.pago_no_salarial_prima}}"/>
+		{% endif %}
+		{% if NominaGeneral.pago_cesantias > 0 %}
+		<Cesantias Pago="{{NominaGeneral.pago_cesantias}}"
+				   Porcentaje="{{'%.2f'|format(NominaGeneral.porcentaje_cesantias)}}"
+		           PagoIntereses="{{NominaGeneral.pago_intereses_cesantias}}"/>
+		{% endif %}
+		{% if NominaGeneral.cantidad_incapacidad > 0 %}
+		<Incapacidades>
+			<Incapacidad FechaInicio="{{NominaGeneral.fecha_inicio_incapacidad}}"
+			             FechaFin="{{NominaGeneral.fecha_fin_incapacidad}}"
+			             Cantidad="{{NominaGeneral.cantidad_incapacidad}}"
+			             Tipo="{{NominaGeneral.tipo_incapacidad}}"
+			             Pago="{{NominaGeneral.valor_pago_incapacidad}}"/>
+		</Incapacidades>
+		{% endif %}
+
+		{% if NominaGeneral.cantidad_mp > 0 or NominaGeneral.cantidad_r > 0 or NominaGeneral.cantidad_nr > 0  %}
+		<Licencias>
+			{% if NominaGeneral.cantidad_mp > 0 %}
+			<LicenciaMP FechaInicio="{{NominaGeneral.fecha_inicio_mp}}"
+			            FechaFin="{{NominaGeneral.fecha_fin_mp}}"
+			            Cantidad="{{NominaGeneral.cantidad_mp}}"
+			            Pago="{{NominaGeneral.valor_pago_mp}}"/>
+			{% endif %}
+			{% if NominaGeneral.cantidad_r > 0 %}
+			<LicenciaR FechaInicio="{{NominaGeneral.fecha_inicio_r}}"
+			            FechaFin="{{NominaGeneral.fecha_fin_r}}"
+			            Cantidad="{{NominaGeneral.cantidad_r}}"
+			            Pago="{{NominaGeneral.valor_pago_r}}"/>
+			{% endif %}
+			{% if NominaGeneral.cantidad_nr > 0 %}
+			<LicenciaNR FechaInicio="{{NominaGeneral.fecha_inicio_nr}}"
+			            FechaFin="{{NominaGeneral.fecha_fin_nr}}"
+			            Cantidad="{{NominaGeneral.cantidad_nr}}"/>
+			{% endif %}
+		</Licencias>
+		{% endif %}
+		{% if NominaGeneral.bonificacion_salarial > 0 %}
+		<Bonificaciones>
+			<Bonificacion BonificacionS="{{NominaGeneral.bonificacion_salarial}}"
+			              BonificacionNS="{{NominaGeneral.bonificacion_no_salarial}}"
+
+			/>
+		</Bonificaciones>
+		{% endif %}
+		{% if NominaGeneral.auxilio_salarial > 0 %}
+		<Auxilios>
+			<Auxilio AuxilioS="{{NominaGeneral.auxilio_salarial}}"
+			         AuxilioNS="{{NominaGeneral.auxilio_no_salarial}}"/>
+		</Auxilios>
+		{% endif %}
+
+		{% if NominaGeneral.cantidad_huelga > 0 %}
+		<HuelgasLegales>
+			<HuelgaLegal FechaInicio="{{NominaGeneral.fecha_inicio_huelga}}"
+			             FechaFin="{{NominaGeneral.fecha_fin_huelga}}"
+			             Cantidad="{{NominaGeneral.cantidad_huelga}}"/>
+		</HuelgasLegales>
+		{% endif %}
+		{% if NominaGeneral.concepto_salarial > 0 or NominaGeneral.concepto_no_salarial > 0 %}
+		<OtrosConceptos>
+			{% if NominaGeneral.concepto_salarial > 0 %}
+			<OtroConcepto DescripcionConcepto="{{NominaGeneral.descripcion_concepto}}"
+			              ConceptoS="{{NominaGeneral.concepto_salarial}}"/>
+			{% endif %}
+
+			{% if NominaGeneral.concepto_no_salarial > 0 %}
+			<OtroConcepto DescripcionConcepto="{{NominaGeneral.descripcion_concepto}}"
+			              ConceptoNS="{{NominaGeneral.concepto_no_salarial}}"/>
+			{% endif %}
+		</OtrosConceptos>
+		{% endif %}
+		{% if NominaGeneral.compensacion_ordinaria > 0 or NominaGeneral.compensacion_extraordinaria > 0 %}
+		<Compensaciones>
+			<Compensacion CompensacionO="{{NominaGeneral.compensacion_ordinaria}}"
+						  CompensacionE="{{NominaGeneral.compensacion_extraordinaria}}"/>
+		</Compensaciones>
+		{% endif %}
+
+		{% if NominaGeneral.pago_salarial > 0 or NominaGeneral.pago_no_salarial > 0 or NominaGeneral.pago_alimentacion_salarial > 0 or NominaGeneral.pago_alim_no_salarial > 0 %}
+		<BonoEPCTVs>
+			{% if NominaGeneral.pago_salarial > 0 %}
+			<BonoEPCTV PagoS="{{NominaGeneral.pago_salarial}}"/>
+			{% endif %}
+			{% if NominaGeneral.pago_no_salarial > 0 %}
+			<BonoEPCTV PagoNS="{{NominaGeneral.pago_no_salarial}}"/>
+			{% endif %}
+			{% if NominaGeneral.pago_alimentacion_salarial > 0 %}
+			<BonoEPCTV PagoAlimentacionS="{{NominaGeneral.pago_alimentacion_salarial}}"/>
+			{% endif %}
+			{% if NominaGeneral.pago_alim_no_salarial > 0 %}
+			<BonoEPCTV PagoAlimentacionNS="{{NominaGeneral.pago_alim_no_salarial}}"/>
+			{% endif %}
+		</BonoEPCTVs>
+		{% endif %}
+		{% if NominaGeneral.comision > 0 %}
+		<Comisiones>
+			<Comision>{{NominaGeneral.comision}}</Comision>
+		</Comisiones>
+		{% endif %}
+		{% if NominaGeneral.pago_terceros > 0 %}
+		<PagosTerceros>
+			<PagoTercero>{{NominaGeneral.pago_terceros}}</PagoTercero>
+		</PagosTerceros>
+		{% endif %}
+		{% if NominaGeneral.devengos_anticipo > 0 %}
+		<Anticipos>
+			<Anticipo>{{NominaGeneral.devengos_anticipo}}</Anticipo>
+		</Anticipos>
+		{% endif %}
+		{% if NominaGeneral.dotacion > 0 %}
+		<Dotacion>{{NominaGeneral.dotacion}}</Dotacion>
+		{% endif %}
+		{% if NominaGeneral.apoyo > 0 %}
+		<ApoyoSost>{{NominaGeneral.apoyo}}</ApoyoSost>
+		{% endif %}
+		{% if NominaGeneral.teletrabajo > 0 %}
+		<Teletrabajo>{{NominaGeneral.teletrabajo}}</Teletrabajo>
+		{% endif %}
+		{% if NominaGeneral.bonifretiro > 0 %}
+		<BonifRetiro>{{NominaGeneral.bonifretiro}}</BonifRetiro>
+		{% endif %}
+		{% if NominaGeneral.indemnizacion > 0 %}
+		<Indemnizacion>{{NominaGeneral.indemnizacion}}</Indemnizacion>
+		{% endif %}
+		{% if NominaGeneral.reintegro > 0 %}
+		<Reintegro>{{NominaGeneral.reintegro}}</Reintegro>
+		{% endif %}
+
+	</Devengados>
+	<Deducciones>
+		<Salud Porcentaje="{{'%.2f'|format(NominaGeneral.porcentaje_salud)}}"
+		       Deduccion="{{NominaGeneral.deduccion_salud}}"/>
+		<FondoPension Porcentaje="{{'%.2f'|format(NominaGeneral.porcentaje_pension)}}"
+		              Deduccion="{{NominaGeneral.deduccion_pension}}"/>
+		{% if NominaGeneral.deduccion_seguridad_pensional > 0 %}
+		<FondoSP Porcentaje="{{'%.2f'|format(NominaGeneral.porcentaje_seguridad_pensional)}}"
+		         DeduccionSP="{{NominaGeneral.deduccion_seguridad_pensional}}"
+		         PorcentajeSub="{{'%.2f'|format(NominaGeneral.porcentaje_de_subsistencia)}}"
+		         DeduccionSub="{{NominaGeneral.deduccion_subsistencia}}"/>
+		{% endif %}
+		{% if NominaGeneral.deduccion_sindicatos > 0 %}
+		<Sindicatos>
+			<Sindicato Porcentaje="{{'%.2f'|format(NominaGeneral.porcentaje_sindicatos)}}"
+			           Deduccion="{{NominaGeneral.deduccion_sindicatos}}"/>
+		</Sindicatos>
+		{% endif %}
+		{% if NominaGeneral.sancion_publica > 0 %}
+		<Sanciones>
+			<Sancion SancionPublic="{{NominaGeneral.sancion_publica}}"
+			         SancionPriv="{{NominaGeneral.sancion_privada}}"/>
+		</Sanciones>
+		{% endif %}
+		{% if NominaGeneral.deduccion_libranza > 0 %}
+		<Libranzas>
+			<Libranza Descripcion="{{NominaGeneral.descripcion_libranza}}"
+			          Deduccion="{{NominaGeneral.deduccion_libranza}}"/>
+		</Libranzas>
+		{% endif %}
+		{% if NominaGeneral.deduccion_pago_tercero > 0 %}
+		<PagosTerceros>
+			<PagoTercero>{{NominaGeneral.deduccion_pago_tercero}}</PagoTercero>
+		</PagosTerceros>
+		{% endif %}
+		{% if NominaGeneral.deduccion_anticipo > 0 %}
+		<Anticipos>
+			<Anticipo>{{NominaGeneral.deduccion_anticipo}}</Anticipo>
+		</Anticipos>
+		{% endif %}
+		{% if NominaGeneral.otra_deduccion > 0 %}
+		<OtrasDeducciones>
+			<OtraDeduccion>{{NominaGeneral.otra_deduccion}}</OtraDeduccion>
+		</OtrasDeducciones>
+		{% endif %}
+		{% if NominaGeneral.pension > 0 %}
+		<PensionVoluntaria>{{NominaGeneral.pension}}</PensionVoluntaria>
+		{% endif %}
+		{% if NominaGeneral.retencion > 0 %}
+		<RetencionFuente>{{NominaGeneral.retencion}}</RetencionFuente>
+		{% endif %}
+
+		{% if NominaGeneral.afc > 0 %}
+		<AFC>{{NominaGeneral.afc}}</AFC>
+		{% endif %}
+		{% if NominaGeneral.cooperativa > 0 %}
+		<Cooperativa>{{NominaGeneral.cooperativa}}</Cooperativa>
+		{% endif %}
+		{% if NominaGeneral.embargo > 0 %}
+		<EmbargoFiscal>{{NominaGeneral.embargo}}</EmbargoFiscal>
+		{% endif %}
+		{% if NominaGeneral.plan > 0 %}
+		<PlanComplementarios>{{NominaGeneral.plan}}</PlanComplementarios>
+		{% endif %}
+		{% if NominaGeneral.educacion > 0 %}
+		<Educacion>{{NominaGeneral.educacion}}</Educacion>
+		{% endif %}
+		{% if NominaGeneral.reintegro_otras_deducciones > 0 %}
+		<Reintegro>{{NominaGeneral.reintegro_otras_deducciones}}</Reintegro>
+		{% endif %}
+		{% if NominaGeneral.deuda > 0 %}
+		<Deuda>{{NominaGeneral.deuda}}</Deuda>
+		{% endif %}
+
+
+	</Deducciones>
+	<DevengadosTotal>{{ValDev}}</DevengadosTotal>
+	<DeduccionesTotal>{{ValDed}}</DeduccionesTotal>
+	<ComprobanteTotal>{{ValTolNE}}</ComprobanteTotal>
+</NominaIndividual>
+
+
+
+
+
+

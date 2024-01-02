@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="inherti_project_view_task_form2" model="ir.ui.view">
+        <field name="name">project.task</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_ids']" position="after">
+                <field name="approval_id"/>
+                <field name="analytic_account_id"/>
+                <field name="way_to_pay"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+  

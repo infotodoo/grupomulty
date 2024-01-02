@@ -25,7 +25,7 @@ class ElectronicInvoiceFunctions(http.Controller):
         if rating == 'True':
             rating_system = 'aprobada'
             invoice_id.write({'invoice_rating': 'approve'})
-        elif rating == 'False':
+        elif rating == 'False' and invoice_id.refuse_text:
             rating_system = 'rechazada'
             invoice_id.write({'invoice_rating': 'refuse'})
         else:

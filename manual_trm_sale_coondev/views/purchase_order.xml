@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_view_purchase_order_sannic" model="ir.ui.view">
+        <field name="name">inherit.purchase.order</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="create_date" invisible="1"/>
+            	<field name="saleorder_id" attrs="{'required': [('create_date', '!=',False)], 'invisible': [('create_date', '=',False)]}"/>
+            </xpath>
+
+        </field> 
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_employee_comfer" model="ir.ui.view">
+      <field name="name">hr.employee.inherit</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr.view_employee_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//page[@name='hr_settings']" position="after">
+            <page name="hr_page_comfer" string="Nomina">
+                <group>
+                  <group string="Afiliaciones">
+                     <field name="eps_id" domain="[('is_eps', '=', True)]" options = "{'no_open': true, 'no_quick_create': true ,'no_create_edit': true,'no_create':true}"/>
+                     <field name="afp_id" domain="[('is_afp', '=', True)]" options = "{'no_open': true, 'no_quick_create': true ,'no_create_edit': true,'no_create':true}"/>
+                     <field name="afc_id" domain="[('is_afc', '=', True)]" options = "{'no_open': true, 'no_quick_create': true ,'no_create_edit': true,'no_create':true}"/>
+                     <field name="arl_id" domain="[('is_arl', '=', True)]" options = "{'no_open': true, 'no_quick_create': true ,'no_create_edit': true,'no_create':true}"/>
+                     <field name="compensation_box" domain="[('is_compensation_box', '=', True)]" options = "{'no_open': true, 'no_quick_create': true ,'no_create_edit': true,'no_create':true}"/>
+                  </group>
+                  <group string="ARL">
+                     <field name="risk_classes_type"/>
+                  </group>
+                </group>
+            </page>
+          </xpath>
+          <xpath expr="//field[@name='address_home_id']" position="attributes">
+               <attribute name="string">Tercero</attribute>
+         </xpath>
+      </field>
+    </record>
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="mail.activity_thread_message_tools">
+        <t t-jquery="a[class='o_unlink_activity']" t-operation="replace">
+        </t>
+    </t>
+</templates>

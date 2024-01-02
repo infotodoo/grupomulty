@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <odoo>
+   <data> 
+      <template id="purchase_report"  inherit_id="purchase.report_purchasequotation_document">
+
+         <xpath expr="/t/t/div/table/thead/tr/th[1]" position="after">
+             <th>
+               <strong><span>Número de parte</span></strong>
+             </th>
+         </xpath>
+
+         <xpath expr="/t/t/div/table/tbody/t/tr/t[1]/td[1]" position="after">
+          <td>
+            <span t-field="order_line.product_id.num_part"/>
+          </td>
+         </xpath>
+
+      </template>
+   </data>
+ </odoo>

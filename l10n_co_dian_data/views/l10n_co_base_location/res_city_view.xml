@@ -3,7 +3,7 @@
 
     <record id="view_city_tree_inherit" model="ir.ui.view">
         <field name="model">res.city</field>
-        <field name="inherit_id" ref="base_address_city.view_city_tree"/>
+        <field name="inherit_id" ref="base_address_extended.view_city_tree"/>
         <field name="arch" type="xml">
             <tree position="attributes">
                 <attribute name="editable"/>
@@ -49,7 +49,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_ids"
                eval="[(5,0,0),
-                      (0, 0, {'view_mode': 'tree', 'view_id': ref('base_address_city.view_city_tree')}),
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('base_address_extended.view_city_tree')}),
                       (0, 0, {'view_mode': 'form', 'view_id': ref('view_city_form')})]"/>
         <field name="help">
             Display and manage the list of all cities that can be assigned to

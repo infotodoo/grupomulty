@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+      <data>
+        <record id="view_freight_tree" model="ir.ui.view">
+            <field name="name">freight.tree</field>
+            <field name="model">sale.order.aditional.freight</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="freight">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_freight_form" model="ir.ui.view">
+            <field name="name">freight.form</field>
+            <field name="model">sale.order.aditional.freight</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="freight">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <table>
+                                    <tr>
+                                        <td style="padding-right:10px;">
+                                            <field name="name" required="1" placeholder="Nombre del flete"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                
+                            </group>
+                            <group>
+                                 
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    
+        <record model="ir.actions.act_window" id="action_view_freight">
+            <field name="name">Fletes</field>
+            <field name="res_model">sale.order.aditional.freight</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Crear nuevo flete
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_freight" name="Fletes" parent="sale.menu_sale_config"
+                  action="action_view_freight"/>
+           
+    </data>
+</odoo>

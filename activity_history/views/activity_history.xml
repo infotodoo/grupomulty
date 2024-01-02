@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="activity_history_view_tree" model="ir.ui.view">
+            <field name="model">activity.history</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="create_date" />
+                    <field name="create_uid" />
+                    <field name="date_deadline" />
+                    <field name="activity_id" />
+                    <field name="res_model" invisible="1" />
+                    <field name="activity_type_id" />
+                    <field name="state" />
+                    <field name="summary" />
+                </tree>
+            </field>
+        </record>
+        <record id="activity_history_view_form" model="ir.ui.view">
+            <field name="name">activity.history.view.form</field>
+            <field name="model">activity.history</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="create_date" />
+                            <field name="create_uid" />
+                            <field name="date_deadline" />
+                            <field name="activity_id" />
+                            <field name="res_model_id" invisible="1" />
+                            <field name="activity_type_id" />
+                            <field name="state" />
+                            <field name="summary" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="activity_history_action" model="ir.actions.act_window">
+            <field name="name">Registro Actividades</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">activity.history</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="activity_history_view_tree"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record> 
+
+        <menuitem action="activity_history_action"
+            id="menu_activity_history"
+            parent="crm.crm_menu_sales"
+            sequence="10"/>
+    </data>
+</odoo>

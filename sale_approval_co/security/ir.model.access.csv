@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manager_model_sale_approvals_settings,user_model_sale_approvals_settings,model_sale_approvals_settings,sale_approval_co.approvals_manager_group,1,1,1,1
