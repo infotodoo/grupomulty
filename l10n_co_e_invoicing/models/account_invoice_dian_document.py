@@ -12,7 +12,7 @@ import zipfile
 #sys.setdefaultencoding('utf8')
 #from StringIO import StringIO
 from io import StringIO ## for Python 3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from base64 import b64encode, b64decode
 from zipfile import ZipFile
 from . import global_functions
@@ -506,14 +506,15 @@ class AccountInvoiceDianDocument(models.Model):
         emission_date = str(IssueDate).replace('-', '')
         QRCodeURL = QRCodeURL.format(cufe_cude['CUFE/CUDE'], partition_key, emission_date)
 
-        self.write({
-            'invoice_url': QRCodeURL,
-            'cufe_cude_uncoded': cufe_cude['CUFE/CUDEUncoded'],
-            'cufe_cude': cufe_cude['CUFE/CUDE'],
-            'software_security_code_uncoded':
-                software_security_code['SoftwareSecurityCodeUncoded'],
-            'software_security_code':
-                software_security_code['SoftwareSecurityCode']})
+        if not self.cufe_cude:
+            self.write({
+                'invoice_url': QRCodeURL,
+                'cufe_cude_uncoded': cufe_cude['CUFE/CUDEUncoded'],
+                'cufe_cude': cufe_cude['CUFE/CUDE'],
+                'software_security_code_uncoded':
+                    software_security_code['SoftwareSecurityCodeUncoded'],
+                'software_security_code':
+                    software_security_code['SoftwareSecurityCode']})
         return {
             'InvoiceAuthorization': active_dian_resolution['resolution_number'],
             'StartDate': active_dian_resolution['date_from'],
@@ -557,8 +558,124 @@ class AccountInvoiceDianDocument(models.Model):
             'TaxInclusiveAmount': '{:.2f}'.format(TaxInclusiveAmount),  # ValTot
             'PayableAmount': '{:.2f}'.format(PayableAmount),
             'OrderReference': self.invoice_id.orden_compra or '',
+
         }
 
+    def _get_xml_accuse_values(self, ClTec):
+        msg7 = _('The Incoterm is not defined for this export type invoice')
+
+        active_dian_resolution = self.invoice_id._get_active_dian_resolution()
+        einvoicing_taxes = self.invoice_id._get_einvoicing_taxes()
+        date_format = str(self.invoice_id.create_date)[0:19]
+        create_date = datetime.strptime(date_format, '%Y-%m-%d %H:%M:%S')
+        create_date = create_date.replace(tzinfo=timezone('UTC'))
+        ID = self.invoice_id.name
+        IssueDate = self.invoice_id.invoice_date
+        IssueTime = create_date.astimezone(
+            timezone('America/Bogota')).strftime('%H:%M:%S-05:00')
+
+        LossRiskResponsibilityCode = self.invoice_id.invoice_incoterm_id.code or ''
+        LossRisk = self.invoice_id.invoice_incoterm_id.name or ''
+        if self.invoice_id.invoice_type_code == '02':
+            if not self.invoice_id.invoice_incoterm_id:
+                raise UserError(msg7)
+            elif not self.invoice_id.invoice_incoterm_id.name or not self.invoice_id.invoice_incoterm_id.code:
+                raise UserError('Incoterm is not properly parameterized')
+            else:
+                LossRiskResponsibilityCode = self.invoice_id.invoice_incoterm_id.code
+                LossRisk = self.invoice_id.invoice_incoterm_id.name
+
+        supplier = self.company_id.partner_id
+        customer = self.invoice_id.partner_id
+        NitOFE = supplier.identification_document
+        NitAdq = customer.identification_document
+
+        ClTec = False
+        SoftwarePIN = False
+        IdSoftware = self.company_id.software_id
+
+        if self.invoice_id.move_type == 'out_invoice' and not self.invoice_id.refund_type:
+            ClTec = active_dian_resolution['technical_key']
+        else:
+            SoftwarePIN = self.company_id.software_pin
+
+        TipoAmbie = self.company_id.profile_execution_id
+
+        if TipoAmbie == '1':
+            QRCodeURL = DIAN['catalogo']
+        else:
+            QRCodeURL = DIAN['catalogo-hab']
+
+        ValFac = self.invoice_id.amount_untaxed
+        try:
+            ValImp1 = einvoicing_taxes['TaxesTotal']['01']['total']
+        except:
+            ValImp1 = 0
+        try:
+            ValImp2 = einvoicing_taxes['TaxesTotal']['04']['total']
+        except:
+            ValImp2 = 0
+        try:
+            ValImp3 = einvoicing_taxes['TaxesTotal']['03']['total']
+        except:
+            ValImp3 = 0
+        TaxInclusiveAmount = ValFac + ValImp1 + ValImp2 + ValImp3
+        # El valor a pagar puede verse afectado, por anticipos, y descuentos y
+        # cargos a nivel de factura
+        PayableAmount = TaxInclusiveAmount
+        cufe_cude = self.cufe_cude
+        software_security_code = global_functions.get_software_security_code(
+            IdSoftware,
+            self.company_id.software_pin,
+            ID)
+        partition_key = 'co|' + str(IssueDate).split('-')[2] + '|' + cufe_cude['CUFE/CUDE'][:2]
+        emission_date = str(IssueDate).replace('-', '')
+        QRCodeURL = QRCodeURL.format(cufe_cude['CUFE/CUDE'], partition_key, emission_date)
+
+        return {
+            'InvoiceAuthorization': active_dian_resolution['resolution_number'],
+            'StartDate': active_dian_resolution['date_from'],
+            'EndDate': active_dian_resolution['date_to'],
+            'Prefix': active_dian_resolution['prefix'],
+            'From': active_dian_resolution['number_from'],
+            'To': active_dian_resolution['number_to'],
+            'ProviderIDschemeID': supplier.check_digit,
+            'ProviderIDschemeName': supplier.document_type_id.code,
+            'ProviderID': NitOFE,
+            'NitAdquiriente': NitAdq,
+            'SoftwareID': IdSoftware,
+            'SoftwareSecurityCode': software_security_code['SoftwareSecurityCode'],
+            'QRCodeURL': QRCodeURL,
+            'ProfileExecutionID': TipoAmbie,
+            'ID': ID,
+            'UUID': cufe_cude['CUFE/CUDE'],
+            'IssueDate': IssueDate,
+            'IssueTime': IssueTime,
+            'LineCountNumeric': len(self.invoice_id.invoice_line_ids.filtered(
+                lambda x: x.display_type not in ('line_section', 'line_note'))),
+            'DocumentCurrencyCode': self.invoice_id.currency_id.name,
+            'Delivery': customer._get_delivery_values(),
+            'DeliveryTerms': {'LossRiskResponsibilityCode': LossRiskResponsibilityCode, 'LossRisk': LossRisk},
+            'AccountingSupplierParty': supplier._get_accounting_partner_party_values(self.company_id),
+            'AccountingCustomerParty': customer._get_accounting_partner_party_values(self.company_id),
+            # TODO: No esta completamente calro los datos de que tercero son
+            'TaxRepresentativeParty': supplier._get_tax_representative_party_values(),
+            'InformationContentProviderParty': self.invoice_id.mandante_id._get_tax_representative_party_values() if self.invoice_id.mandante_id else {},
+            'PaymentMeansID': self.invoice_id.payment_mean_id.code,
+            'PaymentMeansCode': self.invoice_id.payment_mean_code_id.code or '10',
+            # 'PaymentMeansCode': self.invoice_id.payment_mean_code_id,
+            # 'PaymentDueDate': self.invoice_id.date_due,
+            'DueDate': self.invoice_id.invoice_date_due,
+            'PaymentExchangeRate': self.invoice_id._get_payment_exchange_rate(),
+            'PaymentDueDate': self.invoice_id.invoice_date_due,
+            'TaxesTotal': einvoicing_taxes['TaxesTotal'],
+            'WithholdingTaxesTotal': einvoicing_taxes['WithholdingTaxesTotal'],
+            'LineExtensionAmount': 1,
+            'TaxExclusiveAmount': 1,
+            'TaxInclusiveAmount': '{:.2f}'.format(TaxInclusiveAmount),  # ValTot
+            'PayableAmount': '{:.2f}'.format(PayableAmount),
+            'OrderReference': self.invoice_id.orden_compra or '',
+        }
     def _get_xml_values(self, ClTec):
         msg7 = _('The Incoterm is not defined for this export type invoice')
 
@@ -646,14 +763,15 @@ class AccountInvoiceDianDocument(models.Model):
         emission_date = str(IssueDate).replace('-', '')
         QRCodeURL = QRCodeURL.format(cufe_cude['CUFE/CUDE'], partition_key, emission_date)
 
-        self.write({
-            'invoice_url': QRCodeURL,
-            'cufe_cude_uncoded': cufe_cude['CUFE/CUDEUncoded'],
-            'cufe_cude': cufe_cude['CUFE/CUDE'],
-            'software_security_code_uncoded':
-                software_security_code['SoftwareSecurityCodeUncoded'],
-            'software_security_code':
-                software_security_code['SoftwareSecurityCode']})
+        if not self.cufe_cude:
+            self.write({
+                'invoice_url': QRCodeURL,
+                'cufe_cude_uncoded': cufe_cude['CUFE/CUDEUncoded'],
+                'cufe_cude': cufe_cude['CUFE/CUDE'],
+                'software_security_code_uncoded':
+                    software_security_code['SoftwareSecurityCodeUncoded'],
+                'software_security_code':
+                    software_security_code['SoftwareSecurityCode']})
         return {
             'InvoiceAuthorization': active_dian_resolution['resolution_number'],
             'StartDate': active_dian_resolution['date_from'],
@@ -699,7 +817,7 @@ class AccountInvoiceDianDocument(models.Model):
             }
 
     def _get_accuse_recibo_values(self):
-        xml_values = self._get_xml_suppplier_values(False)
+        xml_values = self._get_xml_accuse_values(False)
         xml_values['CustomizationID'] = self.invoice_id.operation_type
         active_dian_resolution = self.invoice_id._get_active_dian_resolution()
         xml_values['InvoiceControl'] = active_dian_resolution
@@ -779,6 +897,20 @@ class AccountInvoiceDianDocument(models.Model):
             self.invoice_id.operation_type = '20'
         elif self.invoice_id.operation_type == '22':
             xml_values['CustomizationID'] = '22'
+
+            invoice_date = self.invoice_id.invoice_date
+
+            first_day_of_month = date(invoice_date.year, invoice_date.month, 1)            
+            if invoice_date.month == 12:
+                last_day_of_month = date(invoice_date.year + 1, 1, 1) - timedelta(days=1)
+            else:
+                next_month = date(invoice_date.year, invoice_date.month + 1, 1)
+                last_day_of_month = next_month - timedelta(days=1)
+
+            # Asignar los valores al diccionario
+            xml_values['StartDate'] = first_day_of_month 
+            xml_values['EndDate'] = last_day_of_month 
+
             self.invoice_id.operation_type = '22'
             billing_reference = {
                 'ID': False,

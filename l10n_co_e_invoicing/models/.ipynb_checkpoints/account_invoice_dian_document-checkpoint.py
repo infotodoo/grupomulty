@@ -12,7 +12,7 @@ import re
 #sys.setdefaultencoding('utf8')
 #from StringIO import StringIO
 from io import StringIO ## for Python 3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from base64 import b64encode, b64decode
 from zipfile import ZipFile
 from . import global_functions
@@ -599,6 +599,20 @@ class AccountInvoiceDianDocument(models.Model):
             self.invoice_id.operation_type = '20'
         elif self.invoice_id.operation_type == '22':
             xml_values['CustomizationID'] = '22'
+
+            invoice_date = self.invoice_id.invoice_date
+
+            first_day_of_month = date(invoice_date.year, invoice_date.month, 1)            
+            if invoice_date.month == 12:
+                last_day_of_month = date(invoice_date.year + 1, 1, 1) - timedelta(days=1)
+            else:
+                next_month = date(invoice_date.year, invoice_date.month + 1, 1)
+                last_day_of_month = next_month - timedelta(days=1)
+
+            # Asignar los valores al diccionario
+            xml_values['StartDate'] = first_day_of_month 
+            xml_values['EndDate'] = last_day_of_month 
+
             self.invoice_id.operation_type = '22'
             billing_reference = {
                 'ID': False,

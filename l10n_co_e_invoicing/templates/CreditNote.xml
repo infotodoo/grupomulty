@@ -62,6 +62,12 @@
 		listAgencyName="United Nations Economic Commission for Europe"
 		listID="ISO 4217 Alpha">{{DocumentCurrencyCode}}</cbc:DocumentCurrencyCode>
 	<cbc:LineCountNumeric>{{LineCountNumeric}}</cbc:LineCountNumeric>
+	{% if CustomizationID == '22' %}
+		<cac:InvoicePeriod>
+		<cbc:StartDate>{{StartDate}}</cbc:StartDate>
+		<cbc:EndDate>{{EndDate}}</cbc:EndDate>		
+		</cac:InvoicePeriod>
+	 {% endif %}
 	<cac:DiscrepancyResponse>
 		<cbc:ReferenceID>{{DiscrepancyReferenceID}}</cbc:ReferenceID>
 		<cbc:ResponseCode>{{DiscrepancyResponseCode}}</cbc:ResponseCode>

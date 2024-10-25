@@ -72,7 +72,7 @@
 	<cbc:Note>{{Note}}</cbc:Note>
 	<cbc:DocumentCurrencyCode listAgencyID="6"
 		listAgencyName="United Nations Economic Commission for Europe"
-		listID="ISO 4217 Alpha">{{DocumentCurrencyCode}}</cbc:DocumentCurrencyCode>
+		listID="ISO 4217 Alpha">COP</cbc:DocumentCurrencyCode>
 	<cbc:LineCountNumeric>{{LineCountNumeric}}</cbc:LineCountNumeric>
 	<cac:OrderReference>
       	<cbc:ID>{{OrderReference}}</cbc:ID>
@@ -277,9 +277,9 @@
 	</cac:PaymentMeans>
 		{% if DocumentCurrencyCode != 'COP' %}
     <cac:PaymentExchangeRate>
-		<cbc:SourceCurrencyCode>{{PaymentExchangeRate.SourceCurrencyCode}}</cbc:SourceCurrencyCode>
-		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
-		<cbc:TargetCurrencyCode>{{PaymentExchangeRate.TargetCurrencyCode}}</cbc:TargetCurrencyCode>
+		<cbc:SourceCurrencyCode>{{PaymentExchangeRate.TargetCurrencyCode}}</cbc:SourceCurrencyCode>
+		<cbc:SourceCurrencyBaseRate>{{'{:.2f}'.format(PaymentExchangeRate.CalculationRate)}}</cbc:SourceCurrencyBaseRate>
+		<cbc:TargetCurrencyCode>{{PaymentExchangeRate.SourceCurrencyCode}}</cbc:TargetCurrencyCode>
 		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
 		<cbc:CalculationRate>{{'{:.2f}'.format(PaymentExchangeRate.CalculationRate)}}</cbc:CalculationRate>
 		<cbc:Date>{{PaymentExchangeRate.Date}}</cbc:Date>
@@ -287,8 +287,8 @@
     {% endif %}
 	{% for TaxTotalID, TaxTotal in TaxesTotal.items() -%}
 	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
-		<cbc:RoundingAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:RoundingAmount>
+		<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
+		<cbc:RoundingAmount currencyID="COP">0.00</cbc:RoundingAmount>
 		{% set ftotal= {'total': 0.00} %}
 		{% for Percent, TaxSubtotal in TaxTotal.taxes.items() -%}
 		      {% set porcentaje = Percent | float %}
@@ -296,8 +296,8 @@
 		      {% set taxamount = TaxSubtotal.amount | float %}
 		      {% if ftotal.update({'total': ftotal.total + (((taxableamount * porcentaje)/100)-taxamount)}) %}{% endif %}
 		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
+			<cbc:TaxableAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
 			<cac:TaxCategory>
 				<cbc:Percent>{{Percent}}</cbc:Percent>
 				<cac:TaxScheme>
@@ -311,11 +311,11 @@
 	{% endfor -%}
 	{% for WithholdingTaxTotalID, WithholdingTaxTotal in WithholdingTaxesTotal.items() -%}
 	<cac:WithholdingTaxTotal>
-		<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(WithholdingTaxTotal.total)}}</cbc:TaxAmount>
+		<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(WithholdingTaxTotal.total)}}</cbc:TaxAmount>
 		{% for Percent, TaxSubtotal in WithholdingTaxTotal.taxes.items() -%}
 		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
+			<cbc:TaxableAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
 			<cac:TaxCategory>
 				<cbc:Percent>{{Percent}}</cbc:Percent>
 				<cac:TaxScheme>
@@ -328,24 +328,24 @@
 	</cac:WithholdingTaxTotal>
 	{% endfor -%}
 	<cac:LegalMonetaryTotal>
-		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{LineExtensionAmount}}</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxExclusiveAmount}}</cbc:TaxExclusiveAmount>
-		<cbc:TaxInclusiveAmount currencyID="{{DocumentCurrencyCode}}">{{TaxInclusiveAmount}}</cbc:TaxInclusiveAmount>
-		<cbc:AllowanceTotalAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:AllowanceTotalAmount>
-      	<cbc:ChargeTotalAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:ChargeTotalAmount>
-		<cbc:PrepaidAmount currencyID="{{DocumentCurrencyCode}}">0.00</cbc:PrepaidAmount>
-		<cbc:PayableAmount currencyID="{{DocumentCurrencyCode}}">{{PayableAmount}}</cbc:PayableAmount>
+		<cbc:LineExtensionAmount currencyID="COP">{{LineExtensionAmount}}</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="COP">{{TaxExclusiveAmount}}</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="COP">{{TaxInclusiveAmount}}</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="COP">0.00</cbc:AllowanceTotalAmount>
+      	<cbc:ChargeTotalAmount currencyID="COP">0.00</cbc:ChargeTotalAmount>
+		<cbc:PrepaidAmount currencyID="COP">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="COP">{{PayableAmount}}</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	{% for InvoiceLineID, InvoiceLine in InvoiceLines.items() -%}
 	<cac:InvoiceLine>
 		<cbc:ID>{{InvoiceLineID}}</cbc:ID>
 		<cbc:Note>{{InvoiceLine.Note}}</cbc:Note>
 		<cbc:InvoicedQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
+		<cbc:LineExtensionAmount currencyID="COP">{{InvoiceLine.LineExtensionAmount}}</cbc:LineExtensionAmount>
 	{% if InvoiceLine.LineExtensionAmount == '0.00' %}
 		<cac:PricingReference>
 			<cac:AlternativeConditionPrice>
-				<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PricingReference}}</cbc:PriceAmount>
+				<cbc:PriceAmount currencyID="COP">{{InvoiceLine.PricingReference}}</cbc:PriceAmount>
 				<cbc:PriceTypeCode>02</cbc:PriceTypeCode>
 			</cac:AlternativeConditionPrice>
 		</cac:PricingReference>
@@ -355,17 +355,17 @@
 			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
 			<cbc:AllowanceChargeReason>Descuento</cbc:AllowanceChargeReason>
 			<cbc:MultiplierFactorNumeric>{{InvoiceLine.MultiplierFactorNumeric}}</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeAmount}}</cbc:Amount>
-			<cbc:BaseAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.AllowanceChargeBaseAmount}}</cbc:BaseAmount>
+			<cbc:Amount currencyID="COP">{{InvoiceLine.AllowanceChargeAmount}}</cbc:Amount>
+			<cbc:BaseAmount currencyID="COP">{{InvoiceLine.AllowanceChargeBaseAmount}}</cbc:BaseAmount>
 	</cac:AllowanceCharge>
 		{% for TaxTotalID, TaxTotal in InvoiceLine.TaxesTotal.items() -%}
 
 		<cac:TaxTotal>
-			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
+			<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(TaxTotal.total)}}</cbc:TaxAmount>
 			{% for Percent, TaxSubtotal in TaxTotal.taxes.items() -%}
 			<cac:TaxSubtotal>
-				<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
-				<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
+				<cbc:TaxableAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
 				{% if TaxTotal.total > 0 %}
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>
@@ -390,11 +390,11 @@
 		{% endfor -%}
 		{% for WithholdingTaxTotalID, WithholdingTaxTotal in InvoiceLine.WithholdingTaxesTotal.items() -%}
 		<cac:WithholdingTaxTotal>
-			<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(WithholdingTaxTotal.total)}}</cbc:TaxAmount>
+			<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(WithholdingTaxTotal.total)}}</cbc:TaxAmount>
 			{% for Percent, TaxSubtotal in WithholdingTaxTotal.taxes.items() -%}
 			<cac:TaxSubtotal>
-				<cbc:TaxableAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
-				<cbc:TaxAmount currencyID="{{DocumentCurrencyCode}}">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
+				<cbc:TaxableAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.base)}}</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="COP">{{'{:.2f}'.format(TaxSubtotal.amount)}}</cbc:TaxAmount>
 				<cac:TaxCategory>
 					<cbc:Percent>{{Percent}}</cbc:Percent>
 					<cac:TaxScheme>
@@ -435,7 +435,7 @@
 		{% endif %}
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="{{DocumentCurrencyCode}}">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>
+			<cbc:PriceAmount currencyID="COP">{{InvoiceLine.PriceAmount}}</cbc:PriceAmount>
 			<cbc:BaseQuantity unitCode="{{InvoiceLine.unitCode}}">{{InvoiceLine.Quantity}}</cbc:BaseQuantity>
 		</cac:Price>
 	</cac:InvoiceLine>

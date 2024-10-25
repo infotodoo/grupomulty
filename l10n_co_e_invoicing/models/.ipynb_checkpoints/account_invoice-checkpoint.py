@@ -299,14 +299,7 @@ class AccountInvoice(models.Model):
 
         return res
 
-    def button_draft(self):
-        res = super(AccountInvoice, self).button_draft()
 
-        for dian_document in self.dian_document_lines:
-            if dian_document.state == 'done':
-                raise UserError(_('No puede cambiar a borrador una factura procesada en la DIAN'))
-
-        return res
 
     def _get_billing_reference(self):
         billing_reference = {}
@@ -616,7 +609,7 @@ class AccountInvoice(models.Model):
             model_name = False
 
             if invoice_line.price_subtotal != 0 and invoice_line.discount != 0:
-                disc_amount = (invoice_line.quantity * invoice_line.price_unit * invoice_line.discount) / 100
+                disc_amount = (invoice_line.price_subtotal * invoice_line.discount) / 100
 
             if invoice_line.price_unit != 0 and invoice_line.quantity != 0:
                 total_wo_disc = invoice_line.price_unit * invoice_line.quantity
